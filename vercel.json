@@ -3,13 +3,20 @@
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.9.0",
-            "memory": 1024,
             "maxDuration": 15
         }
     },
     "routes": [
-        { "handle": "filesystem" },
+        { "src": "/assets/(.*)", "dest": "/assets/$1" },
         { "src": "/(.*)", "dest": "/api/index.php" }
+    ],
+    "headers": [
+        {
+            "source": "/assets/(.*)",
+            "headers": [
+                { "key": "Cache-Control", "value": "public, max-age=604800, immutable" }
+            ]
+        }
     ],
     "env": {
         "NMA_BASE_URL": "/",
