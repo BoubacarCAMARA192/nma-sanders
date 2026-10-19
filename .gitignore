@@ -15,3 +15,6 @@ node_modules/
 vendor/
 Thumbs.db
 desktop.ini
+
+.vercel
+.env*
