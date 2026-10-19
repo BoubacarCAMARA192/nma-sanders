@@ -1,0 +1,616 @@
+/* =====================================================================
+   NMA Sanders - feuille de style de la plateforme
+   Conception mobile-first, pages legeres, contraste eleve.
+   ===================================================================== */
+
+:root {
+    --nma-primary: #8b5a06;
+    --nma-primary-dark: #6d4504;
+    --nma-primary-light: #f6e3bf;
+    --nma-accent: #e8a33d;
+    --nma-ink: #2b2116;
+    --nma-bg: #fbf7f0;
+    --nma-surface: #ffffff;
+    --nma-border: #e8ddc9;
+    --nma-radius: 14px;
+    --nma-shadow: 0 6px 20px rgba(74, 52, 16, .08);
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+body {
+    background: var(--nma-bg);
+    color: var(--nma-ink);
+    font-size: 15px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, .fw-bold { letter-spacing: -.01em; }
+
+a { text-decoration: none; }
+
+/* --- Marque -------------------------------------------------------- */
+.nma-brand-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--nma-accent), #c07c14);
+    color: #fff;
+    font-size: 1.05rem;
+}
+
+.nma-logo {
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22px;
+    font-size: 2.2rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--nma-accent), #b06f0c);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+
+/* --- Pages publiques ---------------------------------------------- */
+.nma-public {
+    background:
+        radial-gradient(1100px 600px at 12% -10%, rgba(232, 163, 61, .35), transparent 60%),
+        linear-gradient(150deg, #4a3103 0%, #7c4a03 45%, #a4680f 100%);
+    min-height: 100vh;
+}
+
+.nma-public .text-white-50 { color: rgba(255, 255, 255, .72) !important; }
+
+.nma-card { border-radius: var(--nma-radius); }
+
+.nma-card .card-body { padding: 1.75rem; }
+
+.form-label { font-weight: 600; font-size: .9rem; color: #4b3a22; }
+
+.form-control, .form-select {
+    border: 1.5px solid var(--nma-border);
+    border-radius: 10px;
+    padding: .65rem .85rem;
+    font-size: 16px; /* evite le zoom automatique sur iOS */
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--nma-accent);
+    box-shadow: 0 0 0 .2rem rgba(232, 163, 61, .2);
+}
+
+.btn { border-radius: 10px; font-weight: 600; }
+
+.btn-nma {
+    background: var(--nma-primary);
+    border-color: var(--nma-primary);
+    color: #fff;
+}
+
+.btn-nma:hover, .btn-nma:focus {
+    background: var(--nma-primary-dark);
+    border-color: var(--nma-primary-dark);
+    color: #fff;
+}
+
+.btn-outline-nma { border-color: var(--nma-primary); color: var(--nma-primary); }
+.btn-outline-nma:hover { background: var(--nma-primary); color: #fff; }
+
+.text-nma { color: var(--nma-primary) !important; }
+.bg-nma-soft { background: var(--nma-primary-light) !important; }
+
+/* --- Application connectee ---------------------------------------- */
+.nma-navbar {
+    background: linear-gradient(120deg, var(--nma-primary-dark), var(--nma-primary));
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .18);
+    min-height: 58px;
+    padding: .35rem .5rem;
+}
+
+.nma-notif-badge { top: 2px; right: -4px; font-size: .62rem; }
+
+.nma-sidebar {
+    background: var(--nma-surface);
+    border-right: 1px solid var(--nma-border);
+    min-height: calc(100vh - 58px);
+    position: sticky;
+    top: 58px;
+}
+
+.nma-nav-link {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem 1.1rem;
+    color: #5d4b34;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+}
+
+.nma-nav-link i { font-size: 1.1rem; opacity: .85; }
+
+.nma-nav-link:hover { background: #fdf8ef; color: var(--nma-primary); }
+
+.nma-nav-link.active {
+    background: var(--nma-primary-light);
+    color: var(--nma-primary-dark);
+    border-left-color: var(--nma-accent);
+    font-weight: 700;
+}
+
+.nma-content { padding: 1rem .75rem; }
+
+@media (min-width: 992px) {
+    .nma-content { padding: 1.5rem 2rem; }
+}
+
+.nma-help-card {
+    background: #fdf6e9;
+    border: 1px solid var(--nma-border);
+    border-radius: 12px;
+    padding: .85rem 1rem;
+    color: var(--nma-primary-dark);
+}
+
+.nma-offcanvas { background: var(--nma-primary-dark); max-width: 82vw; }
+.nma-offcanvas .nma-nav-link { color: rgba(255, 255, 255, .85); }
+.nma-offcanvas .nma-nav-link.active,
+.nma-offcanvas .nma-nav-link:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+.nma-offcanvas .border-bottom { border-color: rgba(255, 255, 255, .2) !important; color: #fff; }
+.nma-offcanvas .text-muted { color: rgba(255, 255, 255, .6) !important; }
+.nma-offcanvas hr { border-color: rgba(255, 255, 255, .2); }
+
+/* --- Navigation basse (mobile) ------------------------------------ */
+.nma-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    display: flex;
+    background: #fff;
+    border-top: 1px solid var(--nma-border);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, .06);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nma-bottom-nav a {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: .5rem .25rem .55rem;
+    color: #7a6a55;
+    font-size: .68rem;
+    font-weight: 600;
+}
+
+.nma-bottom-nav a i { font-size: 1.3rem; }
+.nma-bottom-nav a.active { color: var(--nma-primary); }
+
+.role-boulanger .nma-content, .role-gestionnaire .nma-content, .role-administrateur .nma-content {
+    padding-bottom: 5.5rem;
+}
+
+@media (min-width: 992px) {
+    .role-boulanger .nma-content,
+    .role-gestionnaire .nma-content,
+    .role-administrateur .nma-content { padding-bottom: 2rem; }
+}
+
+/* --- Cartes et tableaux ------------------------------------------- */
+.card {
+    border: 1px solid var(--nma-border);
+    border-radius: var(--nma-radius);
+    box-shadow: var(--nma-shadow);
+}
+
+.card-header {
+    background: #fff;
+    border-bottom: 1px solid var(--nma-border);
+    font-weight: 700;
+    border-radius: var(--nma-radius) var(--nma-radius) 0 0 !important;
+}
+
+.nma-stat {
+    background: #fff;
+    border: 1px solid var(--nma-border);
+    border-radius: var(--nma-radius);
+    padding: 1rem;
+    height: 100%;
+    box-shadow: var(--nma-shadow);
+}
+
+.nma-stat .nma-stat-ico {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background: var(--nma-primary-light);
+    color: var(--nma-primary-dark);
+}
+
+.nma-stat .nma-stat-value { font-size: 1.65rem; font-weight: 800; line-height: 1.1; }
+.nma-stat .nma-stat-label { font-size: .8rem; color: #7a6a55; font-weight: 600; }
+
+.table > :not(caption) > * > * { padding: .7rem .6rem; }
+.table thead th {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #7a6a55;
+    background: #fdf9f2;
+    border-bottom: 1px solid var(--nma-border);
+    white-space: nowrap;
+}
+.table-hover > tbody > tr:hover > * { background: #fdf8ef; }
+.table-responsive { border-radius: 12px; }
+
+/* --- Frese de suivi (F07) ----------------------------------------- */
+.nma-frise { position: relative; padding-left: 2.1rem; }
+
+.nma-frise::before {
+    content: "";
+    position: absolute;
+    left: .8rem;
+    top: .6rem;
+    bottom: .6rem;
+    width: 2px;
+    background: var(--nma-border);
+}
+
+.nma-frise-etape { position: relative; padding-bottom: 1.35rem; }
+.nma-frise-etape:last-child { padding-bottom: 0; }
+
+.nma-frise-etape .point {
+    position: absolute;
+    left: -1.65rem;
+    top: .15rem;
+    width: 1.55rem;
+    height: 1.55rem;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--nma-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .75rem;
+    color: #9a8974;
+}
+
+.nma-frise-etape.fait .point { background: var(--nma-primary); border-color: var(--nma-primary); color: #fff; }
+.nma-frise-etape.actuel .point { background: var(--nma-accent); border-color: var(--nma-accent); color: #fff; }
+.nma-frise-etape.danger .point { background: #dc3545; border-color: #dc3545; color: #fff; }
+.nma-frise-etape.futur .point { opacity: .65; }
+.nma-frise-etape.futur .titre { color: #9a8974; font-weight: 500; }
+
+.nma-frise-etape .titre { font-weight: 700; font-size: .95rem; }
+.nma-frise-etape .meta { font-size: .8rem; color: #7a6a55; }
+
+/* --- Divers -------------------------------------------------------- */
+.nma-progress { height: 8px; border-radius: 999px; background: #efe4d2; }
+.nma-progress .progress-bar { background: linear-gradient(90deg, var(--nma-accent), var(--nma-primary)); }
+
+.nma-produit-card { height: 100%; transition: transform .15s ease, box-shadow .15s ease; }
+.nma-produit-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(74, 52, 16, .12); }
+
+.nma-produit-ico {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--nma-primary-light);
+    color: var(--nma-primary-dark);
+    font-size: 1.35rem;
+    flex: 0 0 auto;
+}
+
+.nma-empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #8d7c64;
+}
+.nma-empty i { font-size: 2.6rem; color: var(--nma-border); display: block; margin-bottom: .5rem; }
+
+.nma-sticky-actions {
+    position: sticky;
+    bottom: 4.6rem;
+    z-index: 20;
+}
+
+@media (min-width: 992px) {
+    .nma-sticky-actions { bottom: .5rem; }
+}
+
+.badge { font-weight: 600; }
+.text-small { font-size: .82rem; }
+.nma-sep { border-top: 1px dashed var(--nma-border); margin: .85rem 0; }
+.nma-num { font-variant-numeric: tabular-nums; }
+
+.nma-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    background: var(--nma-primary-light);
+    color: var(--nma-primary-dark);
+    border-radius: 999px;
+    padding: .2rem .7rem;
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.nma-timeline-note {
+    background: #fdf9f2;
+    border-left: 3px solid var(--nma-accent);
+    border-radius: 8px;
+    padding: .6rem .8rem;
+    font-size: .85rem;
+}
+
+.nma-spin { animation: nma-rotation 1s linear infinite; display: inline-block; }
+
+@keyframes nma-rotation {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* =====================================================================
+   v2 - Interface animee et dynamique
+   ===================================================================== */
+
+/* --- Animations d'entree ------------------------------------------ */
+.nma-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: nma-apparait .7s cubic-bezier(.22, .61, .36, 1) forwards;
+    animation-delay: var(--retard, 0s);
+}
+
+@keyframes nma-apparait {
+    to { opacity: 1; transform: none; }
+}
+
+[data-reveal] { will-change: opacity, transform; }
+
+.nma-revele-js { opacity: 0; transform: translateY(16px); }
+.nma-revele-js.nma-visible {
+    opacity: 1;
+    transform: none;
+    transition: opacity .55s ease, transform .55s cubic-bezier(.22, .61, .36, 1);
+}
+
+/* Entree echelonnee des cartes de contenu (CSS pur, sans JS) */
+.nma-content > .card, .nma-content > .row > [class*="col-"] { animation: nma-apparait .45s ease both; }
+.nma-content > .row > [class*="col-"]:nth-child(1) { animation-delay: .02s; }
+.nma-content > .row > [class*="col-"]:nth-child(2) { animation-delay: .07s; }
+.nma-content > .row > [class*="col-"]:nth-child(3) { animation-delay: .12s; }
+.nma-content > .row > [class*="col-"]:nth-child(4) { animation-delay: .17s; }
+.nma-content > .row > [class*="col-"]:nth-child(5) { animation-delay: .22s; }
+.nma-content > .row > [class*="col-"]:nth-child(6) { animation-delay: .27s; }
+.nma-content > .card:nth-of-type(2) { animation-delay: .08s; }
+.nma-content > .card:nth-of-type(3) { animation-delay: .16s; }
+
+/* --- Page publique : fond anime ------------------------------------ */
+.nma-public {
+    position: relative;
+    overflow-x: hidden;
+    background: linear-gradient(160deg, #241503 0%, #5c3a06 45%, #8b5a06 100%);
+}
+
+.nma-blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .55;
+    pointer-events: none;
+    z-index: 0;
+    animation: nma-flotte 16s ease-in-out infinite alternate;
+}
+
+.nma-blob.b1 { width: 430px; height: 430px; top: -140px; left: -120px; background: radial-gradient(circle, rgba(232, 163, 61, .9), transparent 65%); }
+.nma-blob.b2 { width: 380px; height: 380px; bottom: -160px; right: -100px; background: radial-gradient(circle, rgba(176, 111, 12, .85), transparent 65%); animation-delay: -6s; }
+.nma-blob.b3 { width: 300px; height: 300px; top: 42%; left: 52%; background: radial-gradient(circle, rgba(255, 205, 120, .5), transparent 65%); animation-delay: -11s; }
+
+@keyframes nma-flotte {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(34px, -46px, 0) scale(1.18); }
+}
+
+.nma-auth-wrapper { position: relative; z-index: 1; }
+
+/* --- Carte de connexion (verre depoli) ------------------------------ */
+.nma-glass {
+    background: rgba(255, 255, 255, .92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, .65);
+    border-radius: 22px;
+    box-shadow: 0 30px 60px -18px rgba(20, 10, 0, .55);
+}
+
+.nma-logo-glow { animation: nma-pouls 3.2s ease-in-out infinite; }
+
+@keyframes nma-pouls {
+    0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, .25), 0 0 0 0 rgba(232, 163, 61, .5); }
+    50%      { box-shadow: 0 10px 30px rgba(0, 0, 0, .25), 0 0 0 20px rgba(232, 163, 61, 0); }
+}
+
+.nma-feature {
+    display: flex;
+    gap: .9rem;
+    align-items: flex-start;
+    padding: .8rem 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .14);
+    transition: transform .25s ease, background .25s ease;
+}
+
+.nma-feature:hover { transform: translateX(6px); background: rgba(255, 255, 255, .13); }
+
+.nma-feature .puce {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--nma-accent), #b06f0c);
+}
+
+.nma-badge-confiance {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .85);
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 999px;
+    padding: .3rem .8rem;
+}
+
+.nma-demo-box {
+    background: #fdf6e9;
+    border: 1px dashed var(--nma-border);
+    border-radius: 14px;
+    padding: .8rem .9rem;
+}
+
+.nma-demo-chip {
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.nma-demo-chip:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(74, 52, 16, .18); }
+
+/* --- Boutons : brillance au survol --------------------------------- */
+.btn-nma {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(120deg, var(--nma-primary), #a4680f);
+    border: none;
+    box-shadow: 0 4px 14px rgba(139, 90, 6, .3);
+    transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+.btn-nma:hover, .btn-nma:focus {
+    background: linear-gradient(120deg, var(--nma-primary-dark), var(--nma-primary));
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(139, 90, 6, .38);
+    filter: saturate(1.1);
+}
+
+.btn-nma::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .4) 48%, transparent 62%);
+    transform: translateX(-130%);
+    transition: transform .65s ease;
+    pointer-events: none;
+}
+
+.btn-nma:hover::after { transform: translateX(130%); }
+
+/* Onde au clic */
+.nma-ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(255, 255, 255, .55);
+    animation: nma-onde .6s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes nma-onde {
+    to { transform: scale(3.2); opacity: 0; }
+}
+
+/* --- Barre de navigation : degrade vivant --------------------------- */
+.nma-navbar {
+    background: linear-gradient(120deg, var(--nma-primary-dark), var(--nma-primary), #a4680f, var(--nma-primary-dark));
+    background-size: 260% 260%;
+    animation: nma-degrade 16s ease infinite;
+}
+
+@keyframes nma-degrade {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
+.nma-bottom-nav a.active i { animation: nma-pop .4s ease; }
+
+@keyframes nma-pop {
+    0%   { transform: scale(.8); }
+    60%  { transform: scale(1.22); }
+    100% { transform: scale(1); }
+}
+
+/* --- Cartes statistiques -------------------------------------------- */
+.nma-stat {
+    transition: transform .2s ease, box-shadow .25s ease;
+    background: linear-gradient(180deg, #fff, #fdfaf4);
+}
+
+.nma-stat:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(74, 52, 16, .14); }
+.nma-stat:hover .nma-stat-ico { transform: rotate(-8deg) scale(1.08); }
+.nma-stat .nma-stat-ico { transition: transform .25s ease; }
+
+.nma-stat-value { animation: nma-apparait .5s ease both; }
+
+/* --- Badges de statut : pulsation douce si action requise ----------- */
+.badge[data-pulse] { animation: nma-badge-pulse 2.4s ease-in-out infinite; }
+
+@keyframes nma-badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232, 163, 61, .55); }
+    50%      { box-shadow: 0 0 0 7px rgba(232, 163, 61, 0); }
+}
+
+/* --- Progressions animees ------------------------------------------- */
+.progress-bar { transition: width .9s cubic-bezier(.22, .61, .36, 1); }
+
+/* --- Alertes : glissement d'entree ---------------------------------- */
+.alert {
+    animation: nma-alerte .45s cubic-bezier(.22, .61, .36, 1) both;
+    border: none;
+    border-left: 4px solid rgba(0, 0, 0, .18);
+}
+
+@keyframes nma-alerte {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.alert.nma-part { animation: nma-alerte-sortie .4s ease forwards; }
+
+@keyframes nma-alerte-sortie {
+    to { opacity: 0; transform: translateY(-10px); height: 0; margin: 0; padding: 0; overflow: hidden; }
+}
+
+/* --- Fuseau horaire du compteur -------------------------------------- */
+.nma-compteur { font-variant-numeric: tabular-nums; }
+
+/* --- Accessibilite : mouvement reduit -------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+@media print {
+    .nma-navbar, .nma-sidebar, .nma-bottom-nav, .btn { display: none !important; }
+    .nma-content { padding: 0 !important; }
+}

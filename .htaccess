@@ -1,0 +1,26 @@
+# Plateforme NMA Sanders - configuration Apache
+Options -Indexes -MultiViews
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Ne pas reecrire les fichiers et dossiers existants (assets, images...)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # URLs courtes optionnelles : /boulanger/catalogue -> index.php?r=boulanger/catalogue
+    RewriteRule ^([a-zA-Z0-9/_-]+)/?$ index.php?r=$1 [QSA,L]
+</IfModule>
+
+# Interdire l'acces direct aux fichiers sensibles
+<FilesMatch "\.(sql|md|log|ini|json)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>

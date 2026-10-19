@@ -1,0 +1,17 @@
+# Journaux et donnees locales
+/storage/logs/*
+!/storage/logs/.gitkeep
+*.log
+
+# Configuration locale
+.env
+.env.local
+
+# Plateformes
+.vercel
+.idea
+.vscode
+node_modules/
+vendor/
+Thumbs.db
+desktop.ini
