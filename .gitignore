@@ -6,9 +6,9 @@
 # Configuration locale
 .env
 .env.local
-/tools/tunnel.local.json
+.env*
 
-# Plateformes
+# Plateformes et editeurs
 .vercel
 .idea
 .vscode
@@ -16,6 +16,3 @@ node_modules/
 vendor/
 Thumbs.db
 desktop.ini
-
-.vercel
-.env*

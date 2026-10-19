@@ -53,7 +53,8 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 
 ### Interface
 
-- Page d'accueil animée avec parcours guidé (choix **inscription** ou **connexion**, étapes 1-2-3).
+- Page d'accueil animée : **scène SVG interactive** (champ de blé ondulant, soleil, nuages, camion NMA en tournée, sacs de farine), parallaxe douce à la souris et cartes inclinables.
+- Parcours guidé (choix **inscription** ou **connexion**), cartes « univers » illustrées (Fournil, Livraison, Suivi) et chiffres clés animés, bandeau défilant.
 - Cartes interactives (effet de brillance, icônes animées), fond à halos mouvants, comptes de démonstration cliquables.
 - Tableaux de bord avec compteurs animés, barres de progression animées, entrées échelonnées, mode d'affichage adapté au mobile (barre de navigation basse).
 - Notifications intégrées (cloche) et messages flash auto-nettoyés.
@@ -145,7 +146,7 @@ nma-sanders/
 │   │                          #   HistoriqueStatut, Livraison
 │   └── views/                 # Vues par espace + layouts (public / connecté)
 ├── assets/                    # css/app.css, js/app.js, img/favicon.svg
-├── database/                  # nma_sanders.sql (local) · nma_sanders_import_hebergement.sql (hébergeurs)
+├── database/                  # nma_sanders.sql (schéma + jeu de données)
 └── storage/logs/              # Journaux applicatifs
 ```
 
@@ -184,12 +185,14 @@ C:\xampp\php\php.exe tests\parcours.php
 3. Renseigner `NMA_DB_*` (variables d'environnement de l'hébergeur) ou adapter `app/config/config.php`.
 4. Passer `NMA_DEBUG=0` en production.
 
-### Vercel
+### Vercel (vitrine)
 
-Le dépôt contient une configuration prête pour Vercel (`vercel.json` + `api/index.php`, runtime [`vercel-php`](https://www.npmjs.com/package/vercel-php)) qui permet d'afficher le site. **À savoir** :
+Le dépôt contient une configuration Vercel (`vercel.json` + `api/index.php`, runtime [`vercel-php`](https://www.npmjs.com/package/vercel-php)) qui expose le **site vitrine** : page d'accueil animée, connexion, inscription.
 
-- Vercel ne fournit **pas de serveur MySQL** : il faut une base MySQL hébergée (Railway, Aiven, Clever Cloud, PlanetScale…) et renseigner les variables `NMA_DB_HOST`, `NMA_DB_PORT`, `NMA_DB_NAME`, `NMA_DB_USER`, `NMA_DB_PASS` dans les réglages du projet Vercel.
-- Les fonctions serverless sont **éphémères** : les sessions PHP reposent sur `/tmp` d'une instance. Pour une mise en production réelle, privilégier un hébergement PHP classique.
+- La base de données du projet est **MySQL en local (XAMPP)** : les fonctions de commande et les tableaux de bord s'utilisent depuis l'installation locale.
+- Sans base joignable, les pages concernées affichent une page « base de données injoignable » claire (au lieu d'une erreur brute).
+- Si un jour une base MySQL hébergée est branchée, il suffit de renseigner `NMA_DB_HOST`, `NMA_DB_PORT`, `NMA_DB_NAME`, `NMA_DB_USER`, `NMA_DB_PASS` dans les réglages du projet Vercel.
+- Les fonctions serverless sont **éphémères** : pour l'usage complet (sessions, commandes), privilégier l'installation locale ou un hébergement PHP classique.
 
 Déploiement en ligne de commande :
 
