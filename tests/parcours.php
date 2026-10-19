@@ -454,8 +454,63 @@ verifier('Un boulanger ne voit pas la commande d\'un autre', !str_contains($r['c
 $r = naviguer(BASE . '?r=boulanger/historique', $COOKIES);
 verifier('Historique vide pour le nouveau compte', str_contains($r['corps'], 'Aucune commande'));
 
+// ---------------------------------------------------------------- 7. Inscription
+echo PHP_EOL . "== 7. Inscription autonome ==" . PHP_EOL;
+$cookiesInscription = sys_get_temp_dir() . '/nma_test_cookies_inscription.txt';
+@unlink($cookiesInscription);
+
+$accueilPub = naviguer(BASE . '?r=', $cookiesInscription);
+verifier('Accueil public : choix inscription / connexion', str_contains($accueilPub['corps'], 'Créer un compte') && str_contains($accueilPub['corps'], 'Se connecter'));
+
+$formInscription = naviguer(BASE . '?r=inscription', $cookiesInscription);
+verifier('Formulaire d\'inscription accessible', str_contains($formInscription['corps'], 'name="nom_boulangerie"'));
+
+$r = requete(BASE . '?r=inscription', ['_token' => token($formInscription['corps']), 'email' => 'incomplet@test.sn'], $cookiesInscription);
+verifier('Inscription incomplète rejetée', str_contains($r['corps'], 'obligatoire'));
+
+$emailInscription = 'demande.compte' . random_int(100, 999) . '@test.sn';
+$r = requete(BASE . '?r=inscription', [
+    '_token'                  => token($formInscription['corps']),
+    'nom'                     => 'Awa Diop',
+    'email'                   => $emailInscription,
+    'telephone'               => '+221 77 555 44 33',
+    'nom_boulangerie'         => 'Croissants du Plateau',
+    'ville'                   => 'Dakar',
+    'zone_livraison'          => 'Plateau',
+    'mot_de_passe'            => 'Inscription@2026',
+    'mot_de_passe_confirmation' => 'Inscription@2026',
+], $cookiesInscription);
+
+$suiviInscription = $r['location'] !== null
+    ? naviguer('http://localhost' . $r['location'], $cookiesInscription)
+    : naviguer(BASE . '?r=inscription', $cookiesInscription);
+verifier('Demande d\'inscription transmise (redirection connexion)', $r['location'] !== null && str_contains($r['location'], 'connexion'));
+verifier('Confirmation « service commercial » affichée', str_contains($suiviInscription['corps'], 'service commercial'));
+
+$stmt = $pdo->prepare('SELECT actif, role FROM utilisateur WHERE email = ?');
+$stmt->execute([$emailInscription]);
+$nouveauCompte = $stmt->fetch(PDO::FETCH_ASSOC);
+verifier('Compte créé inactif en attente d\'activation', $nouveauCompte !== false && (int) $nouveauCompte['actif'] === 0 && $nouveauCompte['role'] === 'boulanger');
+
+$pageConnexion = naviguer(BASE . '?r=connexion', $cookiesInscription);
+$r = requete(BASE . '?r=connexion', ['_token' => token($pageConnexion['corps']), 'email' => $emailInscription, 'mot_de_passe' => 'Inscription@2026'], $cookiesInscription);
+verifier('Connexion refusée tant que le compte n\'est pas activé', str_contains($r['corps'], 'non activé'));
+
+$formDoublon = naviguer(BASE . '?r=inscription', $cookiesInscription);
+$r = requete(BASE . '?r=inscription', [
+    '_token'                  => token($formDoublon['corps']),
+    'nom'                     => 'Awa Diop',
+    'email'                   => $emailInscription,
+    'telephone'               => '+221 77 555 44 33',
+    'nom_boulangerie'         => 'Croissants du Plateau',
+    'ville'                   => 'Dakar',
+    'mot_de_passe'            => 'Inscription@2026',
+    'mot_de_passe_confirmation' => 'Inscription@2026',
+], $cookiesInscription);
+verifier('Doublon d\'adresse e-mail refusé', str_contains($r['corps'], 'existe déjà'));
+
 // Nettoyage des donnees de test
-$pdo->exec("DELETE FROM utilisateur WHERE email IN ('$emailTest', 'autre@test.sn')");
+$pdo->exec("DELETE FROM utilisateur WHERE email IN ('$emailTest', 'autre@test.sn', '$emailInscription')");
 $pdo->exec("DELETE FROM produit WHERE reference = 'TEST-REF-01'");
 $pdo->exec("DELETE FROM commande WHERE id = $commandeId");
 $pdo->exec("DELETE FROM notification WHERE utilisateur_id = 0");

@@ -6,6 +6,7 @@
 # Configuration locale
 .env
 .env.local
+/tools/tunnel.local.json
 
 # Plateformes
 .vercel

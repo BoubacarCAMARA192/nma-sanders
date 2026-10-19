@@ -27,6 +27,7 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 | Fonction | Détail |
 | --- | --- |
 | Connexion sécurisée | Mots de passe hachés (bcrypt), verrouillage après 5 tentatives pendant 15 min, expiration de session (45 min) |
+| Inscription en ligne | Page d'accueil avec choix **Créer un compte / Se connecter** ; la demande boulanger est enregistrée **inactive** et les gestionnaires sont notifiés pour activation |
 | Double vérification (2FA) | Code à 6 chiffres pour gestionnaire et administrateur (optionnel), affiché dans l'interface en mode debug |
 | Mot de passe oublié | Jeton à usage unique valable 1 heure, transmis par l'administrateur (pas de SMTP en local) |
 
@@ -52,7 +53,8 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 
 ### Interface
 
-- Page d'accueil / connexion animée (fond interactif, comptes de démonstration cliquables en mode debug).
+- Page d'accueil animée avec parcours guidé (choix **inscription** ou **connexion**, étapes 1-2-3).
+- Cartes interactives (effet de brillance, icônes animées), fond à halos mouvants, comptes de démonstration cliquables.
 - Tableaux de bord avec compteurs animés, barres de progression animées, entrées échelonnées, mode d'affichage adapté au mobile (barre de navigation basse).
 - Notifications intégrées (cloche) et messages flash auto-nettoyés.
 
@@ -66,7 +68,8 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 | Gestionnaire | `gestionnaire@nmasanders.sn` | `Gestion@2026` |
 | Boulanger | `boulanger@demo.sn` | `Boulanger@2026` |
 
-> En mode debug (`NMA_DEBUG=1`, activé par défaut en local), ces comptes sont proposés sur la page de connexion : un clic remplit le formulaire.
+> Les comptes de démonstration sont proposés sur la page de connexion (encart cliquable) quand `NMA_DEMO=1`
+> (activé par défaut en mode debug, et forcé à `1` sur la démo Vercel).
 
 ---
 
@@ -111,6 +114,7 @@ Aucun gestionnaire de paquets n'est nécessaire : le projet se déploie en copia
    | `NMA_DB_USER` | Utilisateur MySQL | `root` |
    | `NMA_DB_PASS` | Mot de passe MySQL | *(vide)* |
    | `NMA_DEBUG` | Mode debug (1/0) | `1` |
+   | `NMA_DEMO` | Afficher les comptes de démonstration sur la connexion (1/0) | `NMA_DEBUG` |
    | `NMA_BASE_URL` | URL de base imposée (déploiements particuliers) | *(auto)* |
 
 4. **Lancer** Apache + MySQL depuis le panneau XAMPP puis ouvrir :
@@ -119,7 +123,7 @@ Aucun gestionnaire de paquets n'est nécessaire : le projet se déploie en copia
    http://localhost/nma-sanders/
    ```
 
-> La page d'accueil redirige automatiquement vers la connexion, puis vers l'espace correspondant au rôle connecté.
+> La page d'accueil propose **Créer un compte** (demande d'inscription) ou **Se connecter**, puis redirige vers l'espace correspondant au rôle connecté.
 
 ---
 
@@ -141,7 +145,7 @@ nma-sanders/
 │   │                          #   HistoriqueStatut, Livraison
 │   └── views/                 # Vues par espace + layouts (public / connecté)
 ├── assets/                    # css/app.css, js/app.js, img/favicon.svg
-├── database/nma_sanders.sql   # Schéma + données de démonstration
+├── database/                  # nma_sanders.sql (local) · nma_sanders_import_hebergement.sql (hébergeurs)
 └── storage/logs/              # Journaux applicatifs
 ```
 
@@ -161,7 +165,7 @@ nma-sanders/
 
 ## Tests fonctionnels
 
-Une suite de tests de bout en bout (69 vérifications) couvre : contrôle d'accès et CSRF, parcours boulanger complet, cycle de vie gestionnaire (validation, stock, refus avec motif, séquence des statuts, livraisons, export CSV), administration (comptes, catalogue, stock, paramètres, journal), traçabilité, notifications, cloisonnement des données et nettoyage automatique.
+Une suite de tests de bout en bout (77 vérifications) couvre : contrôle d'accès et CSRF, parcours boulanger complet, cycle de vie gestionnaire (validation, stock, refus avec motif, séquence des statuts, livraisons, export CSV), administration (comptes, catalogue, stock, paramètres, journal), traçabilité, notifications, cloisonnement des données, inscription autonome (compte créé inactif, refus de connexion, doublon) et nettoyage automatique.
 
 La suite a été utilisée pendant le développement ; elle peut être rejouée avec :
 

@@ -13,6 +13,7 @@ use Core\Controller;
 use Core\Database;
 use Core\Flash;
 use Core\Journal;
+use Core\Notifier;
 use Core\Validator;
 use Model\Utilisateur;
 
@@ -20,13 +21,13 @@ final class AuthController extends Controller
 {
     private const MAX_RESET_MINUTES = 60;
 
-    /** Page d'accueil : redirige vers l'espace correspondant au role. */
+    /** Page d'accueil publique : propose inscription ou connexion. */
     public function accueil(): void
     {
         if (Auth::connecte()) {
             $this->rediriger(Auth::routeAccueil());
         }
-        $this->rediriger('connexion');
+        $this->vuePublique('auth/accueil', ['titre' => APP_NAME . ' – Bienvenue']);
     }
 
     public function formulaireConnexion(): void
@@ -35,6 +36,81 @@ final class AuthController extends Controller
             $this->rediriger(Auth::routeAccueil());
         }
         $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME]);
+    }
+
+    public function formulaireInscription(): void
+    {
+        if (Auth::connecte()) {
+            $this->rediriger(Auth::routeAccueil());
+        }
+        $this->vuePublique('auth/inscription', ['titre' => 'Créer un compte – ' . APP_NAME, 'donnees' => []]);
+    }
+
+    /**
+     * Demande d'inscription autonome (F02) : le compte boulanger est cree
+     * inactif, les gestionnaires sont notifies et l'activent apres contact.
+     */
+    public function inscrire(): void
+    {
+        $donnees = [
+            'nom'             => trim((string) post('nom', '')),
+            'email'           => trim((string) post('email', '')),
+            'telephone'       => trim((string) post('telephone', '')),
+            'nom_boulangerie' => trim((string) post('nom_boulangerie', '')),
+            'ville'           => trim((string) post('ville', '')) ?: 'Dakar',
+            'zone_livraison'  => trim((string) post('zone_livraison', '')),
+        ];
+
+        $validator = new Validator($_POST);
+        $validator->required('nom', 'Le nom du responsable')
+                  ->required('nom_boulangerie', "Le nom de l'établissement")
+                  ->required('email', "L'adresse e-mail")
+                  ->email('email', "L'adresse e-mail")
+                  ->required('telephone', 'Le numéro de téléphone')
+                  ->telephone('telephone', 'Le numéro de téléphone')
+                  ->motDePasse('mot_de_passe')
+                  ->identique('mot_de_passe', 'mot_de_passe_confirmation', 'La confirmation du mot de passe');
+
+        $reprendre = function () use ($donnees): void {
+            $this->vuePublique('auth/inscription', ['titre' => 'Créer un compte – ' . APP_NAME, 'donnees' => $donnees]);
+        };
+
+        if ($validator->echoue()) {
+            Flash::erreur($validator->premiereErreur());
+            $reprendre();
+            return;
+        }
+
+        if (Utilisateur::parEmail($donnees['email']) !== null) {
+            Flash::erreur('Un compte existe déjà avec cette adresse e-mail. Connectez-vous ou contactez le service commercial.');
+            $reprendre();
+            return;
+        }
+
+        $id = Utilisateur::creer([
+            'nom'                 => $donnees['nom'],
+            'email'               => $donnees['email'],
+            'telephone'           => $donnees['telephone'],
+            'mot_de_passe'        => (string) post('mot_de_passe', ''),
+            'role'                => 'boulanger',
+            'actif'               => 0,
+            'double_verification' => 0,
+            'nom_boulangerie'     => $donnees['nom_boulangerie'],
+            'adresse'             => 'À préciser',
+            'ville'               => $donnees['ville'],
+            'zone_livraison'      => $donnees['zone_livraison'] ?: null,
+        ]);
+
+        Journal::enregistrer('inscription_demande', 'utilisateur', $id, 'Demande de compte : ' . $donnees['email']);
+        Notifier::gestionnaires(
+            'Nouvelle demande de compte',
+            $donnees['nom'] . ' (' . $donnees['email'] . ') demande un accès boulanger. Activez son compte dans Utilisateurs.',
+            url('administrateur/utilisateurs'),
+            'alerte'
+        );
+
+        Flash::succes('Votre demande a bien été envoyée ! Le service commercial NMA Sanders vous contactera pour activer votre compte.');
+        $this->rediriger('connexion');
     }
 
     public function connexion(): void
@@ -133,7 +209,7 @@ final class AuthController extends Controller
                 ['token' => hash('sha256', $token), 'min' => self::MAX_RESET_MINUTES, 'id' => (int) $user['id']]
             );
 
-            \Core\Notifier::gestionnaires(
+            Notifier::gestionnaires(
                 'Demande de réinitialisation',
                 $user['nom'] . ' (' . $user['email'] . ') demande la réinitialisation de son mot de passe.',
                 url('administrateur/utilisateurs'),

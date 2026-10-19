@@ -48,13 +48,13 @@
     </div>
 </form>
 
-<?php if (APP_DEBUG): ?>
+<?php if (APP_DEMO): ?>
     <div class="nma-demo-box mt-4">
         <div class="small fw-semibold mb-2">
             <i class="bi bi-stars me-1 text-nma"></i>Comptes de démonstration — cliquez pour remplir :
         </div>
         <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-sm btn-outline-nma nma-demo-chip"
+            <button type="button" class="btn btn-sm btn-outline-nma nma-demo-chip nma-demo-chip-admin"
                     data-email="admin@nmasanders.sn" data-mdp="Admin@2026">
                 <i class="bi bi-shield-lock me-1"></i>Administrateur
             </button>
@@ -71,10 +71,11 @@
 <?php endif; ?>
 
 <hr class="my-4">
-<p class="small text-muted mb-0">
-    <i class="bi bi-info-circle me-1"></i>
-    Pas encore de compte ? Contactez le service commercial de NMA Sanders au
-    <a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a> : votre compte sera créé et activé par l'administrateur.
+<p class="small text-muted mb-0 text-center">
+    <i class="bi bi-shop me-1"></i>Pas encore de compte ?
+    <a href="<?= e(url('inscription')) ?>" class="fw-semibold">Créer un compte</a>
+    ou appelez le
+    <a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a>.
 </p>
 
 <script>

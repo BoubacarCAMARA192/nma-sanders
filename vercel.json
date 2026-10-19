@@ -20,6 +20,7 @@
     ],
     "env": {
         "NMA_BASE_URL": "/",
-        "NMA_DEBUG": "0"
+        "NMA_DEBUG": "0",
+        "NMA_DEMO": "1"
     }
 }

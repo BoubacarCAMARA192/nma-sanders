@@ -35,6 +35,8 @@ final class Router
         $this->get('',                        'AuthController', 'accueil');
         $this->get('connexion',               'AuthController', 'formulaireConnexion');
         $this->post('connexion',              'AuthController', 'connexion');
+        $this->get('inscription',             'AuthController', 'formulaireInscription');
+        $this->post('inscription',            'AuthController', 'inscrire');
         $this->get('double-verification',     'AuthController', 'formulaire2fa');
         $this->post('double-verification',    'AuthController', 'verifier2fa');
         $this->get('deconnexion',             'AuthController', 'deconnexion');
