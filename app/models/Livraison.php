@@ -99,7 +99,11 @@ final class Livraison
             $sql .= ' AND l.date_livraison >= CURDATE()';
         }
 
-        $sql .= " ORDER BY FIELD(l.etat, 'en_cours', 'planifiee', 'echouee', 'livree'), l.date_livraison, c.reference";
+        $ordre = Database::dialecte() === 'sqlite'
+            ? "CASE l.etat WHEN 'en_cours' THEN 1 WHEN 'planifiee' THEN 2 WHEN 'echouee' THEN 3 ELSE 4 END"
+            : "FIELD(l.etat, 'en_cours', 'planifiee', 'echouee', 'livree')";
+
+        $sql .= ' ORDER BY ' . $ordre . ', l.date_livraison, c.reference';
 
         return Database::fetchAll($sql, $params);
     }

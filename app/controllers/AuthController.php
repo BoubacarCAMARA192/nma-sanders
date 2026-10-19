@@ -204,10 +204,11 @@ final class AuthController extends Controller
         // Reponse identique que le compte existe ou non (anti-enumeration).
         if ($user !== null && (int) $user['actif'] === 1) {
             $token = bin2hex(random_bytes(32));
-            Database::run(
-                'UPDATE utilisateur SET reset_token = :token, reset_expire_le = DATE_ADD(NOW(), INTERVAL :min MINUTE) WHERE id = :id',
-                ['token' => hash('sha256', $token), 'min' => self::MAX_RESET_MINUTES, 'id' => (int) $user['id']]
-            );
+            $expiration = Database::dialecte() === 'sqlite'
+                ? "UPDATE utilisateur SET reset_token = :token, reset_expire_le = DATETIME(NOW(), '+' || :min || ' minutes') WHERE id = :id"
+                : 'UPDATE utilisateur SET reset_token = :token, reset_expire_le = DATE_ADD(NOW(), INTERVAL :min MINUTE) WHERE id = :id';
+
+            Database::run($expiration, ['token' => hash('sha256', $token), 'min' => self::MAX_RESET_MINUTES, 'id' => (int) $user['id']]);
 
             Notifier::gestionnaires(
                 'Demande de réinitialisation',

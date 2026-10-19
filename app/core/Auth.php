@@ -125,10 +125,11 @@ final class Auth
         $tentatives = (int) $user['tentatives_connexion'] + 1;
 
         if ($tentatives >= $max) {
-            Database::run(
-                'UPDATE utilisateur SET tentatives_connexion = 0, bloque_jusqua = DATE_ADD(NOW(), INTERVAL :min MINUTE) WHERE id = :id',
-                ['min' => $minutes, 'id' => (int) $user['id']]
-            );
+            $blocage = Database::dialecte() === 'sqlite'
+                ? "UPDATE utilisateur SET tentatives_connexion = 0, bloque_jusqua = DATETIME(NOW(), '+' || :min || ' minutes') WHERE id = :id"
+                : 'UPDATE utilisateur SET tentatives_connexion = 0, bloque_jusqua = DATE_ADD(NOW(), INTERVAL :min MINUTE) WHERE id = :id';
+
+            Database::run($blocage, ['min' => $minutes, 'id' => (int) $user['id']]);
 
             return;
         }

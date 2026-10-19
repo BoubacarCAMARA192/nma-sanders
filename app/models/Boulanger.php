@@ -49,6 +49,10 @@ final class Boulanger
     /** Liste des boulangeries avec leur volume de commandes (suivi commercial). */
     public static function listerAvecActivite(int $jours = 90): array
     {
+        $depuis = Database::dialecte() === 'sqlite'
+            ? "c.date_commande >= DATETIME(NOW(), '-' || :jours || ' days')"
+            : 'c.date_commande >= DATE_SUB(NOW(), INTERVAL :jours DAY)';
+
         return Database::fetchAll(
             "SELECT b.id, b.nom_boulangerie, b.adresse, b.ville, b.zone_livraison,
                     u.nom AS contact, u.email, u.telephone, u.actif,
@@ -57,7 +61,7 @@ final class Boulanger
                     MAX(c.date_commande) AS derniere_commande
              FROM boulanger b
              JOIN utilisateur u ON u.id = b.utilisateur_id
-             LEFT JOIN commande c ON c.boulanger_id = b.id AND c.date_commande >= DATE_SUB(NOW(), INTERVAL :jours DAY)
+             LEFT JOIN commande c ON c.boulanger_id = b.id AND " . $depuis . "
              LEFT JOIN (
                  SELECT commande_id, SUM(quantite) AS total_sacs FROM ligne_commande GROUP BY commande_id
              ) ca ON ca.commande_id = c.id

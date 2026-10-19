@@ -245,7 +245,11 @@ final class Commande
             }
         }
 
-        $sql .= ' ORDER BY FIELD(c.statut, "recue", "validee", "en_preparation", "en_livraison", "livree", "refusee", "annulee"), c.date_commande DESC LIMIT ' . (int) $limite;
+        $ordre = Database::dialecte() === 'sqlite'
+            ? "CASE c.statut WHEN 'recue' THEN 1 WHEN 'validee' THEN 2 WHEN 'en_preparation' THEN 3 WHEN 'en_livraison' THEN 4 WHEN 'livree' THEN 5 WHEN 'refusee' THEN 6 ELSE 7 END"
+            : 'FIELD(c.statut, "recue", "validee", "en_preparation", "en_livraison", "livree", "refusee", "annulee")';
+
+        $sql .= ' ORDER BY ' . $ordre . ', c.date_commande DESC LIMIT ' . (int) $limite;
 
         return Database::fetchAll($sql, $params);
     }
@@ -500,8 +504,12 @@ final class Commande
             $params
         );
 
+        $delaiSql = Database::dialecte() === 'sqlite'
+            ? "SELECT AVG(TIMESTAMPDIFF('HOUR', c.date_commande, h.date_heure)) AS moyenne_heures"
+            : 'SELECT AVG(TIMESTAMPDIFF(HOUR, c.date_commande, h.date_heure)) AS moyenne_heures';
+
         $delai = Database::fetch(
-            'SELECT AVG(TIMESTAMPDIFF(HOUR, c.date_commande, h.date_heure)) AS moyenne_heures
+            $delaiSql . '
              FROM commande c
              JOIN historique_statut h ON h.commande_id = c.id AND h.statut = "livree"
              WHERE 1 = 1' . str_replace('date_commande', 'c.date_commande', $filtre),
@@ -524,13 +532,17 @@ final class Commande
 
     public static function volumesParMois(int $mois = 6): array
     {
+        $depuis = Database::dialecte() === 'sqlite'
+            ? "c.date_commande >= DATE(CURDATE(), '-' || :m || ' months')"
+            : 'c.date_commande >= DATE_SUB(CURDATE(), INTERVAL :m MONTH)';
+
         $rows = Database::fetchAll(
             'SELECT DATE_FORMAT(c.date_commande, "%Y-%m") AS periode,
                     COUNT(DISTINCT c.id) AS nb_commandes,
                     COALESCE(SUM(lc.quantite), 0) AS total_sacs
              FROM commande c
              LEFT JOIN ligne_commande lc ON lc.commande_id = c.id
-             WHERE c.date_commande >= DATE_SUB(CURDATE(), INTERVAL :m MONTH)
+             WHERE ' . $depuis . '
              GROUP BY periode ORDER BY periode',
             ['m' => $mois]
         );

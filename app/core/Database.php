@@ -19,18 +19,42 @@ final class Database
     {
     }
 
+    /**
+     * Pilote actif : MySQL en local (XAMPP), SQLite automatiquement sur les
+     * plateformes serverless (Vercel) sans base MySQL configuree.
+     */
+    public static function dialecte(): string
+    {
+        $pilote = getenv('NMA_DB_DRIVER');
+
+        if ($pilote !== false && $pilote !== '') {
+            return strtolower($pilote) === 'sqlite' ? 'sqlite' : 'mysql';
+        }
+
+        if (getenv('VERCEL') !== false && getenv('NMA_DB_HOST') === false) {
+            return 'sqlite';
+        }
+
+        return 'mysql';
+    }
+
     public static function pdo(): PDO
     {
         if (self::$instance === null) {
-            $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', DB_HOST, DB_PORT, DB_NAME);
-
             try {
-                self::$instance = new PDO($dsn, DB_USER, DB_PASS, [
-                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES   => false,
-                    PDO::ATTR_STRINGIFY_FETCHES  => false,
-                ]);
+                if (self::dialecte() === 'sqlite') {
+                    require_once __DIR__ . '/Sqlite.php';
+                    self::$instance = Sqlite::ouvrir();
+                } else {
+                    $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4', DB_HOST, DB_PORT, DB_NAME);
+
+                    self::$instance = new PDO($dsn, DB_USER, DB_PASS, [
+                        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::ATTR_EMULATE_PREPARES   => false,
+                        PDO::ATTR_STRINGIFY_FETCHES  => false,
+                    ]);
+                }
             } catch (PDOException $e) {
                 if (APP_DEBUG) {
                     http_response_code(500);

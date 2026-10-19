@@ -3,7 +3,29 @@
  * Test fonctionnel de bout en bout : parcours boulanger, gestionnaire, administrateur.
  */
 
-const BASE = 'http://localhost/nma-sanders/index.php';
+define('BASE', getenv('NMA_TEST_BASE') ?: 'http://localhost/nma-sanders/index.php');
+
+/** Hote reel du serveur teste (les redirections absolues y sont resolues). */
+function base_hote(): string
+{
+    $parties = parse_url(BASE);
+    $hote = ($parties['scheme'] ?? 'http') . '://' . ($parties['host'] ?? 'localhost');
+
+    return isset($parties['port']) ? $hote . ':' . $parties['port'] : $hote;
+}
+
+/** Acces direct a la base pour les verifications (MySQL local ou SQLite de test). */
+function pdo_test(): PDO
+{
+    if (getenv('NMA_TEST_SQLITE') !== false) {
+        $pdo = new PDO('sqlite:' . rtrim(sys_get_temp_dir(), '/\\') . '/nma_sanders.sqlite');
+        $pdo->exec('PRAGMA busy_timeout = 10000');
+
+        return $pdo;
+    }
+
+    return new PDO('mysql:host=127.0.0.1;dbname=nma_sanders', 'root', '');
+}
 $COOKIES = sys_get_temp_dir() . '/nma_test_cookies.txt';
 @unlink($COOKIES);
 
@@ -47,7 +69,7 @@ function naviguer(string $url, string $cookies): array
         if ($r['location'] === null) {
             return $r;
         }
-        $url = str_starts_with($r['location'], '/') ? 'http://localhost' . $r['location'] : $r['location'];
+        $url = str_starts_with($r['location'], '/') ? base_hote() . $r['location'] : $r['location'];
     }
     return ['code' => 0, 'corps' => 'BOUCLE DE REDIRECTION', 'location' => null];
 }
@@ -75,7 +97,7 @@ function ouvrirSession(string $email, string $motDePasse, string $cookies): arra
     $page = naviguer(BASE . '?r=connexion', $cookies);
     $r = requete(BASE . '?r=connexion', ['_token' => token($page['corps']), 'email' => $email, 'mot_de_passe' => $motDePasse], $cookies);
     if ($r['location'] !== null) {
-        return naviguer(str_starts_with($r['location'], '/') ? 'http://localhost' . $r['location'] : $r['location'], $cookies);
+        return naviguer(str_starts_with($r['location'], '/') ? base_hote() . $r['location'] : $r['location'], $cookies);
     }
     return naviguer(BASE . '?r=connexion', $cookies);
 }
@@ -138,7 +160,7 @@ $r = requete(BASE . '?r=boulanger/commande/enregistrer', [
 ], $COOKIES);
 verifier('Commande enregistrée (redirection)', $r['location'] !== null, $r['location'] ?? '');
 
-$suivi = naviguer($r['location'] !== null ? 'http://localhost' . $r['location'] : BASE . '?r=boulanger/historique', $COOKIES);
+$suivi = naviguer($r['location'] !== null ? base_hote() . $r['location'] : BASE . '?r=boulanger/historique', $COOKIES);
 verifier('Suivi de commande affiché', str_contains($suivi['corps'], 'Commande reçue'));
 preg_match('/CMD-\d{8}-[A-Z0-9]{5}/', $suivi['corps'], $ref);
 $reference = $ref[0] ?? '';
@@ -208,7 +230,7 @@ $r = requete(BASE . '?r=gestionnaire/commande/valider', ['_token' => token($deta
 $detail = naviguer(BASE . '?r=gestionnaire/commande&id=' . $commandeId, $COOKIES);
 verifier('Commande validée', str_contains($detail['corps'], 'Validée'));
 
-$stockAvant = (int) (new PDO('mysql:host=127.0.0.1;dbname=nma_sanders', 'root', ''))->query('SELECT stock_disponible FROM produit WHERE id = ' . (int) $produitsIds[0])->fetchColumn();
+$stockAvant = (int) pdo_test()->query('SELECT stock_disponible FROM produit WHERE id = ' . (int) $produitsIds[0])->fetchColumn();
 echo "        (stock restant du 1er produit : $stockAvant)" . PHP_EOL;
 
 $r = requete(BASE . '?r=gestionnaire/commande/valider', ['_token' => token($detail['corps']), 'id' => $commandeId], $COOKIES);
@@ -286,10 +308,11 @@ $r = requete(BASE . '?r=administrateur/utilisateur/creer', [
 $users = naviguer(BASE . '?r=administrateur/utilisateurs', $COOKIES);
 verifier('Compte boulanger créé (actif)', str_contains($users['corps'], $emailTest));
 
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=nma_sanders', 'root', '');
+$pdo = pdo_test();
 $stmt = $pdo->prepare('SELECT u.id, u.actif, u.role, b.nom_boulangerie FROM utilisateur u LEFT JOIN boulanger b ON b.utilisateur_id = u.id WHERE u.email = ?');
 $stmt->execute([$emailTest]);
 $nouveau = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->closeCursor();
 verifier('Fiche boulanger créée automatiquement', $nouveau !== false && $nouveau['nom_boulangerie'] === 'Boulangerie Test Auto', '#' . ($nouveau['id'] ?? '?'));
 $nouvelId = (int) ($nouveau['id'] ?? 0);
 
@@ -482,7 +505,7 @@ $r = requete(BASE . '?r=inscription', [
 ], $cookiesInscription);
 
 $suiviInscription = $r['location'] !== null
-    ? naviguer('http://localhost' . $r['location'], $cookiesInscription)
+    ? naviguer(base_hote() . $r['location'], $cookiesInscription)
     : naviguer(BASE . '?r=inscription', $cookiesInscription);
 verifier('Demande d\'inscription transmise (redirection connexion)', $r['location'] !== null && str_contains($r['location'], 'connexion'));
 verifier('Confirmation « service commercial » affichée', str_contains($suiviInscription['corps'], 'service commercial'));
@@ -490,6 +513,7 @@ verifier('Confirmation « service commercial » affichée', str_contains($suiviI
 $stmt = $pdo->prepare('SELECT actif, role FROM utilisateur WHERE email = ?');
 $stmt->execute([$emailInscription]);
 $nouveauCompte = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->closeCursor();
 verifier('Compte créé inactif en attente d\'activation', $nouveauCompte !== false && (int) $nouveauCompte['actif'] === 0 && $nouveauCompte['role'] === 'boulanger');
 
 $pageConnexion = naviguer(BASE . '?r=connexion', $cookiesInscription);

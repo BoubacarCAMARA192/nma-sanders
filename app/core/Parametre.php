@@ -42,11 +42,13 @@ final class Parametre
 
     public static function enregistrer(string $cle, string $valeur): void
     {
-        Database::run(
-            'INSERT INTO parametre (cle, valeur, libelle) VALUES (:cle, :valeur, :libelle)
-             ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)',
-            ['cle' => $cle, 'valeur' => $valeur, 'libelle' => $cle]
-        );
+        $sql = Database::dialecte() === 'sqlite'
+            ? 'INSERT INTO parametre (cle, valeur, libelle) VALUES (:cle, :valeur, :libelle)
+               ON CONFLICT(cle) DO UPDATE SET valeur = excluded.valeur'
+            : 'INSERT INTO parametre (cle, valeur, libelle) VALUES (:cle, :valeur, :libelle)
+               ON DUPLICATE KEY UPDATE valeur = VALUES(valeur)';
+
+        Database::run($sql, ['cle' => $cle, 'valeur' => $valeur, 'libelle' => $cle]);
         self::$cache = null;
     }
 }

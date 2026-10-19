@@ -79,7 +79,7 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 | Couche | Choix |
 | --- | --- |
 | Langage | PHP 8 (POO, `declare(strict_types=1)`, `match`) |
-| Base de données | MySQL / MariaDB (PDO, requêtes préparées) |
+| Base de données | MySQL / MariaDB en local (PDO, requêtes préparées) — bascule automatique sur **SQLite** côté serverless, avec persistance **Vercel Blob** |
 | Architecture | MVC en 3 couches : vues ↔ contrôleurs/noyau ↔ modèles/MySQL |
 | Front | Bootstrap 5.3 + Bootstrap Icons (CDN), CSS et JS vanille maison (aucune dépendance build) |
 | Serveur local | XAMPP (Apache + PHP 8.0 + MariaDB 10.4) |
@@ -114,6 +114,7 @@ Aucun gestionnaire de paquets n'est nécessaire : le projet se déploie en copia
    | `NMA_DB_NAME` | Nom de la base | `nma_sanders` |
    | `NMA_DB_USER` | Utilisateur MySQL | `root` |
    | `NMA_DB_PASS` | Mot de passe MySQL | *(vide)* |
+   | `NMA_DB_DRIVER` | Pilote imposé (`mysql` ou `sqlite`) | *(auto)* |
    | `NMA_DEBUG` | Mode debug (1/0) | `1` |
    | `NMA_DEMO` | Afficher les comptes de démonstration sur la connexion (1/0) | `NMA_DEBUG` |
    | `NMA_BASE_URL` | URL de base imposée (déploiements particuliers) | *(auto)* |
@@ -174,6 +175,9 @@ La suite a été utilisée pendant le développement ; elle peut être rejouée 
 C:\xampp\php\php.exe tests\parcours.php
 ```
 
+Pour rejouer la suite dans les conditions serverless (SQLite, sans MySQL), lancer l'application avec
+`NMA_DB_DRIVER=sqlite` puis la suite avec `NMA_TEST_SQLITE=1` (et `NMA_TEST_BASE` si le port diffère).
+
 ---
 
 ## Déploiement
@@ -185,14 +189,15 @@ C:\xampp\php\php.exe tests\parcours.php
 3. Renseigner `NMA_DB_*` (variables d'environnement de l'hébergeur) ou adapter `app/config/config.php`.
 4. Passer `NMA_DEBUG=0` en production.
 
-### Vercel (vitrine)
+### Vercel (application complète)
 
-Le dépôt contient une configuration Vercel (`vercel.json` + `api/index.php`, runtime [`vercel-php`](https://www.npmjs.com/package/vercel-php)) qui expose le **site vitrine** : page d'accueil animée, connexion, inscription.
+Le dépôt contient une configuration Vercel (`vercel.json` + `api/index.php`, runtime [`vercel-php`](https://www.npmjs.com/package/vercel-php)) qui expose **l'application complète** (page d'accueil animée, connexion, inscription, commandes, tableaux de bord).
 
-- La base de données du projet est **MySQL en local (XAMPP)** : les fonctions de commande et les tableaux de bord s'utilisent depuis l'installation locale.
+- En environnement serverless, l'application **bascule automatiquement sur SQLite** (aucun réglage MySQL requis) : le fichier de base est créé dans le stockage éphémère de la fonction.
+- Pour **conserver les données entre les exécutions**, connecter un magasin **Vercel Blob** au projet : le jeton `BLOB_READ_WRITE_TOKEN` est alors fourni automatiquement et le fichier SQLite est téléversé/restauré à chaque exécution.
+- `NMA_DEMO=1` affiche les comptes de démonstration sur la page de connexion.
+- En local, la base **MySQL (XAMPP)** reste la référence de développement ; il suffit de renseigner `NMA_DB_HOST`, `NMA_DB_PORT`, `NMA_DB_NAME`, `NMA_DB_USER`, `NMA_DB_PASS` (ou `NMA_DB_DRIVER=mysql`) pour l'utiliser partout.
 - Sans base joignable, les pages concernées affichent une page « base de données injoignable » claire (au lieu d'une erreur brute).
-- Si un jour une base MySQL hébergée est branchée, il suffit de renseigner `NMA_DB_HOST`, `NMA_DB_PORT`, `NMA_DB_NAME`, `NMA_DB_USER`, `NMA_DB_PASS` dans les réglages du projet Vercel.
-- Les fonctions serverless sont **éphémères** : pour l'usage complet (sessions, commandes), privilégier l'installation locale ou un hébergement PHP classique.
 
 Déploiement en ligne de commande :
 
