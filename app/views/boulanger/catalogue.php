@@ -39,34 +39,39 @@ $nbPanier = array_sum($panier);
             $quantitePanier = (int) ($panier[(int) $p['id']] ?? 0);
             ?>
             <div class="col-12 col-md-6 col-xxl-4">
-                <div class="card nma-produit-card">
+                <div class="card nma-produit-card h-100">
+                    <div class="nma-produit-visuel">
+                        <?php if (!empty($p['image'])): ?>
+                            <img src="<?= e(asset($p['image'])) ?>" alt="<?= e($p['libelle']) ?>" loading="lazy">
+                        <?php else: ?>
+                            <i class="bi bi-bag"></i>
+                        <?php endif; ?>
+                    </div>
                     <div class="card-body">
-                        <div class="d-flex gap-3">
-                            <div class="nma-produit-ico"><i class="bi bi-bag"></i></div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-start gap-2">
-                                    <h2 class="h6 fw-bold mb-1"><?= e($p['libelle']) ?></h2>
-                                    <?php if ($quantitePanier > 0): ?>
-                                        <span class="badge text-bg-success"><?= $quantitePanier ?> dans la commande</span>
-                                    <?php endif; ?>
-                                </div>
-                                <p class="text-small text-muted mb-2"><?= e($p['description'] ?? '') ?></p>
-                                <div class="d-flex flex-wrap gap-2 text-small mb-2">
-                                    <span class="nma-pill"><i class="bi bi-tag"></i><?= e($p['reference']) ?></span>
-                                    <span class="nma-pill"><i class="bi bi-box-seam"></i><?= e($p['unite']) ?></span>
-                                    <span class="nma-pill"><i class="bi bi-cash-coin"></i><?= e(fcfa($p['prix_unitaire'] !== null ? (float) $p['prix_unitaire'] : null)) ?></span>
-                                </div>
-                                <?php if ($dispo): ?>
-                                    <div class="text-small text-success">
-                                        <i class="bi bi-check2-circle me-1"></i><?= $enStock ?> <?= e($p['unite']) ?> disponibles
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-small text-danger">
-                                        <i class="bi bi-x-circle me-1"></i>Produit momentanément indisponible
-                                    </div>
-                                <?php endif; ?>
-                            </div>
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <h2 class="h6 fw-bold mb-0"><?= e($p['libelle']) ?></h2>
+                            <?php if ($quantitePanier > 0): ?>
+                                <span class="badge text-bg-success"><?= $quantitePanier ?> dans la commande</span>
+                            <?php endif; ?>
                         </div>
+                        <p class="text-small text-muted mb-2"><?= e($p['description'] ?? '') ?></p>
+                        <div class="nma-produit-prix mb-2">
+                            <?= e(fcfa($p['prix_unitaire'] !== null ? (float) $p['prix_unitaire'] : null)) ?>
+                            <small>/ <?= e($p['unite']) ?></small>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 text-small mb-2">
+                            <span class="nma-pill"><i class="bi bi-tag"></i><?= e($p['reference']) ?></span>
+                            <span class="nma-pill"><i class="bi bi-box-seam"></i><?= e($p['unite']) ?></span>
+                        </div>
+                        <?php if ($dispo): ?>
+                            <div class="text-small text-success">
+                                <i class="bi bi-check2-circle me-1"></i><?= $enStock ?> <?= e($p['unite']) ?> disponibles
+                            </div>
+                        <?php else: ?>
+                            <div class="text-small text-danger">
+                                <i class="bi bi-x-circle me-1"></i>Produit momentanément indisponible
+                            </div>
+                        <?php endif; ?>
 
                         <?php if ($dispo): ?>
                             <form method="post" action="<?= e(url('boulanger/panier/ajouter')) ?>" class="mt-3">

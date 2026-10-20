@@ -84,6 +84,9 @@ $totalGlobal = array_sum($compteurs);
                                 <?php if (!empty($c['motif_refus'])): ?>
                                     <div class="text-small text-danger">Motif : <?= e($c['motif_refus']) ?></div>
                                 <?php endif; ?>
+                                <div class="text-small text-muted">
+                                    <i class="bi bi-<?= e(mode_paiement_icone($c['mode_paiement'] ?? null)) ?> me-1"></i><?= e(mode_paiement_libelle($c['mode_paiement'] ?? null)) ?>
+                                </div>
                             </td>
                             <td class="d-none d-md-table-cell text-small text-muted"><?= e(date_fr($c['date_commande'], 'd/m/Y')) ?></td>
                             <td class="text-small">

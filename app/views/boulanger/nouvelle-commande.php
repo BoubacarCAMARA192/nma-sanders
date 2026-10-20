@@ -148,6 +148,26 @@ foreach ($lignes as $l) {
                               placeholder="Ex. livrer avant 10 h, appeler à l'arrivée..."><?= e($commentaire) ?></textarea>
                 </div>
 
+                <div class="mb-3">
+                    <span class="form-label d-block">Mode de paiement</span>
+                    <div class="nma-paiement-options">
+                        <?php foreach (modes_paiement() as $code => $mode): ?>
+                            <div class="nma-paiement-option">
+                                <input type="radio" id="paiement-<?= e($code) ?>" name="mode_paiement"
+                                       value="<?= e($code) ?>" <?= $code === 'carte' ? 'checked' : '' ?> required>
+                                <label for="paiement-<?= e($code) ?>">
+                                    <span class="nma-paiement-ico"><i class="bi bi-<?= e($mode[1]) ?>"></i></span>
+                                    <span class="nma-paiement-txt">
+                                        <strong><?= e($mode[0]) ?></strong>
+                                        <small><?= e($mode[2]) ?></small>
+                                    </span>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="form-text">Le règlement est confirmé avec le gestionnaire lors de la validation de la commande.</div>
+                </div>
+
                 <div class="nma-timeline-note mb-3">
                     <i class="bi bi-clock-history me-1"></i>
                     Votre commande sera <strong>« Reçue »</strong> dès l'envoi. Vous pourrez la modifier ou l'annuler

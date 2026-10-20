@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Test fonctionnel de bout en bout : parcours boulanger, gestionnaire, administrateur.
  */
@@ -134,13 +134,13 @@ $tableau = ouvrirSession('boulanger@demo.sn', 'Boulanger@2026', $COOKIES);
 verifier('Connexion boulanger réussie', str_contains($tableau['corps'], 'Bonjour'), 'taille ' . strlen($tableau['corps']));
 
 $catalogue = naviguer(BASE . '?r=boulanger/catalogue', $COOKIES);
-verifier('Catalogue affiché (8 produits)', substr_count($catalogue['corps'], 'Ajouter') >= 8);
+verifier('Catalogue affiché (4 farines NMA)', substr_count($catalogue['corps'], 'Ajouter') >= 4);
 
 $produitsIds = [];
 if (preg_match_all('/name="produit_id" value="(\d+)"/', $catalogue['corps'], $m)) {
     $produitsIds = array_values(array_unique($m[1]));
 }
-verifier('Produits disponibles détectés', count($produitsIds) >= 5, count($produitsIds) . ' produit(s)');
+verifier('Produits disponibles détectés', count($produitsIds) >= 4, count($produitsIds) . ' produit(s)');
 
 $jetonCat = token($catalogue['corps']);
 if (isset($produitsIds[0])) {
@@ -157,11 +157,13 @@ $r = requete(BASE . '?r=boulanger/commande/enregistrer', [
     'date_livraison_souhaitee' => date('Y-m-d', strtotime('+3 days')),
     'adresse_livraison' => 'Rue 12 x Avenue Bourguiba, Dakar',
     'commentaire' => 'Test automatisé : livrer avant 10 h.',
+    'mode_paiement' => 'wave',
 ], $COOKIES);
 verifier('Commande enregistrée (redirection)', $r['location'] !== null, $r['location'] ?? '');
 
 $suivi = naviguer($r['location'] !== null ? base_hote() . $r['location'] : BASE . '?r=boulanger/historique', $COOKIES);
 verifier('Suivi de commande affiché', str_contains($suivi['corps'], 'Commande reçue'));
+verifier('Mode de paiement enregistré (Wave)', str_contains($suivi['corps'], 'Wave'));
 preg_match('/CMD-\d{8}-[A-Z0-9]{5}/', $suivi['corps'], $ref);
 $reference = $ref[0] ?? '';
 verifier('Référence de commande générée', $reference !== '', $reference);
@@ -189,10 +191,12 @@ $modif = requete(BASE . '?r=boulanger/commande/modifier', [
     'date_livraison_souhaitee' => date('Y-m-d', strtotime('+4 days')),
     'adresse_livraison' => 'Rue 12 x Avenue Bourguiba, Dakar (modifiée)',
     'commentaire' => 'Commande modifiée par le test.',
+    'mode_paiement' => 'orange_money',
     'quantites' => array_combine($produitsIds, array_fill(0, count($produitsIds), 8)),
 ], $COOKIES);
 $suivi2 = naviguer(BASE . '?r=boulanger/commande&id=' . $commandeId, $COOKIES);
 verifier('Commande modifiée par le boulanger', str_contains($suivi2['corps'], 'modifiée par le test'));
+verifier('Mode de paiement modifié (Orange Money)', str_contains($suivi2['corps'], 'Orange Money'));
 
 $r = naviguer(BASE . '?r=boulanger/commande&id=999999', $COOKIES);
 verifier('Commande inexistante → accès bloqué', str_contains($r['corps'], 'introuvable') || $r['code'] === 404);
@@ -368,6 +372,7 @@ $r = requete(BASE . '?r=administrateur/catalogue/enregistrer', [
     'reference' => 'TEST-REF-01',
     'libelle' => 'Farine de test automatisé',
     'description' => 'Produit créé par le test',
+    'image' => 'assets/img/produits/farine-boulangere.png',
     'unite' => 'sac de 50 kg',
     'prix_unitaire' => '21000',
     'stock_disponible' => '150',
@@ -379,6 +384,9 @@ verifier('Produit créé au catalogue', str_contains($catalogue['corps'], 'TEST-
 
 $produitTestId = (int) $pdo->query("SELECT id FROM produit WHERE reference = 'TEST-REF-01'")->fetchColumn();
 verifier('Produit présent en base', $produitTestId > 0, '#' . $produitTestId);
+
+$imageEnBase = (string) $pdo->query("SELECT image FROM produit WHERE id = $produitTestId")->fetchColumn();
+verifier('Visuel produit enregistré', $imageEnBase === 'assets/img/produits/farine-boulangere.png', $imageEnBase);
 
 requete(BASE . '?r=administrateur/catalogue/stock', ['_token' => token($catalogue['corps']), 'id' => $produitTestId, 'delta' => '40'], $COOKIES);
 $catalogue = naviguer(BASE . '?r=administrateur/catalogue', $COOKIES);

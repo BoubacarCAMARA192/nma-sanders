@@ -28,4 +28,8 @@ try {
         throw $e;
     }
     View::erreur(500, 'Erreur interne', 'Une erreur est survenue. Merci de réessayer.');
+} finally {
+    if (class_exists(\Core\Sqlite::class)) {
+        \Core\Sqlite::synchroniser();
+    }
 }

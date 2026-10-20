@@ -16,3 +16,5 @@ node_modules/
 vendor/
 Thumbs.db
 desktop.ini
+
+.env*

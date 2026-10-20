@@ -139,6 +139,7 @@ final class BoulangerController extends Controller
             'date_livraison_souhaitee' => (string) post('date_livraison_souhaitee', ''),
             'adresse_livraison'        => (string) post('adresse_livraison', ''),
             'commentaire'              => (string) post('commentaire', '') ?: null,
+            'mode_paiement'            => (string) post('mode_paiement', 'carte'),
         ], $lignes);
 
         unset($_SESSION[self::PANIER]);
@@ -198,6 +199,7 @@ final class BoulangerController extends Controller
             'date_livraison_souhaitee' => (string) post('date_livraison_souhaitee', ''),
             'adresse_livraison'        => (string) post('adresse_livraison', ''),
             'commentaire'              => (string) post('commentaire', '') ?: null,
+            'mode_paiement'            => (string) post('mode_paiement', 'carte'),
         ], $lignes);
 
         $this->succes('Commande mise à jour.', 'boulanger/commande', ['id' => (int) $commande['id']]);
@@ -332,12 +334,18 @@ final class BoulangerController extends Controller
 
     private function validerCommande(): Validator
     {
+        if (post('mode_paiement') === null || post('mode_paiement') === '') {
+            $_POST['mode_paiement'] = 'carte';
+        }
+
         $validator = new Validator($_POST);
         $validator->required('date_livraison_souhaitee', 'La date de livraison souhaitée')
                   ->dateFuture('date_livraison_souhaitee', 'La date de livraison souhaitée', date_livraison_min())
                   ->required('adresse_livraison', "L'adresse de livraison")
                   ->maxLength('adresse_livraison', 255, "L'adresse de livraison")
-                  ->maxLength('commentaire', 500, 'Le commentaire');
+                  ->maxLength('commentaire', 500, 'Le commentaire')
+                  ->required('mode_paiement', 'Le mode de paiement')
+                  ->dansListe('mode_paiement', Commande::MODES_PAIEMENT, 'Le mode de paiement');
 
         return $validator;
     }

@@ -205,6 +205,13 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                     </table>
                 </div>
             </div>
+            <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <span class="nma-stat-label mb-0">Paiement</span>
+                <span class="nma-paiement-badge">
+                    <i class="bi bi-<?= e(mode_paiement_icone($commande['mode_paiement'] ?? null)) ?>"></i>
+                    <?= e(mode_paiement_libelle($commande['mode_paiement'] ?? null)) ?>
+                </span>
+            </div>
             <?php if (!empty($commande['commentaire'])): ?>
                 <div class="card-footer bg-white">
                     <div class="nma-stat-label">Commentaire transmis</div>
@@ -283,6 +290,24 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                             <label class="form-label" for="m_adresse">Adresse de livraison</label>
                             <textarea class="form-control" id="m_adresse" name="adresse_livraison" rows="2"
                                       maxlength="255" required><?= e($commande['adresse_livraison']) ?></textarea>
+                        </div>
+                        <div class="col-12">
+                            <span class="form-label d-block">Mode de paiement</span>
+                            <div class="nma-paiement-options">
+                                <?php foreach (modes_paiement() as $code => $mode): ?>
+                                    <div class="nma-paiement-option">
+                                        <input type="radio" id="m_paiement-<?= e($code) ?>" name="mode_paiement"
+                                               value="<?= e($code) ?>" <?= ($commande['mode_paiement'] ?? 'carte') === $code ? 'checked' : '' ?> required>
+                                        <label for="m_paiement-<?= e($code) ?>">
+                                            <span class="nma-paiement-ico"><i class="bi bi-<?= e($mode[1]) ?>"></i></span>
+                                            <span class="nma-paiement-txt">
+                                                <strong><?= e($mode[0]) ?></strong>
+                                                <small><?= e($mode[2]) ?></small>
+                                            </span>
+                                        </label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
                     </div>
                 </div>

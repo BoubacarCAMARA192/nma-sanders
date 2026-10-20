@@ -50,12 +50,13 @@ final class Produit
     public static function creer(array $d): int
     {
         return Database::insert(
-            'INSERT INTO produit (reference, libelle, description, unite, prix_unitaire, stock_disponible, seuil_alerte, actif)
-             VALUES (:reference, :libelle, :description, :unite, :prix, :stock, :seuil, :actif)',
+            'INSERT INTO produit (reference, libelle, description, image, unite, prix_unitaire, stock_disponible, seuil_alerte, actif)
+             VALUES (:reference, :libelle, :description, :image, :unite, :prix, :stock, :seuil, :actif)',
             [
                 'reference'   => $d['reference'],
                 'libelle'     => $d['libelle'],
                 'description' => $d['description'] ?? null,
+                'image'       => $d['image'] ?? null,
                 'unite'       => $d['unite'] ?? 'sac de 50 kg',
                 'prix'        => $d['prix_unitaire'] !== null && $d['prix_unitaire'] !== '' ? (float) $d['prix_unitaire'] : null,
                 'stock'       => (int) ($d['stock_disponible'] ?? 0),
@@ -69,12 +70,13 @@ final class Produit
     {
         Database::run(
             'UPDATE produit SET reference = :reference, libelle = :libelle, description = :description,
-                    unite = :unite, prix_unitaire = :prix, seuil_alerte = :seuil
+                    image = :image, unite = :unite, prix_unitaire = :prix, seuil_alerte = :seuil
              WHERE id = :id',
             [
                 'reference'   => $d['reference'],
                 'libelle'     => $d['libelle'],
                 'description' => $d['description'] ?? null,
+                'image'       => $d['image'] ?? null,
                 'unite'       => $d['unite'] ?? 'sac de 50 kg',
                 'prix'        => $d['prix_unitaire'] !== null && $d['prix_unitaire'] !== '' ? (float) $d['prix_unitaire'] : null,
                 'seuil'       => (int) ($d['seuil_alerte'] ?? 20),

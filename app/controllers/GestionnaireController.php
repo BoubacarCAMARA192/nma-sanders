@@ -259,7 +259,7 @@ final class GestionnaireController extends Controller
         fputcsv($sortie, [
             'Reference', 'Date commande', 'Boulangerie', 'Contact', 'Telephone', 'Ville',
             'Adresse livraison', 'Date livraison souhaitee', 'Date livraison planifiee', 'Livreur',
-            'Statut', 'Nombre de lignes', 'Total sacs', 'Commentaire', 'Motif refus',
+            'Statut', 'Nombre de lignes', 'Total sacs', 'Mode paiement', 'Commentaire', 'Motif refus',
         ], ';');
 
         foreach ($commandes as $c) {
@@ -278,6 +278,7 @@ final class GestionnaireController extends Controller
                 $libelle,
                 $c['nb_lignes'],
                 $c['total_sacs'],
+                mode_paiement_libelle($c['mode_paiement'] ?? null),
                 $c['commentaire'] ?? '',
                 $c['motif_refus'] ?? '',
             ], ';');

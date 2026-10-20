@@ -112,6 +112,13 @@ $statutsLibelles = [
                     </table>
                 </div>
             </div>
+            <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <span class="nma-stat-label mb-0">Mode de paiement</span>
+                <span class="nma-paiement-badge">
+                    <i class="bi bi-<?= e(mode_paiement_icone($commande['mode_paiement'] ?? null)) ?>"></i>
+                    <?= e(mode_paiement_libelle($commande['mode_paiement'] ?? null)) ?>
+                </span>
+            </div>
             <?php if (!empty($commande['commentaire'])): ?>
                 <div class="card-footer bg-white">
                     <div class="nma-stat-label">Commentaire du boulanger</div>

@@ -10,18 +10,20 @@ foreach ($alerte as $p) {
     $enAlerte[(int) $p['id']] = true;
 }
 ?>
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+<div class="nma-catalogue-hero d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <div>
-        <h1 class="h4 fw-bold mb-0">Catalogue des produits</h1>
-        <p class="text-muted small mb-0">
+        <h1 class="h4">Catalogue des produits</h1>
+        <p>
             <?= (int) $stats['actifs'] ?> produit(s) actif(s) sur <?= (int) $stats['total'] ?> ·
             <?= (int) $stats['stock'] ?> sac(s) en stock ·
             <?= (int) $stats['alerte'] ?> sous le seuil d'alerte
         </p>
     </div>
-    <button class="btn btn-nma" data-bs-toggle="collapse" data-bs-target="#formProduit">
-        <i class="bi bi-plus-lg me-2"></i>Ajouter un produit
-    </button>
+    <div class="nma-hero-actions">
+        <button class="btn btn-light fw-semibold" data-bs-toggle="collapse" data-bs-target="#formProduit">
+            <i class="bi bi-plus-lg me-2"></i>Ajouter un produit
+        </button>
+    </div>
 </div>
 
 <div class="collapse mb-3" id="formProduit">
@@ -44,6 +46,18 @@ foreach ($alerte as $p) {
                     <div class="col-12">
                         <label class="form-label" for="description">Description</label>
                         <input type="text" class="form-control" id="description" name="description" maxlength="255">
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="image">Visuel du produit</label>
+                        <input type="text" class="form-control" id="image" name="image" list="listeVisuels"
+                               placeholder="assets/img/produits/farine-boulangere.png" maxlength="255">
+                        <datalist id="listeVisuels">
+                            <option value="assets/img/produits/farine-boulangere.png"></option>
+                            <option value="assets/img/produits/farine-boulangere-amelioree.png"></option>
+                            <option value="assets/img/produits/farine-tapalapa.png"></option>
+                            <option value="assets/img/produits/farine-patissiere.png"></option>
+                        </datalist>
+                        <div class="form-text">Chemin d'une image déjà présente dans <code>assets/img/produits/</code>.</div>
                     </div>
                     <div class="col-6 col-md-3">
                         <label class="form-label" for="unite">Unité de vente</label>
@@ -98,8 +112,19 @@ foreach ($alerte as $p) {
                     <?php foreach ($produits as $p): ?>
                         <tr>
                             <td>
-                                <div class="fw-semibold"><?= e($p['libelle']) ?></div>
-                                <div class="text-small text-muted"><?= e($p['reference']) ?><?= !empty($p['description']) ? ' · ' . e($p['description']) : '' ?></div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <?php if (!empty($p['image'])): ?>
+                                        <img src="<?= e(asset($p['image'])) ?>" alt="" class="nma-table-visuel" loading="lazy">
+                                    <?php else: ?>
+                                        <span class="nma-table-visuel d-inline-flex align-items-center justify-content-center text-muted">
+                                            <i class="bi bi-image"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                    <div>
+                                        <div class="fw-semibold"><?= e($p['libelle']) ?></div>
+                                        <div class="text-small text-muted"><?= e($p['reference']) ?><?= !empty($p['description']) ? ' · ' . e($p['description']) : '' ?></div>
+                                    </div>
+                                </div>
                             </td>
                             <td class="d-none d-md-table-cell text-small"><?= e($p['unite']) ?></td>
                             <td class="text-end text-small nma-num"><?= e(fcfa($p['prix_unitaire'] !== null ? (float) $p['prix_unitaire'] : null)) ?></td>
@@ -175,6 +200,22 @@ foreach ($alerte as $p) {
                         <div class="col-12">
                             <label class="form-label">Description</label>
                             <input type="text" class="form-control" name="description" maxlength="255" value="<?= e($p['description'] ?? '') ?>">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Visuel du produit</label>
+                            <div class="nma-form-visuel">
+                                <?php if (!empty($p['image'])): ?>
+                                    <img src="<?= e(asset($p['image'])) ?>" alt="">
+                                <?php else: ?>
+                                    <span class="nma-table-visuel d-inline-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></span>
+                                <?php endif; ?>
+                                <div class="flex-grow-1">
+                                    <input type="text" class="form-control" name="image" list="listeVisuels"
+                                           value="<?= e($p['image'] ?? '') ?>" maxlength="255"
+                                           placeholder="assets/img/produits/farine-boulangere.png">
+                                    <small>Laissez vide pour afficher l'icône générique.</small>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Unité de vente</label>

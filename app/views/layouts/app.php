@@ -54,7 +54,7 @@ $roleLibelle = match ($role) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#7c4a03">
+    <meta name="theme-color" content="#007e48">
     <title><?= e($titrePage) ?> — <?= e(APP_NAME) ?></title>
     <link rel="icon" href="<?= e(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -72,9 +72,8 @@ $roleLibelle = match ($role) {
         </button>
 
         <a class="navbar-brand d-flex align-items-center text-white fw-bold" href="<?= e(url(Core\Auth::routeAccueil())) ?>">
-            <span class="nma-brand-badge me-2"><i class="bi bi-basket2-fill"></i></span>
-            <span class="d-none d-sm-inline"><?= e(APP_NAME) ?></span>
-            <span class="d-sm-none"><?= e(APP_NAME) ?></span>
+            <img src="<?= e(asset('assets/img/logo-nma.png')) ?>" alt="" class="nma-logo-nav me-2" width="34" height="34">
+            <span><?= e(APP_NAME) ?></span>
         </a>
 
         <div class="d-flex align-items-center gap-1 ms-auto">
@@ -161,8 +160,9 @@ $roleLibelle = match ($role) {
 <!-- Menu mobile -->
 <div class="offcanvas offcanvas-start nma-offcanvas" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title text-white" id="menuLateralLabel">
-            <span class="nma-brand-badge me-2"><i class="bi bi-basket2-fill"></i></span><?= e(APP_NAME) ?>
+        <h5 class="offcanvas-title text-white d-flex align-items-center" id="menuLateralLabel">
+            <img src="<?= e(asset('assets/img/logo-nma.png')) ?>" alt="" class="nma-logo-nav me-2" width="34" height="34">
+            <?= e(APP_NAME) ?>
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
     </div>

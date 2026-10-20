@@ -98,6 +98,9 @@ foreach ($commandes as $c) {
                                 <?php if (!empty($c['commentaire'])): ?>
                                     <i class="bi bi-chat-left-text text-muted ms-1" title="<?= e($c['commentaire']) ?>"></i>
                                 <?php endif; ?>
+                                <div class="text-small text-muted">
+                                    <i class="bi bi-<?= e(mode_paiement_icone($c['mode_paiement'] ?? null)) ?> me-1"></i><?= e(mode_paiement_libelle($c['mode_paiement'] ?? null)) ?>
+                                </div>
                             </td>
                             <td>
                                 <div class="text-small fw-semibold"><?= e($c['nom_boulangerie']) ?></div>

@@ -20,6 +20,9 @@ final class Commande
 {
     public const STATUTS = ['recue', 'validee', 'en_preparation', 'en_livraison', 'livree', 'refusee', 'annulee'];
 
+    /** Modes de paiement disponibles. */
+    public const MODES_PAIEMENT = ['carte', 'wave', 'orange_money'];
+
     /** Statuts editables par le boulanger (F06). */
     public const STATUTS_MODIFIABLES = ['recue'];
 
@@ -47,8 +50,8 @@ final class Commande
             $reference = self::referenceUnique();
 
             $commandeId = Database::insert(
-                'INSERT INTO commande (reference, boulanger_id, date_livraison_souhaitee, adresse_livraison, statut, commentaire)
-                 VALUES (:reference, :boulanger, :date_livraison, :adresse, :statut, :commentaire)',
+                'INSERT INTO commande (reference, boulanger_id, date_livraison_souhaitee, adresse_livraison, statut, commentaire, mode_paiement)
+                 VALUES (:reference, :boulanger, :date_livraison, :adresse, :statut, :commentaire, :mode_paiement)',
                 [
                     'reference'     => $reference,
                     'boulanger'     => $boulangerId,
@@ -56,6 +59,7 @@ final class Commande
                     'adresse'       => $d['adresse_livraison'],
                     'statut'        => 'recue',
                     'commentaire'   => $d['commentaire'] ?? null,
+                    'mode_paiement' => $d['mode_paiement'] ?? 'carte',
                 ]
             );
 
@@ -106,12 +110,13 @@ final class Commande
         try {
             Database::run(
                 'UPDATE commande SET date_livraison_souhaitee = :date_livraison, adresse_livraison = :adresse,
-                        commentaire = :commentaire
+                        commentaire = :commentaire, mode_paiement = :mode_paiement
                  WHERE id = :id',
                 [
                     'date_livraison' => $d['date_livraison_souhaitee'],
                     'adresse'        => $d['adresse_livraison'],
                     'commentaire'    => $d['commentaire'] ?? null,
+                    'mode_paiement'  => $d['mode_paiement'] ?? 'carte',
                     'id'             => $commandeId,
                 ]
             );

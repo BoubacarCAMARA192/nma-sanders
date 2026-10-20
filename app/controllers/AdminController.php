@@ -219,6 +219,14 @@ final class AdminController extends Controller
             $validator->entierPositif('prix_unitaire', 'Le prix unitaire', 1, 100000000);
         }
 
+        $image = trim((string) post('image', ''));
+        if ($image !== '' && (
+            !preg_match('#^assets/img/produits/[a-zA-Z0-9._-]+$#', $image)
+            || !is_file(ROOT_PATH . '/' . $image)
+        )) {
+            $validator->ajouterErreur('image', 'Le visuel doit être une image présente dans assets/img/produits.');
+        }
+
         if ($validator->echoue()) {
             $this->erreur($validator->premiereErreur(), 'administrateur/catalogue');
         }
@@ -227,6 +235,7 @@ final class AdminController extends Controller
             'reference'        => (string) post('reference', ''),
             'libelle'          => (string) post('libelle', ''),
             'description'      => (string) post('description', '') ?: null,
+            'image'            => $image !== '' ? $image : null,
             'unite'            => (string) post('unite', 'sac de 50 kg'),
             'prix_unitaire'    => str_replace([' ', ','], ['', '.'], (string) post('prix_unitaire', '')),
             'stock_disponible' => (int) post('stock_disponible', 0),

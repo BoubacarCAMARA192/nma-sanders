@@ -241,3 +241,23 @@ function generer_reference(string $prefixe): string
 {
     return $prefixe . '-' . date('Y') . '-' . strtoupper(bin2hex(random_bytes(3)));
 }
+
+/** Modes de paiement proposes a la commande. */
+function modes_paiement(): array
+{
+    return [
+        'carte'        => ['Carte bancaire', 'credit-card-2-front', 'Paiement sécurisé'],
+        'wave'         => ['Wave', 'water', 'Application mobile'],
+        'orange_money' => ['Orange Money', 'phone-fill', 'Paiement mobile'],
+    ];
+}
+
+function mode_paiement_libelle(?string $code): string
+{
+    return modes_paiement()[$code][0] ?? 'Non renseigné';
+}
+
+function mode_paiement_icone(?string $code): string
+{
+    return modes_paiement()[$code][1] ?? 'credit-card';
+}

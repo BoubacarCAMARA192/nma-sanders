@@ -86,6 +86,22 @@
         });
     });
 
+    /** Petit message flottant en bas d'ecran (pages publiques). */
+    var zoneToast = document.getElementById('nmaToast');
+    var minuteurToast = null;
+
+    function afficherToast(message) {
+        if (!zoneToast) {
+            return;
+        }
+        zoneToast.textContent = message;
+        zoneToast.classList.add('nma-toast-visible');
+        window.clearTimeout(minuteurToast);
+        minuteurToast = window.setTimeout(function () {
+            zoneToast.classList.remove('nma-toast-visible');
+        }, 2600);
+    }
+
     /** Comptes de demonstration : remplissage automatique du formulaire. */
     document.querySelectorAll('.nma-demo-chip').forEach(function (puce) {
         puce.addEventListener('click', function () {
@@ -96,6 +112,15 @@
             }
             email.value = this.getAttribute('data-email') || '';
             mdp.value = this.getAttribute('data-mdp') || '';
+
+            [email, mdp].forEach(function (champ) {
+                champ.classList.remove('nma-rempli');
+                void champ.offsetWidth;
+                champ.classList.add('nma-rempli');
+            });
+
+            var role = this.querySelector('strong');
+            afficherToast('Identifiants « ' + (role ? role.textContent.trim() : 'démo') + ' » remplis — cliquez sur Se connecter.');
             mdp.focus();
         });
     });
