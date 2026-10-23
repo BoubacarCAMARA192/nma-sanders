@@ -1,4 +1,4 @@
-# Plateforme NMA Sanders - configuration Apache
+# Plateforme Sanders Connect - configuration Apache
 Options -Indexes -MultiViews
 DirectoryIndex index.php
 

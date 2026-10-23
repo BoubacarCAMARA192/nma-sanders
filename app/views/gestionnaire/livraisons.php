@@ -18,7 +18,7 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
     <form method="get" action="<?= e(url('gestionnaire/livraisons')) ?>" class="d-flex gap-2">
         <input type="hidden" name="r" value="gestionnaire/livraisons">
         <input type="date" class="form-control" name="date" value="<?= e($date) ?>">
-        <button type="submit" class="btn btn-nma text-nowrap"><i class="bi bi-search"></i></button>
+        <button type="submit" class="btn btn-sc text-nowrap"><i class="bi bi-search"></i></button>
     </form>
 </div>
 
@@ -32,11 +32,11 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
     ];
     foreach ($cartes as [$libelle, $valeur, $icone, $couleur]): ?>
         <div class="col-6 col-lg-3">
-            <div class="nma-stat d-flex align-items-center gap-3">
-                <div class="nma-stat-ico text-<?= e($couleur) ?>"><i class="bi bi-<?= e($icone) ?>"></i></div>
+            <div class="sc-stat d-flex align-items-center gap-3">
+                <div class="sc-stat-ico text-<?= e($couleur) ?>"><i class="bi bi-<?= e($icone) ?>"></i></div>
                 <div>
-                    <div class="nma-stat-value"><?= (int) $valeur ?></div>
-                    <div class="nma-stat-label"><?= e($libelle) ?></div>
+                    <div class="sc-stat-value"><?= (int) $valeur ?></div>
+                    <div class="sc-stat-label"><?= e($libelle) ?></div>
                 </div>
             </div>
         </div>
@@ -67,10 +67,10 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
                                 <div class="text-muted"><?= e($c['zone_livraison'] ?? '') ?></div>
                             </td>
                             <td class="text-small"><?= e(date_fr($c['date_livraison_souhaitee'])) ?></td>
-                            <td class="text-end nma-num"><?= (int) $c['total_sacs'] ?></td>
+                            <td class="text-end sc-num"><?= (int) $c['total_sacs'] ?></td>
                             <td class="text-end">
                                 <a href="<?= e(url('gestionnaire/commande', ['id' => (int) $c['id']])) ?>#livraison"
-                                   class="btn btn-sm btn-nma"><i class="bi bi-truck me-1"></i>Planifier</a>
+                                   class="btn btn-sm btn-sc"><i class="bi bi-truck me-1"></i>Planifier</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -82,10 +82,10 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
 <?php endif; ?>
 
 <div class="card mb-3">
-    <div class="card-header"><i class="bi bi-truck text-nma me-2"></i>Tournées du <?= e(date_fr($date)) ?></div>
+    <div class="card-header"><i class="bi bi-truck text-sc me-2"></i>Tournées du <?= e(date_fr($date)) ?></div>
     <div class="card-body p-0">
         <?php if ($planning === []): ?>
-            <div class="nma-empty"><i class="bi bi-calendar-x"></i>Aucune livraison programmée pour cette date.</div>
+            <div class="sc-empty"><i class="bi bi-calendar-x"></i>Aucune livraison programmée pour cette date.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -118,7 +118,7 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
                                     <div class="text-muted"><?= e($l['vehicule']) ?></div>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-end nma-num"><?= (int) $l['total_sacs'] ?></td>
+                            <td class="text-end sc-num"><?= (int) $l['total_sacs'] ?></td>
                             <td>
                                 <span class="badge text-bg-<?= e($etatBadge[$l['etat']] ?? 'secondary') ?>">
                                     <?= e(ucfirst(str_replace('_', ' ', (string) $l['etat']))) ?>
@@ -133,7 +133,7 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
                                             <option value="<?= e($cle) ?>" <?= $l['etat'] === $cle ? 'selected' : '' ?>><?= e($lib) ?></option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <button type="submit" class="btn btn-sm btn-outline-nma"><i class="bi bi-check2"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-outline-sc"><i class="bi bi-check2"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -146,10 +146,10 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
 </div>
 
 <div class="card">
-    <div class="card-header"><i class="bi bi-calendar-week text-nma me-2"></i>Prochaines tournées</div>
+    <div class="card-header"><i class="bi bi-calendar-week text-sc me-2"></i>Prochaines tournées</div>
     <div class="card-body p-0">
         <?php if ($aVenir === []): ?>
-            <div class="nma-empty"><i class="bi bi-calendar3"></i>Aucune tournée à venir.</div>
+            <div class="sc-empty"><i class="bi bi-calendar3"></i>Aucune tournée à venir.</div>
         <?php else: ?>
             <ul class="list-group list-group-flush">
                 <?php foreach (array_slice($aVenir, 0, 10) as $l): ?>
@@ -162,7 +162,7 @@ $etatBadge = ['planifiee' => 'secondary', 'en_cours' => 'primary', 'livree' => '
                             </div>
                         </div>
                         <a href="<?= e(url('gestionnaire/commande', ['id' => (int) $l['commande_id']])) ?>#livraison"
-                           class="btn btn-sm btn-outline-nma"><i class="bi bi-pencil"></i></a>
+                           class="btn btn-sm btn-outline-sc"><i class="bi bi-pencil"></i></a>
                     </li>
                 <?php endforeach; ?>
             </ul>

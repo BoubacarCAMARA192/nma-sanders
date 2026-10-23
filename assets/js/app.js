@@ -1,5 +1,5 @@
 /* =====================================================================
-   NMA Sanders - comportements d'interface (JavaScript vanille, leger)
+   Sanders Connect - comportements d'interface (JavaScript vanille, leger)
    ===================================================================== */
 (function () {
     'use strict';
@@ -20,7 +20,7 @@
             bouton.disabled = true;
             var icone = bouton.querySelector('i');
             if (icone) {
-                icone.className = 'bi bi-arrow-repeat nma-spin';
+                icone.className = 'bi bi-arrow-repeat sc-spin';
             }
             window.setTimeout(function () { bouton.disabled = false; }, 8000);
         }
@@ -87,7 +87,7 @@
     });
 
     /** Petit message flottant en bas d'ecran (pages publiques). */
-    var zoneToast = document.getElementById('nmaToast');
+    var zoneToast = document.getElementById('scToast');
     var minuteurToast = null;
 
     function afficherToast(message) {
@@ -95,15 +95,15 @@
             return;
         }
         zoneToast.textContent = message;
-        zoneToast.classList.add('nma-toast-visible');
+        zoneToast.classList.add('sc-toast-visible');
         window.clearTimeout(minuteurToast);
         minuteurToast = window.setTimeout(function () {
-            zoneToast.classList.remove('nma-toast-visible');
+            zoneToast.classList.remove('sc-toast-visible');
         }, 2600);
     }
 
     /** Comptes de demonstration : remplissage automatique du formulaire. */
-    document.querySelectorAll('.nma-demo-chip').forEach(function (puce) {
+    document.querySelectorAll('.sc-demo-chip').forEach(function (puce) {
         puce.addEventListener('click', function () {
             var email = document.getElementById('email');
             var mdp = document.getElementById('mot_de_passe');
@@ -114,9 +114,9 @@
             mdp.value = this.getAttribute('data-mdp') || '';
 
             [email, mdp].forEach(function (champ) {
-                champ.classList.remove('nma-rempli');
+                champ.classList.remove('sc-rempli');
                 void champ.offsetWidth;
-                champ.classList.add('nma-rempli');
+                champ.classList.add('sc-rempli');
             });
 
             var role = this.querySelector('strong');
@@ -126,7 +126,7 @@
     });
 
     /** Compteurs animes sur les indicateurs chiffres. */
-    document.querySelectorAll('.nma-stat-value').forEach(function (bloc) {
+    document.querySelectorAll('.sc-stat-value').forEach(function (bloc) {
         var texte = bloc.textContent.trim();
         var trouve = texte.match(/^([0-9][0-9\s.,]*)(.*)$/);
         if (!trouve) {
@@ -142,7 +142,7 @@
         var debut = null;
         var duree = 850;
 
-        bloc.classList.add('nma-compteur');
+        bloc.classList.add('sc-compteur');
         bloc.textContent = (decimales ? (0).toFixed(1) : '0') + suffixe;
 
         function etape(instant) {
@@ -163,7 +163,7 @@
     });
 
     /** Barres de progression : remplissage anime au chargement. */
-    document.querySelectorAll('.nma-progress .progress-bar, .progress .progress-bar').forEach(function (barre) {
+    document.querySelectorAll('.sc-progress .progress-bar, .progress .progress-bar').forEach(function (barre) {
         var largeur = barre.style.width;
         if (!largeur || largeur === '0%' || largeur === '100%') {
             return;
@@ -178,14 +178,14 @@
 
     /** Onde visuelle au clic sur les boutons principaux. */
     document.addEventListener('click', function (evenement) {
-        var bouton = evenement.target.closest('.btn-nma');
+        var bouton = evenement.target.closest('.btn-sc');
         if (!bouton) {
             return;
         }
         var zone = bouton.getBoundingClientRect();
         var taille = Math.max(zone.width, zone.height);
         var onde = document.createElement('span');
-        onde.className = 'nma-ripple';
+        onde.className = 'sc-ripple';
         onde.style.width = taille + 'px';
         onde.style.height = taille + 'px';
         onde.style.left = (evenement.clientX - zone.left - taille / 2) + 'px';
@@ -197,7 +197,7 @@
     /** Disparition automatique des messages de succes. */
     document.querySelectorAll('.alert-success.alert-dismissible').forEach(function (alerte) {
         window.setTimeout(function () {
-            alerte.classList.add('nma-part');
+            alerte.classList.add('sc-part');
             window.setTimeout(function () { alerte.remove(); }, 420);
         }, 6000);
     });
@@ -207,7 +207,7 @@
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             return;
         }
-        if (!document.querySelector('.nma-public') || !window.matchMedia('(hover: hover)').matches) {
+        if (!document.querySelector('.sc-public') || !window.matchMedia('(hover: hover)').matches) {
             return;
         }
 
@@ -221,8 +221,8 @@
             planifie = true;
             window.requestAnimationFrame(function () {
                 planifie = false;
-                racine.style.setProperty('--nma-mx', ((evenement.clientX / window.innerWidth) * 2 - 1).toFixed(3));
-                racine.style.setProperty('--nma-my', ((evenement.clientY / window.innerHeight) * 2 - 1).toFixed(3));
+                racine.style.setProperty('--sc-mx', ((evenement.clientX / window.innerWidth) * 2 - 1).toFixed(3));
+                racine.style.setProperty('--sc-my', ((evenement.clientY / window.innerHeight) * 2 - 1).toFixed(3));
             });
         });
     }());
@@ -236,7 +236,7 @@
             return;
         }
 
-        document.querySelectorAll('.nma-tilt').forEach(function (carte) {
+        document.querySelectorAll('.sc-tilt').forEach(function (carte) {
             carte.addEventListener('pointermove', function (evenement) {
                 var zone = carte.getBoundingClientRect();
                 var x = (evenement.clientX - zone.left) / zone.width - 0.5;

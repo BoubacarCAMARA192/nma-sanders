@@ -28,9 +28,13 @@ function url(string $route = '', array $params = []): string
 function asset(string $path): string
 {
     $file = ROOT_PATH . '/' . ltrim($path, '/');
-    $version = is_file($file) ? (string) filemtime($file) : APP_VERSION;
+    $version = (string) (getenv('VERCEL_DEPLOYMENT_ID') ?: getenv('VERCEL_GIT_COMMIT_SHA') ?: getenv('VERCEL_URL') ?: '');
 
-    return BASE_URL . '/' . ltrim($path, '/') . '?v=' . $version;
+    if ($version === '') {
+        $version = is_file($file) ? (string) filemtime($file) : APP_VERSION;
+    }
+
+    return BASE_URL . '/' . ltrim($path, '/') . '?v=' . rawurlencode($version);
 }
 
 /** Champ cache CSRF pour les formulaires. */

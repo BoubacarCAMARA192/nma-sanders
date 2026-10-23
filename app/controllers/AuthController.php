@@ -109,7 +109,7 @@ final class AuthController extends Controller
             'alerte'
         );
 
-        Flash::succes('Votre demande a bien été envoyée ! Le service commercial NMA Sanders vous contactera pour activer votre compte.');
+        Flash::succes('Votre demande a bien été envoyée ! Le service commercial Sanders Connect vous contactera pour activer votre compte.');
         $this->rediriger('connexion');
     }
 
@@ -223,7 +223,7 @@ final class AuthController extends Controller
             }
         }
 
-        Flash::succes('Votre demande a été transmise. NMA Sanders vous contactera pour vous communiquer le lien de réinitialisation.');
+        Flash::succes('Votre demande a été transmise. Sanders Connect vous contactera pour vous communiquer le lien de réinitialisation.');
         $this->rediriger('mot-de-passe-oublie');
     }
 

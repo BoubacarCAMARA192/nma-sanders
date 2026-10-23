@@ -23,7 +23,7 @@ $totalGlobal = array_sum($compteurs);
         <h1 class="h4 fw-bold mb-0">Mes commandes</h1>
         <p class="text-muted small mb-0"><?= (int) $totalGlobal ?> commande(s) enregistrée(s) depuis la création de votre compte.</p>
     </div>
-    <a href="<?= e(url('boulanger/commande/nouvelle')) ?>" class="btn btn-nma">
+    <a href="<?= e(url('boulanger/commande/nouvelle')) ?>" class="btn btn-sc">
         <i class="bi bi-plus-circle me-2"></i>Nouvelle commande
     </a>
 </div>
@@ -47,7 +47,7 @@ $totalGlobal = array_sum($compteurs);
                 </select>
             </div>
             <div class="col-4 col-md-3">
-                <button type="submit" class="btn btn-nma w-100"><i class="bi bi-funnel me-1"></i>Filtrer</button>
+                <button type="submit" class="btn btn-sc w-100"><i class="bi bi-funnel me-1"></i>Filtrer</button>
             </div>
         </div>
     </div>
@@ -56,10 +56,10 @@ $totalGlobal = array_sum($compteurs);
 <div class="card">
     <div class="card-body p-0">
         <?php if ($commandes === []): ?>
-            <div class="nma-empty">
+            <div class="sc-empty">
                 <i class="bi bi-receipt"></i>
                 Aucune commande ne correspond à ce filtre.
-                <div class="mt-2"><a href="<?= e(url('boulanger/historique')) ?>" class="btn btn-sm btn-outline-nma">Voir toutes mes commandes</a></div>
+                <div class="mt-2"><a href="<?= e(url('boulanger/historique')) ?>" class="btn btn-sm btn-outline-sc">Voir toutes mes commandes</a></div>
             </div>
         <?php else: ?>
             <div class="table-responsive">
@@ -96,11 +96,11 @@ $totalGlobal = array_sum($compteurs);
                                     <span class="text-muted">souhaitée le <?= e(date_fr($c['date_livraison_souhaitee'])) ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-end nma-num"><?= (int) $c['total_sacs'] ?></td>
+                            <td class="text-end sc-num"><?= (int) $c['total_sacs'] ?></td>
                             <td><?= statut_badge($c['statut']) ?></td>
                             <td class="text-end">
                                 <a href="<?= e(url('boulanger/commande', ['id' => (int) $c['id']])) ?>"
-                                   class="btn btn-sm btn-outline-nma">
+                                   class="btn btn-sm btn-outline-sc">
                                     <i class="bi bi-eye"></i><span class="d-none d-lg-inline ms-1">Suivre</span>
                                 </a>
                             </td>

@@ -246,7 +246,7 @@ final class GestionnaireController extends Controller
 
         Journal::enregistrer('export_csv', 'commande', null, count($commandes) . ' commande(s) exportée(s)');
 
-        $fichier = 'commandes-nma-sanders-' . date('Ymd-His') . '.csv';
+        $fichier = 'commandes-sanders-connect-' . date('Ymd-His') . '.csv';
 
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $fichier . '"');
@@ -340,6 +340,6 @@ final class GestionnaireController extends Controller
 
         $livreurs = array_column($rows, 'livreur');
 
-        return $livreurs === [] ? ['Livreur NMA 1', 'Livreur NMA 2'] : $livreurs;
+        return $livreurs === [] ? ['Livreur Sanders Connect 1', 'Livreur Sanders Connect 2'] : $livreurs;
     }
 }

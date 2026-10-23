@@ -47,6 +47,10 @@ abstract class Controller
 
     protected function rediriger(string $route, array $params = []): void
     {
+        if (class_exists(Sqlite::class)) {
+            Sqlite::synchroniser();
+        }
+
         header('Location: ' . url($route, $params));
         exit;
     }

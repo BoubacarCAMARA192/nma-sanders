@@ -1,6 +1,6 @@
 <?php
 /**
- * Point d'entree unique de la plateforme NMA Sanders.
+ * Point d'entree unique de la plateforme Sanders Connect.
  * Toutes les requetes sont traitees par le routeur (app/core/Router.php).
  */
 
@@ -21,6 +21,8 @@ header('X-XSS-Protection: 1; mode=block');
 // header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
 
 try {
+    \Core\Sqlite::verrouiller();
+
     (new Router())->dispatcher();
 } catch (Throwable $e) {
     error_log('Fatal: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());

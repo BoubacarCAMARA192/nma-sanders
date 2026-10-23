@@ -10,7 +10,7 @@ foreach ($alerte as $p) {
     $enAlerte[(int) $p['id']] = true;
 }
 ?>
-<div class="nma-catalogue-hero d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+<div class="sc-catalogue-hero d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <div>
         <h1 class="h4">Catalogue des produits</h1>
         <p>
@@ -19,7 +19,7 @@ foreach ($alerte as $p) {
             <?= (int) $stats['alerte'] ?> sous le seuil d'alerte
         </p>
     </div>
-    <div class="nma-hero-actions">
+    <div class="sc-hero-actions">
         <button class="btn btn-light fw-semibold" data-bs-toggle="collapse" data-bs-target="#formProduit">
             <i class="bi bi-plus-lg me-2"></i>Ajouter un produit
         </button>
@@ -27,8 +27,8 @@ foreach ($alerte as $p) {
 </div>
 
 <div class="collapse mb-3" id="formProduit">
-    <div class="card border-nma">
-        <div class="card-header bg-nma-soft"><i class="bi bi-box-seam text-nma me-2"></i>Nouveau produit</div>
+    <div class="card border-sc">
+        <div class="card-header bg-sc-soft"><i class="bi bi-box-seam text-sc me-2"></i>Nouveau produit</div>
         <form method="post" action="<?= e(url('administrateur/catalogue/enregistrer')) ?>">
             <?= csrf_field() ?>
             <input type="hidden" name="id" value="0">
@@ -56,6 +56,7 @@ foreach ($alerte as $p) {
                             <option value="assets/img/produits/farine-boulangere-amelioree.png"></option>
                             <option value="assets/img/produits/farine-tapalapa.png"></option>
                             <option value="assets/img/produits/farine-patissiere.png"></option>
+                            <option value="assets/img/produits/farine-biscuitiere.png"></option>
                         </datalist>
                         <div class="form-text">Chemin d'une image déjà présente dans <code>assets/img/produits/</code>.</div>
                     </div>
@@ -85,7 +86,7 @@ foreach ($alerte as $p) {
                 </div>
             </div>
             <div class="card-footer bg-white">
-                <button type="submit" class="btn btn-nma w-100"><i class="bi bi-check2 me-2"></i>Ajouter au catalogue</button>
+                <button type="submit" class="btn btn-sc w-100"><i class="bi bi-check2 me-2"></i>Ajouter au catalogue</button>
             </div>
         </form>
     </div>
@@ -94,7 +95,7 @@ foreach ($alerte as $p) {
 <div class="card">
     <div class="card-body p-0">
         <?php if ($produits === []): ?>
-            <div class="nma-empty"><i class="bi bi-box"></i>Aucun produit au catalogue.</div>
+            <div class="sc-empty"><i class="bi bi-box"></i>Aucun produit au catalogue.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -114,9 +115,9 @@ foreach ($alerte as $p) {
                             <td>
                                 <div class="d-flex align-items-center gap-2">
                                     <?php if (!empty($p['image'])): ?>
-                                        <img src="<?= e(asset($p['image'])) ?>" alt="" class="nma-table-visuel" loading="lazy">
+                                        <img src="<?= e(asset($p['image'])) ?>" alt="" class="sc-table-visuel" loading="lazy">
                                     <?php else: ?>
-                                        <span class="nma-table-visuel d-inline-flex align-items-center justify-content-center text-muted">
+                                        <span class="sc-table-visuel d-inline-flex align-items-center justify-content-center text-muted">
                                             <i class="bi bi-image"></i>
                                         </span>
                                     <?php endif; ?>
@@ -127,9 +128,9 @@ foreach ($alerte as $p) {
                                 </div>
                             </td>
                             <td class="d-none d-md-table-cell text-small"><?= e($p['unite']) ?></td>
-                            <td class="text-end text-small nma-num"><?= e(fcfa($p['prix_unitaire'] !== null ? (float) $p['prix_unitaire'] : null)) ?></td>
+                            <td class="text-end text-small sc-num"><?= e(fcfa($p['prix_unitaire'] !== null ? (float) $p['prix_unitaire'] : null)) ?></td>
                             <td class="text-end">
-                                <span class="nma-num fw-semibold"><?= (int) $p['stock_disponible'] ?></span>
+                                <span class="sc-num fw-semibold"><?= (int) $p['stock_disponible'] ?></span>
                                 <?php if (isset($enAlerte[(int) $p['id']])): ?>
                                     <i class="bi bi-exclamation-triangle-fill text-warning ms-1" title="Stock sous le seuil d'alerte"></i>
                                 <?php endif; ?>
@@ -142,7 +143,7 @@ foreach ($alerte as $p) {
                             </td>
                             <td class="text-end">
                                 <div class="d-flex gap-1 justify-content-end">
-                                    <button class="btn btn-sm btn-outline-nma" data-bs-toggle="modal"
+                                    <button class="btn btn-sm btn-outline-sc" data-bs-toggle="modal"
                                             data-bs-target="#modalProduit<?= (int) $p['id'] ?>" title="Modifier">
                                         <i class="bi bi-pencil"></i>
                                     </button>
@@ -203,11 +204,11 @@ foreach ($alerte as $p) {
                         </div>
                         <div class="col-12">
                             <label class="form-label">Visuel du produit</label>
-                            <div class="nma-form-visuel">
+                            <div class="sc-form-visuel">
                                 <?php if (!empty($p['image'])): ?>
                                     <img src="<?= e(asset($p['image'])) ?>" alt="">
                                 <?php else: ?>
-                                    <span class="nma-table-visuel d-inline-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></span>
+                                    <span class="sc-table-visuel d-inline-flex align-items-center justify-content-center text-muted"><i class="bi bi-image"></i></span>
                                 <?php endif; ?>
                                 <div class="flex-grow-1">
                                     <input type="text" class="form-control" name="image" list="listeVisuels"
@@ -240,7 +241,7 @@ foreach ($alerte as $p) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-nma"><i class="bi bi-save me-1"></i>Enregistrer</button>
+                    <button type="submit" class="btn btn-sc"><i class="bi bi-save me-1"></i>Enregistrer</button>
                 </div>
             </form>
         </div>

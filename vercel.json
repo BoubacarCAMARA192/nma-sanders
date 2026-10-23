@@ -19,8 +19,8 @@
         }
     ],
     "env": {
-        "NMA_BASE_URL": "/",
-        "NMA_DEBUG": "0",
-        "NMA_DEMO": "1"
+        "SC_BASE_URL": "/",
+        "SC_DEBUG": "0",
+        "SC_DEMO": "1"
     }
 }

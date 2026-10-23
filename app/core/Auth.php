@@ -47,7 +47,7 @@ final class Auth
         if ((int) $user['actif'] !== 1) {
             Journal::enregistrer('connexion_refusee', 'utilisateur', (int) $user['id'], 'Compte inactif', (int) $user['id']);
 
-            return ['statut' => 'erreur', 'message' => 'Compte non activé. Contactez NMA Sanders.'];
+            return ['statut' => 'erreur', 'message' => 'Compte non activé. Contactez Sanders Connect.'];
         }
 
         // Rehachage transparent si le cout bcrypt a evolue.

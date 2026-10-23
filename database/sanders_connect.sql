@@ -1,12 +1,12 @@
 -- =====================================================================
--- Plateforme NMA Sanders - Gestion et suivi des commandes de farine
--- Base de donnees : nma_sanders (MySQL / MariaDB)
+-- Plateforme Sanders Connect - Gestion et suivi des commandes de farine
+-- Base de donnees : sanders_connect (MySQL / MariaDB)
 -- Encodage : utf8mb4 / InnoDB
 -- =====================================================================
 
-DROP DATABASE IF EXISTS nma_sanders;
-CREATE DATABASE nma_sanders CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE nma_sanders;
+DROP DATABASE IF EXISTS sanders_connect;
+CREATE DATABASE sanders_connect CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sanders_connect;
 
 -- ---------------------------------------------------------------------
 -- 1. UTILISATEUR  (comptes : boulanger, gestionnaire, administrateur)
@@ -207,21 +207,22 @@ INSERT INTO parametre (cle, valeur, libelle) VALUES
 --   client 1       : Client1@2026
 --   client 2       : Client2@2026
 INSERT INTO utilisateur (nom, email, telephone, mot_de_passe, role, actif, double_verification, code_securite) VALUES
-('Administrateur NMA', 'admin@nmasanders.sn',        '+221 33 839 00 00', '$2y$10$GWt.FvL0dLPMtbeTYWSCa.xzr9LBUCv/dvUqPx.OOrbL0cG5C7XLe', 'administrateur', 1, 0, NULL),
-('Moussa Ndiaye',      'gestionnaire@nmasanders.sn', '+221 77 123 45 67', '$2y$10$6643pMK.dvzQHm1n5nkRSO64JGfSeaCPxvBA6NuFAKVNweoLIVPfu', 'gestionnaire',   1, 0, NULL),
-('Boulangerie Demo',   'boulanger@demo.sn',          '+221 76 987 65 43', '$2y$10$jtGFqmr/cOJ5DP98/fXpiORu96y3KYiwO6BcEIOYMRXF/ZOvU/oay',
+('Fatma Kébé',         'admin@sandersconnect.sn',    '+221 33 839 00 00', '$2y$10$GWt.FvL0dLPMtbeTYWSCa.xzr9LBUCv/dvUqPx.OOrbL0cG5C7XLe', 'administrateur', 1, 0, NULL),
+('Moussa Ndiaye',      'gestionnaire@sandersconnect.sn', '+221 77 123 45 67', '$2y$10$6643pMK.dvzQHm1n5nkRSO64JGfSeaCPxvBA6NuFAKVNweoLIVPfu', 'gestionnaire',   1, 0, NULL),
+('Boubacar',           'boulanger@sandersconnect.sn', '+221 76 987 65 43', '$2y$10$jtGFqmr/cOJ5DP98/fXpiORu96y3KYiwO6BcEIOYMRXF/ZOvU/oay',
   'boulanger', 1, 0, NULL),
-('Aissatou Fall',      'client1@demo.sn',            '+221 77 801 23 45', '$2y$10$2vTPzRVyr6BB4.GsaOneS.EksMNgztvuz0vq9mB3BYzkXJV6uSjO.', 'boulanger', 1, 0, NULL),
-('Omar Sow',           'client2@demo.sn',            '+221 78 902 34 56', '$2y$10$QZng4SuDjEjkborDdIJVQen85X8EYwX5JuwFLuArhhz9K7r.rSvne', 'boulanger', 1, 0, NULL);
+('Booba',              'client1@sandersconnect.sn',   '+221 77 801 23 45', '$2y$10$2vTPzRVyr6BB4.GsaOneS.EksMNgztvuz0vq9mB3BYzkXJV6uSjO.', 'boulanger', 1, 0, NULL),
+('Omar Sow',           'client2@sandersconnect.sn',            '+221 78 902 34 56', '$2y$10$QZng4SuDjEjkborDdIJVQen85X8EYwX5JuwFLuArhhz9K7r.rSvne', 'boulanger', 1, 0, NULL);
 
 INSERT INTO boulanger (utilisateur_id, nom_boulangerie, adresse, ville, zone_livraison) VALUES
 (3, 'Boulangerie Demo',      'Rue 12 x Avenue Bourguiba', 'Dakar', 'Dakar Plateau'),
 (4, 'Boulangerie du Marche', 'Cite Fass, rue 22',         'Dakar', 'Fass / Colobane'),
 (5, 'Patisserie Teranga',    'Liberte 6, villa 41',       'Dakar', 'Liberte 6');
 
--- Catalogue produits : les 4 farines NMA Sanders -------------------
+-- Catalogue produits : les 5 farines Sanders Connect -------------------
 INSERT INTO produit (reference, libelle, description, image, unite, prix_unitaire, stock_disponible, seuil_alerte) VALUES
 ('FAR-T55',  'Farine Boulangère',           'Farine de blé tendre T55 complémentée, idéale pour le pain courant.',      'assets/img/produits/farine-boulangere.png',           'sac de 50 kg', 15200.00, 480, 60),
 ('FAR-AMEL', 'Farine Boulangère Améliorée', 'Farine T55 enrichie en fer et acide folique, pour les professionnels.',    'assets/img/produits/farine-boulangere-amelioree.png', 'sac de 50 kg', 15700.00, 400, 60),
 ('FAR-TAPA', 'Farine Tapalapa',             'Farine de blé T80 spécialement conçue pour le pain tapalapa.',            'assets/img/produits/farine-tapalapa.png',             'sac de 50 kg', 15200.00, 300, 50),
-('FAR-PAT',  'Farine Pâtissière Type 45',   'Farine Farima T45 extra-fine pour pâtisserie, viennoiserie et pains industriels.', 'assets/img/produits/farine-patissiere.png',   'sac de 50 kg', 26000.00, 120, 30);
+('FAR-PAT',  'Farine Pâtissière Type 45',   'Farine Farima T45 extra-fine pour pâtisserie, viennoiserie et pains industriels.', 'assets/img/produits/farine-patissiere.png',   'sac de 50 kg', 24400.00, 120, 30),
+('FAR-BISC', 'Farine Biscuitière', 'Farine de blé tendre spécialement sélectionnée pour biscuits, cakes et pâtisseries sèches.', 'assets/img/produits/farine-biscuitiere.png', 'sac de 50 kg', 16600.00, 200, 40);

@@ -14,22 +14,40 @@ use Throwable;
 
 final class Sqlite
 {
-    private const NOM_BLOB = 'nma_sanders.sqlite';
-    private const VERSION_CATALOGUE_NMA = '1';
+    private const NOM_BLOB = 'sanders_connect.sqlite';
+    private const NOM_VERROU = 'sanders_connect.lock';
+    private const VERSION_CATALOGUE_SC = '2';
+    private const DUREE_VERROU = 30;
+    private const CLE_VERROU_NEON = 9042001;
+    private const ID_ETAT_NEON = 1;
 
     private static ?PDO $pdoPersistance = null;
+    private static ?PDO $pdoNeon = null;
     private static string $fichierPersistance = '';
     private static int $modificationsPersistance = 0;
     private static bool $initialisationPersistance = false;
     private static bool $synchronisationEffectuee = true;
+    private static ?string $etagPersistance = null;
+    private static bool $verrouAcquis = false;
+    private static string $verrouProprietaire = '';
+    private static bool $finalisationEnregistree = false;
 
     public static function ouvrir(): PDO
     {
-        $fichier = rtrim(sys_get_temp_dir(), '/\\') . '/nma_sanders.sqlite';
-        $presentEnLigne = false;
+        $fichier = rtrim(sys_get_temp_dir(), '/\\') . '/sanders_connect.sqlite';
+        $persistance = self::neonConfigure();
 
-        if (self::blobConfigure()) {
-            $presentEnLigne = in_array(self::blobTelecharger($fichier), ['ok', 'absent'], true);
+        if (!$persistance && self::neonUrl() !== '') {
+            throw new \RuntimeException('Extension PostgreSQL indisponible pour la base partagee.');
+        }
+
+        if ($persistance) {
+            self::enregistrerFinalisation();
+            self::supprimerFichiersLocaux($fichier);
+
+            if (self::neonTelecharger($fichier) === 'erreur') {
+                throw new \RuntimeException('La base de donnees partagee est momentanement indisponible.');
+            }
         }
 
         $existait = is_file($fichier);
@@ -58,13 +76,48 @@ final class Sqlite
         self::$fichierPersistance = $fichier;
         self::$modificationsPersistance = $modificationsApres;
         self::$initialisationPersistance = $initialisationModifiee;
-        self::$synchronisationEffectuee = !$presentEnLigne;
-
-        if ($presentEnLigne) {
-            register_shutdown_function([self::class, 'synchroniser']);
-        }
+        self::$synchronisationEffectuee = !$persistance;
 
         return $pdo;
+    }
+
+    /** Indique si la base doit etre synchronisee avec Neon. */
+    public static function persistanceActive(): bool
+    {
+        return self::neonConfigure();
+    }
+
+    /**
+     * Verrou global des ecritures : evite que deux instances Vercel
+     * ecrasent mutuellement leurs commandes (SQLite n'a pas de verrou
+     * distribue). A appeler avant le routeur pour chaque requete.
+     */
+    public static function verrouiller(): void
+    {
+        if (self::neonUrl() === '') {
+            return;
+        }
+
+        if (!self::neonConfigure()) {
+            throw new \RuntimeException('Extension PostgreSQL indisponible pour la base partagee.');
+        }
+
+        self::enregistrerFinalisation();
+        $pdo = self::neonPdo();
+        $limite = microtime(true) + 8.0;
+
+        do {
+            $acquis = $pdo->query('SELECT pg_try_advisory_lock(' . self::CLE_VERROU_NEON . ')')->fetchColumn();
+
+            if ($acquis === true || $acquis === 't' || $acquis === 1 || $acquis === '1') {
+                self::$verrouAcquis = true;
+                return;
+            }
+
+            usleep(250000);
+        } while (microtime(true) < $limite);
+
+        throw new \RuntimeException('La base partagee est occupee. Merci de reessayer.');
     }
 
     /** Fonctions MySQL reproduites en SQLite (memes requetes des modeles). */
@@ -244,7 +297,7 @@ final class Sqlite
         }
 
         self::assurerClientsDemo($pdo);
-        self::assurerCatalogueNma($pdo);
+        self::assurerCatalogueSc($pdo);
     }
 
     /** Ajoute les colonnes recentes aux bases SQLite deja initialisees. */
@@ -273,12 +326,12 @@ final class Sqlite
         }
     }
 
-    /** Aligne le catalogue sur les 4 farines NMA Sanders, une seule fois. */
-    private static function assurerCatalogueNma(PDO $pdo): void
+    /** Aligne le catalogue sur les 5 farines Sanders Connect, une seule fois. */
+    private static function assurerCatalogueSc(PDO $pdo): void
     {
-        $version = $pdo->query("SELECT valeur FROM parametre WHERE cle = 'catalogue_nma_version'")->fetchColumn();
+        $version = $pdo->query("SELECT valeur FROM parametre WHERE cle = 'catalogue_sc_version'")->fetchColumn();
 
-        if ($version === self::VERSION_CATALOGUE_NMA) {
+        if ($version === self::VERSION_CATALOGUE_SC) {
             return;
         }
 
@@ -286,7 +339,8 @@ final class Sqlite
             ['FAR-T55', 'Farine Boulangère', 'Farine de blé tendre T55 complémentée, idéale pour le pain courant.', 'assets/img/produits/farine-boulangere.png', 'sac de 50 kg', 15200.00, 480, 60],
             ['FAR-AMEL', 'Farine Boulangère Améliorée', 'Farine T55 enrichie en fer et acide folique, pour les professionnels.', 'assets/img/produits/farine-boulangere-amelioree.png', 'sac de 50 kg', 15700.00, 400, 60],
             ['FAR-TAPA', 'Farine Tapalapa', 'Farine de blé T80 spécialement conçue pour le pain tapalapa.', 'assets/img/produits/farine-tapalapa.png', 'sac de 50 kg', 15200.00, 300, 50],
-            ['FAR-PAT', 'Farine Pâtissière Type 45', 'Farine Farima T45 extra-fine pour pâtisserie, viennoiserie et pains industriels.', 'assets/img/produits/farine-patissiere.png', 'sac de 50 kg', 26000.00, 120, 30],
+            ['FAR-PAT', 'Farine Pâtissière Type 45', 'Farine Farima T45 extra-fine pour pâtisserie, viennoiserie et pains industriels.', 'assets/img/produits/farine-patissiere.png', 'sac de 50 kg', 24400.00, 120, 30],
+            ['FAR-BISC', 'Farine Biscuitière', 'Farine de blé tendre spécialement sélectionnée pour biscuits, cakes et pâtisseries sèches.', 'assets/img/produits/farine-biscuitiere.png', 'sac de 50 kg', 16600.00, 200, 40],
         ];
         $references = array_column($produits, 0);
 
@@ -321,9 +375,9 @@ final class Sqlite
             ->execute($references);
 
         $pdo->prepare(
-            "INSERT INTO parametre (cle, valeur, libelle) VALUES ('catalogue_nma_version', ?, 'Version du catalogue NMA')
+            "INSERT INTO parametre (cle, valeur, libelle) VALUES ('catalogue_sc_version', ?, 'Version du catalogue Sanders Connect')
              ON CONFLICT(cle) DO UPDATE SET valeur = excluded.valeur"
-        )->execute([self::VERSION_CATALOGUE_NMA]);
+        )->execute([self::VERSION_CATALOGUE_SC]);
     }
 
     /** Memes parametres, comptes de demonstration et catalogue que MySQL. */
@@ -342,11 +396,11 @@ final class Sqlite
         }
 
         $utilisateurs = [
-            [1, 'Administrateur NMA', 'admin@nmasanders.sn', '+221 33 839 00 00', '$2y$10$GWt.FvL0dLPMtbeTYWSCa.xzr9LBUCv/dvUqPx.OOrbL0cG5C7XLe', 'administrateur'],
-            [2, 'Moussa Ndiaye', 'gestionnaire@nmasanders.sn', '+221 77 123 45 67', '$2y$10$6643pMK.dvzQHm1n5nkRSO64JGfSeaCPxvBA6NuFAKVNweoLIVPfu', 'gestionnaire'],
-            [3, 'Boulangerie Demo', 'boulanger@demo.sn', '+221 76 987 65 43', '$2y$10$jtGFqmr/cOJ5DP98/fXpiORu96y3KYiwO6BcEIOYMRXF/ZOvU/oay', 'boulanger'],
-            [4, 'Aissatou Fall', 'client1@demo.sn', '+221 77 801 23 45', '$2y$10$2vTPzRVyr6BB4.GsaOneS.EksMNgztvuz0vq9mB3BYzkXJV6uSjO.', 'boulanger'],
-            [5, 'Omar Sow', 'client2@demo.sn', '+221 78 902 34 56', '$2y$10$QZng4SuDjEjkborDdIJVQen85X8EYwX5JuwFLuArhhz9K7r.rSvne', 'boulanger'],
+            [1, 'Fatma Kébé', 'admin@sandersconnect.sn', '+221 33 839 00 00', '$2y$10$GWt.FvL0dLPMtbeTYWSCa.xzr9LBUCv/dvUqPx.OOrbL0cG5C7XLe', 'administrateur'],
+            [2, 'Moussa Ndiaye', 'gestionnaire@sandersconnect.sn', '+221 77 123 45 67', '$2y$10$6643pMK.dvzQHm1n5nkRSO64JGfSeaCPxvBA6NuFAKVNweoLIVPfu', 'gestionnaire'],
+            [3, 'Boubacar', 'boulanger@sandersconnect.sn', '+221 76 987 65 43', '$2y$10$jtGFqmr/cOJ5DP98/fXpiORu96y3KYiwO6BcEIOYMRXF/ZOvU/oay', 'boulanger'],
+            [4, 'Booba', 'client1@sandersconnect.sn', '+221 77 801 23 45', '$2y$10$2vTPzRVyr6BB4.GsaOneS.EksMNgztvuz0vq9mB3BYzkXJV6uSjO.', 'boulanger'],
+            [5, 'Omar Sow', 'client2@sandersconnect.sn', '+221 78 902 34 56', '$2y$10$QZng4SuDjEjkborDdIJVQen85X8EYwX5JuwFLuArhhz9K7r.rSvne', 'boulanger'],
         ];
         $insert = $pdo->prepare(
             'INSERT INTO utilisateur (id, nom, email, telephone, mot_de_passe, role, actif)
@@ -367,7 +421,8 @@ final class Sqlite
             ['FAR-T55', 'Farine Boulangère', 'Farine de blé tendre T55 complémentée, idéale pour le pain courant.', 'assets/img/produits/farine-boulangere.png', 'sac de 50 kg', 15200.00, 480, 60],
             ['FAR-AMEL', 'Farine Boulangère Améliorée', 'Farine T55 enrichie en fer et acide folique, pour les professionnels.', 'assets/img/produits/farine-boulangere-amelioree.png', 'sac de 50 kg', 15700.00, 400, 60],
             ['FAR-TAPA', 'Farine Tapalapa', 'Farine de blé T80 spécialement conçue pour le pain tapalapa.', 'assets/img/produits/farine-tapalapa.png', 'sac de 50 kg', 15200.00, 300, 50],
-            ['FAR-PAT', 'Farine Pâtissière Type 45', 'Farine Farima T45 extra-fine pour pâtisserie, viennoiserie et pains industriels.', 'assets/img/produits/farine-patissiere.png', 'sac de 50 kg', 26000.00, 120, 30],
+            ['FAR-PAT', 'Farine Pâtissière Type 45', 'Farine Farima T45 extra-fine pour pâtisserie, viennoiserie et pains industriels.', 'assets/img/produits/farine-patissiere.png', 'sac de 50 kg', 24400.00, 120, 30],
+            ['FAR-BISC', 'Farine Biscuitière', 'Farine de blé tendre spécialement sélectionnée pour biscuits, cakes et pâtisseries sèches.', 'assets/img/produits/farine-biscuitiere.png', 'sac de 50 kg', 16600.00, 200, 40],
         ];
         $insert = $pdo->prepare(
             'INSERT INTO produit (reference, libelle, description, image, unite, prix_unitaire, stock_disponible, seuil_alerte)
@@ -385,8 +440,8 @@ final class Sqlite
     private static function assurerClientsDemo(PDO $pdo): void
     {
         $clients = [
-            ['Aissatou Fall', 'client1@demo.sn', '+221 77 801 23 45', '$2y$10$2vTPzRVyr6BB4.GsaOneS.EksMNgztvuz0vq9mB3BYzkXJV6uSjO.', 'Boulangerie du Marche', 'Cite Fass, rue 22', 'Fass / Colobane'],
-            ['Omar Sow', 'client2@demo.sn', '+221 78 902 34 56', '$2y$10$QZng4SuDjEjkborDdIJVQen85X8EYwX5JuwFLuArhhz9K7r.rSvne', 'Patisserie Teranga', 'Liberte 6, villa 41', 'Liberte 6'],
+            ['Booba', 'client1@sandersconnect.sn', '+221 77 801 23 45', '$2y$10$2vTPzRVyr6BB4.GsaOneS.EksMNgztvuz0vq9mB3BYzkXJV6uSjO.', 'Boulangerie du Marche', 'Cite Fass, rue 22', 'Fass / Colobane'],
+            ['Omar Sow', 'client2@sandersconnect.sn', '+221 78 902 34 56', '$2y$10$QZng4SuDjEjkborDdIJVQen85X8EYwX5JuwFLuArhhz9K7r.rSvne', 'Patisserie Teranga', 'Liberte 6, villa 41', 'Liberte 6'],
         ];
 
         $creerUtilisateur = $pdo->prepare(
@@ -479,6 +534,82 @@ final class Sqlite
         return self::blobContexte() !== null && function_exists('curl_init');
     }
 
+    /** Supprime le fichier SQLite et ses journaux WAL/SHM avant un telechargement. */
+    private static function supprimerFichiersLocaux(string $fichier): void
+    {
+        foreach ([$fichier, $fichier . '-wal', $fichier . '-shm'] as $chemin) {
+            if (is_file($chemin)) {
+                @unlink($chemin);
+            }
+        }
+    }
+
+    /** Enregistre une seule fois la finalisation (synchronisation + verrou). */
+    private static function enregistrerFinalisation(): void
+    {
+        if (self::$finalisationEnregistree) {
+            return;
+        }
+
+        self::$finalisationEnregistree = true;
+        register_shutdown_function([self::class, 'finaliser']);
+    }
+
+    /** Synchronise les donnees puis libere le verrou d'ecriture. */
+    public static function finaliser(): void
+    {
+        self::synchroniser();
+        self::libererVerrou();
+    }
+
+    /** Contenu et ETag du verrou distant, ou [null, null] s'il est absent. */
+    private static function verrouDistant(array $contexte): array
+    {
+        $url = $contexte['base'] . '/?prefix=' . urlencode(self::NOM_VERROU) . '&limit=5';
+        [$code, $corps] = self::blobRequete('GET', $url, self::blobEntetes($contexte));
+
+        if ($code !== 200) {
+            return [null, null];
+        }
+
+        foreach (json_decode($corps, true)['blobs'] ?? [] as $blob) {
+            if (($blob['pathname'] ?? '') !== self::NOM_VERROU || empty($blob['downloadUrl'])) {
+                continue;
+            }
+
+            [$code, $contenu] = self::blobRequete(
+                'GET',
+                (string) $blob['downloadUrl'],
+                ['Authorization: Bearer ' . $contexte['token']]
+            );
+
+            return [
+                isset($blob['etag']) ? (string) $blob['etag'] : null,
+                $code === 200 ? json_decode($contenu, true) : null,
+            ];
+        }
+
+        return [null, null];
+    }
+
+    /** Libere le verrou PostgreSQL de la requete courante. */
+    private static function libererVerrou(): void
+    {
+        if (!self::$verrouAcquis) {
+            return;
+        }
+
+        self::$verrouAcquis = false;
+
+        try {
+            if (self::$pdoNeon instanceof PDO) {
+                self::$pdoNeon->query('SELECT pg_advisory_unlock(' . self::CLE_VERROU_NEON . ')');
+            }
+        } catch (Throwable $e) {
+            error_log('Neon verrou: liberation impossible - ' . $e->getMessage());
+        }
+    }
+
     /** Envoie la base vers Blob si la requete a modifie des donnees. */
     public static function synchroniser(): void
     {
@@ -486,23 +617,25 @@ final class Sqlite
             return;
         }
 
-        self::$synchronisationEffectuee = true;
-
         try {
             $modifications = (int) self::$pdoPersistance->query('SELECT total_changes()')->fetchColumn();
 
             if (!self::$initialisationPersistance && $modifications <= self::$modificationsPersistance) {
+                self::$synchronisationEffectuee = true;
                 return;
             }
 
             self::$pdoPersistance->exec('PRAGMA wal_checkpoint(TRUNCATE)');
 
-            if (!self::blobEnvoyer(self::$fichierPersistance)) {
-                self::$synchronisationEffectuee = false;
-                error_log('Blob: echec de la synchronisation de ' . self::NOM_BLOB);
+            if (self::neonEnvoyer(self::$fichierPersistance)) {
+                self::$synchronisationEffectuee = true;
+                self::$modificationsPersistance = $modifications;
+                self::$initialisationPersistance = false;
+                return;
             }
+
+            error_log('Neon: echec de la synchronisation de ' . self::NOM_BLOB);
         } catch (Throwable $e) {
-            self::$synchronisationEffectuee = false;
             error_log('Blob: erreur de synchronisation - ' . $e->getMessage());
         }
     }
@@ -550,42 +683,66 @@ final class Sqlite
             return 'erreur';
         }
 
+        self::$etagPersistance = null;
         $listeUrl = $contexte['base'] . '/?prefix=' . urlencode(self::NOM_BLOB) . '&limit=10';
-        [$code, $corps] = self::blobRequete('GET', $listeUrl, self::blobEntetes($contexte));
+        $blob = null;
 
-        if ($code !== 200) {
-            error_log('Blob list: HTTP ' . $code);
+        for ($essai = 0; $essai < 3 && $blob === null; $essai++) {
+            [$code, $corps] = self::blobRequete('GET', $listeUrl, self::blobEntetes($contexte));
+
+            if ($code === 200) {
+                $blobs = json_decode($corps, true)['blobs'] ?? [];
+
+                if ($blobs === []) {
+                    return 'absent';
+                }
+
+                foreach ($blobs as $candidat) {
+                    if (($candidat['pathname'] ?? '') === self::NOM_BLOB) {
+                        $blob = $candidat;
+                        break;
+                    }
+                }
+            } else {
+                error_log('Blob list: HTTP ' . $code);
+            }
+
+            if ($blob === null) {
+                usleep(200000);
+            }
+        }
+
+        if ($blob === null) {
             return 'erreur';
         }
 
-        $blobs = json_decode($corps, true)['blobs'] ?? [];
+        $url = (string) ($blob['downloadUrl'] ?? $blob['url'] ?? '');
 
-        if ($blobs === []) {
-            return 'absent';
+        if ($url === '') {
+            return 'erreur';
         }
 
-        foreach ($blobs as $blob) {
-            if (($blob['pathname'] ?? '') !== self::NOM_BLOB) {
-                continue;
-            }
+        self::$etagPersistance = isset($blob['etag']) ? (string) $blob['etag'] : null;
 
-            $url = (string) ($blob['downloadUrl'] ?? $blob['url'] ?? '');
-
-            if ($url === '') {
-                return 'erreur';
-            }
-
+        for ($essai = 0; $essai < 3; $essai++) {
             [$code, $contenu] = self::blobRequete('GET', $url, ['Authorization: Bearer ' . $contexte['token']]);
 
-            if ($code !== 200 || $contenu === '' || file_put_contents($fichier, $contenu) === false) {
-                error_log('Blob download: HTTP ' . $code . ' taille=' . strlen($contenu));
+            if ($code === 200 && $contenu !== '') {
+                self::supprimerFichiersLocaux($fichier);
+
+                if (file_put_contents($fichier, $contenu) !== false) {
+                    return 'ok';
+                }
+
+                error_log('Blob download: ecriture locale impossible');
                 return 'erreur';
             }
 
-            return 'ok';
+            error_log('Blob download: HTTP ' . $code . ' taille=' . strlen($contenu));
+            usleep(200000);
         }
 
-        return 'absent';
+        return 'erreur';
     }
 
     private static function blobEnvoyer(string $fichier): bool
@@ -599,19 +756,189 @@ final class Sqlite
         $url = $contexte['type'] === 'oidc'
             ? $contexte['base'] . '/?pathname=' . rawurlencode(self::NOM_BLOB)
             : $contexte['base'] . '/' . self::NOM_BLOB;
-
-        [$code, $corps] = self::blobRequete('PUT', $url, array_merge(self::blobEntetes($contexte), [
+        $entetes = array_merge(self::blobEntetes($contexte), [
             'Content-Type: application/octet-stream',
             'x-content-type: application/octet-stream',
             'x-add-random-suffix: 0',
             'x-allow-overwrite: 1',
             'x-vercel-blob-access: private',
-        ]), (string) file_get_contents($fichier));
+        ]);
 
-        if ($code !== 200) {
-            error_log('Blob upload: HTTP ' . $code . ' ' . substr($corps, 0, 200));
+        if (self::$etagPersistance !== null && self::$etagPersistance !== '') {
+            $entetes[] = 'x-if-match: ' . self::$etagPersistance;
         }
 
-        return $code === 200;
+        $contenu = (string) file_get_contents($fichier);
+
+        for ($essai = 0; $essai < 3; $essai++) {
+            [$code, $corps] = self::blobRequete('PUT', $url, $entetes, $contenu);
+
+            if ($code === 200) {
+                $etag = json_decode($corps, true)['etag'] ?? null;
+                self::$etagPersistance = is_string($etag) ? $etag : null;
+
+                return true;
+            }
+
+            if ($code === 412) {
+                error_log('Blob upload: conflit de version (412), nouvelle tentative au prochain passage');
+                return false;
+            }
+
+            error_log('Blob upload: HTTP ' . $code . ' ' . substr($corps, 0, 200));
+
+            if ($code !== 0 && $code < 500) {
+                return false;
+            }
+
+            usleep(250000);
+        }
+
+        return false;
+    }
+
+    /** URL de la base Neon, avec priorite a la connexion directe. */
+    private static function neonUrl(): string
+    {
+        foreach (['DATABASE_URL_UNPOOLED', 'DATABASE_URL', 'POSTGRES_URL_NON_POOLING', 'POSTGRES_URL'] as $cle) {
+            $valeur = trim((string) getenv($cle));
+
+            if ($valeur !== '') {
+                return $valeur;
+            }
+        }
+
+        return '';
+    }
+
+    private static function neonConfigure(): bool
+    {
+        return self::neonUrl() !== ''
+            && in_array('pgsql', PDO::getAvailableDrivers(), true);
+    }
+
+    /**
+     * Construit le DSN PostgreSQL. Le suffixe "options=endpoint=..." dans
+     * dbname est le contournement Neon pour les anciennes versions de libpq.
+     *
+     * @return array{0:string, 1:string, 2:string}
+     */
+    private static function neonDsn(): array
+    {
+        $url = self::neonUrl();
+        $parties = parse_url($url);
+
+        if ($parties === false || empty($parties['host'])) {
+            throw new \RuntimeException('URL PostgreSQL invalide.');
+        }
+
+        parse_str($parties['query'] ?? '', $query);
+        $endpoint = (string) preg_replace('/-pooler$/', '', explode('.', (string) $parties['host'])[0]);
+        $base = ltrim((string) ($parties['path'] ?? ''), '/') ?: 'neondb';
+        $dsn = 'pgsql:host=' . $parties['host']
+            . ';port=' . ($parties['port'] ?? 5432)
+            . ';dbname=' . $base . ' options=endpoint=' . $endpoint
+            . ';sslmode=' . ($query['sslmode'] ?? 'require')
+            . ';connect_timeout=10';
+
+        if (($query['channel_binding'] ?? '') === 'require') {
+            $dsn .= ';channel_binding=require';
+        }
+
+        return [
+            $dsn,
+            rawurldecode((string) ($parties['user'] ?? '')),
+            rawurldecode((string) ($parties['pass'] ?? '')),
+        ];
+    }
+
+    private static function neonPdo(): PDO
+    {
+        if (self::$pdoNeon instanceof PDO) {
+            return self::$pdoNeon;
+        }
+
+        if (self::neonUrl() === '') {
+            throw new \RuntimeException('Base PostgreSQL non configuree.');
+        }
+
+        [$dsn, $utilisateur, $motDePasse] = self::neonDsn();
+
+        self::$pdoNeon = new PDO($dsn, $utilisateur, $motDePasse, [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+        self::$pdoNeon->exec("SET statement_timeout = '12000'");
+        self::$pdoNeon->exec(
+            'CREATE TABLE IF NOT EXISTS sc_state (
+                id INTEGER PRIMARY KEY,
+                data TEXT NOT NULL,
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+            )'
+        );
+
+        return self::$pdoNeon;
+    }
+
+    private static function neonTelecharger(string $fichier): string
+    {
+        try {
+            $pdo = self::neonPdo();
+            $donnees = $pdo->query('SELECT data FROM sc_state WHERE id = ' . self::ID_ETAT_NEON)->fetchColumn();
+
+            if ($donnees === false) {
+                return 'absent';
+            }
+
+            $binaire = base64_decode((string) $donnees, true);
+
+            if ($binaire === false || $binaire === '') {
+                return 'erreur';
+            }
+
+            self::supprimerFichiersLocaux($fichier);
+
+            if (file_put_contents($fichier, $binaire) === false) {
+                error_log('Neon download: ecriture locale impossible');
+                return 'erreur';
+            }
+
+            return 'ok';
+        } catch (Throwable $e) {
+            error_log('Neon download: ' . $e->getMessage());
+            return 'erreur';
+        }
+    }
+
+    private static function neonEnvoyer(string $fichier): bool
+    {
+        try {
+            if (!is_file($fichier)) {
+                return false;
+            }
+
+            $contenu = file_get_contents($fichier);
+
+            if ($contenu === false || $contenu === '') {
+                return false;
+            }
+
+            $pdo = self::neonPdo();
+            $requete = $pdo->prepare(
+                'INSERT INTO sc_state (id, data, updated_at)
+                 VALUES (:id, :data, now())
+                 ON CONFLICT (id) DO UPDATE
+                 SET data = EXCLUDED.data, updated_at = now()'
+            );
+            $requete->execute([
+                ':id'   => self::ID_ETAT_NEON,
+                ':data' => base64_encode($contenu),
+            ]);
+
+            return true;
+        } catch (Throwable $e) {
+            error_log('Neon upload: ' . $e->getMessage());
+            return false;
+        }
     }
 }

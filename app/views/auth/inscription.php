@@ -7,7 +7,7 @@
 $d = static fn (string $cle): string => (string) ($donnees[$cle] ?? '');
 ?>
 <div class="text-center mb-4">
-    <span class="nma-brand-badge mb-2" style="width:46px;height:46px;font-size:1.45rem;">
+    <span class="sc-brand-badge mb-2" style="width:46px;height:46px;font-size:1.45rem;">
         <i class="bi bi-shop"></i>
     </span>
     <h2 class="h4 fw-bold mb-1">Créer un compte</h2>
@@ -96,12 +96,12 @@ $d = static fn (string $cle): string => (string) ($donnees[$cle] ?? '');
         </div>
     </div>
 
-    <button type="submit" class="btn btn-nma w-100 btn-lg mb-3">
+    <button type="submit" class="btn btn-sc w-100 btn-lg mb-3">
         <i class="bi bi-send me-2"></i>Créer mon compte
     </button>
 
     <div class="alert alert-light border small mb-0" role="note">
-        <i class="bi bi-info-circle me-1 text-nma"></i>
+        <i class="bi bi-info-circle me-1 text-sc"></i>
         Le compte reste <strong>inactif</strong> jusqu'à l'appel de notre service commercial
         (<a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a>).
     </div>

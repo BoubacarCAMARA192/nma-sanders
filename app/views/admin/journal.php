@@ -37,7 +37,7 @@
                        placeholder="Auteur, dÃ©tail de l'opÃ©ration...">
             </div>
             <div class="col-12 col-md-3 d-flex gap-2">
-                <button type="submit" class="btn btn-nma flex-grow-1"><i class="bi bi-search"></i></button>
+                <button type="submit" class="btn btn-sc flex-grow-1"><i class="bi bi-search"></i></button>
                 <a href="<?= e(url('administrateur/journal')) ?>" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise"></i></a>
             </div>
         </div>
@@ -47,7 +47,7 @@
 <div class="card">
     <div class="card-body p-0">
         <?php if ($operations === []): ?>
-            <div class="nma-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration ne correspond Ã  ces critÃ¨res.</div>
+            <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration ne correspond Ã  ces critÃ¨res.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover table-sm align-middle mb-0">
@@ -64,8 +64,8 @@
                     <tbody>
                     <?php foreach ($operations as $op): ?>
                         <tr>
-                            <td class="nma-num text-muted text-small"><?= (int) $op['id'] ?></td>
-                            <td class="text-small nma-num"><?= e(date_fr($op['date_heure'], 'd/m/Y H:i:s')) ?></td>
+                            <td class="sc-num text-muted text-small"><?= (int) $op['id'] ?></td>
+                            <td class="text-small sc-num"><?= e(date_fr($op['date_heure'], 'd/m/Y H:i:s')) ?></td>
                             <td class="text-small">
                                 <?= e(Core\Journal::auteur($op['auteur'] ?? null, $op['auteur_role'] ?? null)) ?>
                             </td>
@@ -76,7 +76,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="d-none d-lg-table-cell text-small text-muted"><?= e($op['details'] ?? '') ?></td>
-                            <td class="d-none d-md-table-cell text-small text-muted nma-num"><?= e($op['adresse_ip'] ?? '') ?></td>
+                            <td class="d-none d-md-table-cell text-small text-muted sc-num"><?= e($op['adresse_ip'] ?? '') ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

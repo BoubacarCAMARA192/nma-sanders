@@ -56,15 +56,16 @@ $roleLibelle = match ($role) {
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#007e48">
     <title><?= e($titrePage) ?> — <?= e(APP_NAME) ?></title>
-    <link rel="icon" href="<?= e(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
+    <link rel="icon" href="<?= e(asset('assets/img/favicon.png')) ?>" type="image/png">
+    <link rel="apple-touch-icon" href="<?= e(asset('assets/img/apple-touch-icon.png')) ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= e(asset('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
-<body class="nma-app role-<?= e($role) ?>">
+<body class="sc-app role-<?= e($role) ?>">
 
-<nav class="navbar nma-navbar sticky-top">
+<nav class="navbar sc-navbar sticky-top">
     <div class="container-fluid">
         <button class="btn btn-link text-white d-lg-none px-1" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#menuLateral" aria-label="Ouvrir le menu">
@@ -72,7 +73,7 @@ $roleLibelle = match ($role) {
         </button>
 
         <a class="navbar-brand d-flex align-items-center text-white fw-bold" href="<?= e(url(Core\Auth::routeAccueil())) ?>">
-            <img src="<?= e(asset('assets/img/logo-nma.png')) ?>" alt="" class="nma-logo-nav me-2" width="34" height="34">
+            <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>" class="sc-logo-nav me-2" width="34" height="34">
             <span><?= e(APP_NAME) ?></span>
         </a>
 
@@ -81,7 +82,7 @@ $roleLibelle = match ($role) {
                aria-label="Notifications">
                 <i class="bi bi-bell fs-5"></i>
                 <?php if (($notifNonLues ?? 0) > 0): ?>
-                    <span class="position-absolute badge rounded-pill text-bg-danger nma-notif-badge">
+                    <span class="position-absolute badge rounded-pill text-bg-danger sc-notif-badge">
                         <?= (int) $notifNonLues ?>
                     </span>
                 <?php endif; ?>
@@ -115,27 +116,27 @@ $roleLibelle = match ($role) {
 <div class="container-fluid">
     <div class="row">
         <!-- Menu lateral (bureau) -->
-        <aside class="col-lg-2 d-none d-lg-block nma-sidebar p-0">
+        <aside class="col-lg-2 d-none d-lg-block sc-sidebar p-0">
             <nav class="nav flex-column py-3">
                 <?php foreach ($menu as [$cle, $route, $icone, $libelle]): ?>
-                    <a class="nav-link nma-nav-link <?= $estActif($route) ? 'active' : '' ?>" href="<?= e(url($route)) ?>">
+                    <a class="nav-link sc-nav-link <?= $estActif($route) ? 'active' : '' ?>" href="<?= e(url($route)) ?>">
                         <i class="bi bi-<?= e($icone) ?>"></i>
                         <span><?= e($libelle) ?></span>
                     </a>
                 <?php endforeach; ?>
 
                 <hr class="mx-3 my-2">
-                <a class="nav-link nma-nav-link" href="<?= e(logout_url()) ?>">
+                <a class="nav-link sc-nav-link" href="<?= e(logout_url()) ?>">
                     <i class="bi bi-box-arrow-right"></i><span>Déconnexion</span>
                 </a>
             </nav>
 
             <?php if ($role === 'boulanger'): ?>
                 <div class="px-3 pb-3">
-                    <div class="nma-help-card">
+                    <div class="sc-help-card">
                         <i class="bi bi-telephone-outbound fs-4"></i>
                         <div class="small fw-semibold mt-1">Besoin d'aide ?</div>
-                        <div class="small text-muted">Service commercial NMA Sanders</div>
+                        <div class="small text-muted">Service commercial Sanders Connect</div>
                         <a class="small fw-semibold" href="tel:+221338390000">+221 33 839 00 00</a>
                     </div>
                 </div>
@@ -143,7 +144,7 @@ $roleLibelle = match ($role) {
         </aside>
 
         <!-- Contenu -->
-        <main class="col-lg-10 nma-content pb-5">
+        <main class="col-lg-10 sc-content pb-5">
             <?php foreach (($messages ?? []) as $msg): ?>
                 <div class="alert alert-<?= e($msg['type']) ?> alert-dismissible fade show shadow-sm d-flex" role="alert">
                     <i class="bi bi-<?= $msg['type'] === 'success' ? 'check2-circle' : ($msg['type'] === 'danger' ? 'exclamation-triangle' : 'info-circle') ?> me-2 mt-1"></i>
@@ -158,10 +159,10 @@ $roleLibelle = match ($role) {
 </div>
 
 <!-- Menu mobile -->
-<div class="offcanvas offcanvas-start nma-offcanvas" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralLabel">
+<div class="offcanvas offcanvas-start sc-offcanvas" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title text-white d-flex align-items-center" id="menuLateralLabel">
-            <img src="<?= e(asset('assets/img/logo-nma.png')) ?>" alt="" class="nma-logo-nav me-2" width="34" height="34">
+            <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>" class="sc-logo-nav me-2" width="34" height="34">
             <?= e(APP_NAME) ?>
         </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fermer"></button>
@@ -173,18 +174,18 @@ $roleLibelle = match ($role) {
         </div>
         <nav class="nav flex-column py-2">
             <?php foreach ($menu as [$cle, $route, $icone, $libelle]): ?>
-                <a class="nav-link nma-nav-link <?= $estActif($route) ? 'active' : '' ?>" href="<?= e(url($route)) ?>">
+                <a class="nav-link sc-nav-link <?= $estActif($route) ? 'active' : '' ?>" href="<?= e(url($route)) ?>">
                     <i class="bi bi-<?= e($icone) ?>"></i><span><?= e($libelle) ?></span>
                 </a>
             <?php endforeach; ?>
-            <a class="nav-link nma-nav-link" href="<?= e(url('notifications')) ?>">
+            <a class="nav-link sc-nav-link" href="<?= e(url('notifications')) ?>">
                 <i class="bi bi-bell"></i><span>Notifications</span>
                 <?php if (($notifNonLues ?? 0) > 0): ?>
                     <span class="badge text-bg-danger ms-auto"><?= (int) $notifNonLues ?></span>
                 <?php endif; ?>
             </a>
             <hr class="mx-3 my-2">
-            <a class="nav-link nma-nav-link text-danger" href="<?= e(logout_url()) ?>">
+            <a class="nav-link sc-nav-link text-danger" href="<?= e(logout_url()) ?>">
                 <i class="bi bi-box-arrow-right"></i><span>Déconnexion</span>
             </a>
         </nav>
@@ -192,7 +193,7 @@ $roleLibelle = match ($role) {
 </div>
 
 <!-- Barre de navigation mobile -->
-<nav class="nma-bottom-nav d-lg-none">
+<nav class="sc-bottom-nav d-lg-none">
     <?php foreach (array_slice($menu, 0, 4) as [$cle, $route, $icone, $libelle]): ?>
         <a href="<?= e(url($route)) ?>" class="<?= $estActif($route) ? 'active' : '' ?>">
             <i class="bi bi-<?= e($icone) ?>"></i>

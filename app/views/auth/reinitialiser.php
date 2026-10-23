@@ -25,7 +25,7 @@
                name="mot_de_passe_confirmation" required autocomplete="new-password">
     </div>
 
-    <button type="submit" class="btn btn-nma w-100 btn-lg">
+    <button type="submit" class="btn btn-sc w-100 btn-lg">
         <i class="bi bi-check2-circle me-2"></i>Enregistrer le mot de passe
     </button>
 </form>

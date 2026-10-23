@@ -16,18 +16,18 @@
 <div class="row g-3 mb-4">
     <?php
     $cartes = [
-        ['Comptes boulangers', $users['boulangers'],  'shop',        'nma'],
+        ['Comptes boulangers', $users['boulangers'],  'shop',        'sc'],
         ['Comptes actifs',     $users['actifs'],      'person-check','success'],
         ['Produits au catalogue', $produits['actifs'],'box-seam',    'info'],
         ['Commandes reÃ§ues',   $compteurs['recue'],   'inbox',       'warning'],
     ];
     foreach ($cartes as [$libelle, $valeur, $icone, $couleur]): ?>
         <div class="col-6 col-lg-3">
-            <div class="nma-stat d-flex align-items-center gap-3">
-                <div class="nma-stat-ico text-<?= e($couleur) ?>"><i class="bi bi-<?= e($icone) ?>"></i></div>
+            <div class="sc-stat d-flex align-items-center gap-3">
+                <div class="sc-stat-ico text-<?= e($couleur) ?>"><i class="bi bi-<?= e($icone) ?>"></i></div>
                 <div>
-                    <div class="nma-stat-value"><?= (int) $valeur ?></div>
-                    <div class="nma-stat-label"><?= e($libelle) ?></div>
+                    <div class="sc-stat-value"><?= (int) $valeur ?></div>
+                    <div class="sc-stat-label"><?= e($libelle) ?></div>
                 </div>
             </div>
         </div>
@@ -38,12 +38,12 @@
     <div class="col-12 col-lg-6">
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-journal-text text-nma me-2"></i>DerniÃ¨res opÃ©rations</span>
+                <span><i class="bi bi-journal-text text-sc me-2"></i>DerniÃ¨res opÃ©rations</span>
                 <a href="<?= e(url('administrateur/journal')) ?>" class="small">Journal complet</a>
             </div>
             <div class="card-body p-0">
                 <?php if ($operations === []): ?>
-                    <div class="nma-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration enregistrÃ©e.</div>
+                    <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration enregistrÃ©e.</div>
                 <?php else: ?>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($operations as $op): ?>
@@ -85,7 +85,7 @@
 
     <div class="col-12 col-lg-6">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-clipboard-data text-nma me-2"></i>ActivitÃ© des 3 derniers mois</div>
+            <div class="card-header"><i class="bi bi-clipboard-data text-sc me-2"></i>ActivitÃ© des 3 derniers mois</div>
             <div class="card-body">
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Commandes</span><strong><?= (int) $stats['total'] ?></strong></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Sacs commandÃ©s</span><strong><?= (int) $stats['sacs'] ?></strong></div>
@@ -94,14 +94,14 @@
                     <span class="text-muted">DÃ©lai moyen de livraison</span>
                     <strong><?= $stats['delai_moyen'] !== null ? e((string) $stats['delai_moyen']) . ' h' : 'â€”' ?></strong>
                 </div>
-                <div class="nma-sep"></div>
+                <div class="sc-sep"></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Comptes inactifs</span><strong><?= (int) $users['inactifs'] ?></strong></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Gestionnaires</span><strong><?= (int) $users['gestionnaires'] ?></strong></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Stock total (sacs)</span><strong><?= (int) $produits['stock'] ?></strong></div>
             </div>
             <div class="card-footer bg-white d-flex gap-2">
-                <a href="<?= e(url('administrateur/statistiques')) ?>" class="btn btn-sm btn-outline-nma flex-grow-1">Statistiques</a>
-                <a href="<?= e(url('administrateur/utilisateurs')) ?>" class="btn btn-sm btn-nma flex-grow-1">GÃ©rer les comptes</a>
+                <a href="<?= e(url('administrateur/statistiques')) ?>" class="btn btn-sm btn-outline-sc flex-grow-1">Statistiques</a>
+                <a href="<?= e(url('administrateur/utilisateurs')) ?>" class="btn btn-sm btn-sc flex-grow-1">GÃ©rer les comptes</a>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
                                     <div class="fw-semibold text-small"><?= e($c['reference']) ?></div>
                                     <div class="text-small text-muted"><?= e($c['nom_boulangerie']) ?> Â· <?= (int) $c['total_sacs'] ?> sac(s)</div>
                                 </div>
-                                <a href="<?= e(url('gestionnaire/commande', ['id' => (int) $c['id']])) ?>" class="btn btn-sm btn-outline-nma">Ouvrir</a>
+                                <a href="<?= e(url('gestionnaire/commande', ['id' => (int) $c['id']])) ?>" class="btn btn-sm btn-outline-sc">Ouvrir</a>
                             </li>
                         <?php endforeach; ?>
                     </ul>

@@ -25,13 +25,13 @@ final class Database
      */
     public static function dialecte(): string
     {
-        $pilote = getenv('NMA_DB_DRIVER');
+        $pilote = getenv('SC_DB_DRIVER');
 
         if ($pilote !== false && $pilote !== '') {
             return strtolower($pilote) === 'sqlite' ? 'sqlite' : 'mysql';
         }
 
-        if (getenv('VERCEL') !== false && getenv('NMA_DB_HOST') === false) {
+        if (getenv('VERCEL') !== false && getenv('SC_DB_HOST') === false) {
             return 'sqlite';
         }
 

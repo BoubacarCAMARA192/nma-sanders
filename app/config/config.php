@@ -1,6 +1,6 @@
 <?php
 /**
- * Configuration generale de la plateforme NMA Sanders.
+ * Configuration generale de la plateforme Sanders Connect.
  * Trois couches : presentation (app/views), traitement (app/controllers + app/core),
  * donnees (app/models + MySQL).
  */
@@ -20,24 +20,24 @@ if (session_status() === PHP_SESSION_NONE) {
         'samesite' => 'Lax',
         'secure'   => $enHttps,
     ]);
-    session_name('NMA_SANDERS_SID');
+    session_name('SANDERS_CONNECT_SID');
     session_start();
 }
 
 // --- Base de donnees ---------------------------------------------------
-define('DB_HOST', getenv('NMA_DB_HOST') ?: '127.0.0.1');
-define('DB_PORT', getenv('NMA_DB_PORT') ?: '3306');
-define('DB_NAME', getenv('NMA_DB_NAME') ?: 'nma_sanders');
-define('DB_USER', getenv('NMA_DB_USER') ?: 'root');
-define('DB_PASS', getenv('NMA_DB_PASS') !== false ? getenv('NMA_DB_PASS') : '');
+define('DB_HOST', getenv('SC_DB_HOST') ?: '127.0.0.1');
+define('DB_PORT', getenv('SC_DB_PORT') ?: '3306');
+define('DB_NAME', getenv('SC_DB_NAME') ?: 'sanders_connect');
+define('DB_USER', getenv('SC_DB_USER') ?: 'root');
+define('DB_PASS', getenv('SC_DB_PASS') !== false ? getenv('SC_DB_PASS') : '');
 
 // --- Application -------------------------------------------------------
-define('APP_NAME', 'NMA Sanders');
+define('APP_NAME', 'Sanders Connect');
 define('APP_SLOGAN', 'Commandez votre farine en toute autonomie');
 define('APP_VERSION', '1.0');
-define('APP_DEBUG', filter_var(getenv('NMA_DEBUG') !== false ? getenv('NMA_DEBUG') : '1', FILTER_VALIDATE_BOOLEAN));
-// Comptes de demonstration affiches sur la page de connexion (NMA_DEMO=1).
-define('APP_DEMO', filter_var(getenv('NMA_DEMO') !== false ? getenv('NMA_DEMO') : (APP_DEBUG ? '1' : '0'), FILTER_VALIDATE_BOOLEAN));
+define('APP_DEBUG', filter_var(getenv('SC_DEBUG') !== false ? getenv('SC_DEBUG') : '1', FILTER_VALIDATE_BOOLEAN));
+// Comptes de demonstration affiches sur la page de connexion (SC_DEMO=1).
+define('APP_DEMO', filter_var(getenv('SC_DEMO') !== false ? getenv('SC_DEMO') : (APP_DEBUG ? '1' : '0'), FILTER_VALIDATE_BOOLEAN));
 define('APP_TIMEZONE', 'Africa/Dakar');
 define('APP_LOCALE', 'fr_FR');
 
@@ -54,7 +54,7 @@ define('STORAGE_PATH', ROOT_PATH . DIRECTORY_SEPARATOR . 'storage');
  * Detection automatique de l'URL de base (fonctionne en local, sous dossier
  * htdocs ou a la racine d'un hebergement mutualise).
  */
-$baseForcee = getenv('NMA_BASE_URL');
+$baseForcee = getenv('SC_BASE_URL');
 if ($baseForcee !== false) {
     // Deploiements particuliers (ex. Vercel) : URL de base imposee.
     $scriptDir = rtrim(str_replace('\\', '/', $baseForcee), '/');

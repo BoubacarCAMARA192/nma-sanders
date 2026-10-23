@@ -13,7 +13,7 @@ $couleurs = ['info' => 'info', 'succes' => 'success', 'alerte' => 'warning', 'da
     </div>
     <form method="post" action="<?= e(url('notifications/tout-lire')) ?>">
         <?= csrf_field() ?>
-        <button type="submit" class="btn btn-outline-nma">
+        <button type="submit" class="btn btn-outline-sc">
             <i class="bi bi-check2-all me-1"></i>Tout marquer comme lu
         </button>
     </form>
@@ -22,11 +22,11 @@ $couleurs = ['info' => 'info', 'succes' => 'success', 'alerte' => 'warning', 'da
 <div class="card">
     <div class="card-body p-0">
         <?php if ($notifications === []): ?>
-            <div class="nma-empty"><i class="bi bi-bell-slash"></i>Aucune notification pour le moment.</div>
+            <div class="sc-empty"><i class="bi bi-bell-slash"></i>Aucune notification pour le moment.</div>
         <?php else: ?>
             <div class="list-group list-group-flush">
                 <?php foreach ($notifications as $n): ?>
-                    <a class="list-group-item list-group-item-action d-flex gap-3 py-3 <?= (int) $n['lu'] === 0 ? 'bg-nma-soft' : '' ?>"
+                    <a class="list-group-item list-group-item-action d-flex gap-3 py-3 <?= (int) $n['lu'] === 0 ? 'bg-sc-soft' : '' ?>"
                        href="<?= e(url('notifications/ouvrir', ['id' => (int) $n['id']])) ?>">
                         <i class="bi bi-<?= e($icones[$n['type']] ?? 'info-circle') ?> text-<?= e($couleurs[$n['type']] ?? 'info') ?> fs-4 mt-1"></i>
                         <div class="flex-grow-1">

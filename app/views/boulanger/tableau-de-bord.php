@@ -15,7 +15,7 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
         <h1 class="h4 fw-bold mb-0">Bonjour <?= e(explode(' ', (string) $utilisateur['nom'])[0]) ?> 👋</h1>
         <p class="text-muted small mb-0"><?= e($utilisateur['nom_boulangerie'] ?? '') ?><?= !empty($utilisateur['zone_livraison']) ? ' · ' . e($utilisateur['zone_livraison']) : '' ?></p>
     </div>
-    <a href="<?= e(url('boulanger/commande/nouvelle')) ?>" class="btn btn-nma">
+    <a href="<?= e(url('boulanger/commande/nouvelle')) ?>" class="btn btn-sc">
         <i class="bi bi-plus-circle me-2"></i>Passer une commande
         <?php if ($nbPanier > 0): ?><span class="badge text-bg-light ms-1"><?= (int) $nbPanier ?></span><?php endif; ?>
     </a>
@@ -23,38 +23,38 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
 
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="nma-stat d-flex align-items-center gap-3">
-            <div class="nma-stat-ico"><i class="bi bi-truck"></i></div>
+        <div class="sc-stat d-flex align-items-center gap-3">
+            <div class="sc-stat-ico"><i class="bi bi-truck"></i></div>
             <div>
-                <div class="nma-stat-value"><?= (int) $totalActives ?></div>
-                <div class="nma-stat-label">Commande(s) en cours</div>
+                <div class="sc-stat-value"><?= (int) $totalActives ?></div>
+                <div class="sc-stat-label">Commande(s) en cours</div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="nma-stat d-flex align-items-center gap-3">
-            <div class="nma-stat-ico"><i class="bi bi-inbox"></i></div>
+        <div class="sc-stat d-flex align-items-center gap-3">
+            <div class="sc-stat-ico"><i class="bi bi-inbox"></i></div>
             <div>
-                <div class="nma-stat-value"><?= (int) $compteurs['recue'] ?></div>
-                <div class="nma-stat-label">En attente de validation</div>
+                <div class="sc-stat-value"><?= (int) $compteurs['recue'] ?></div>
+                <div class="sc-stat-label">En attente de validation</div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="nma-stat d-flex align-items-center gap-3">
-            <div class="nma-stat-ico"><i class="bi bi-check2-all"></i></div>
+        <div class="sc-stat d-flex align-items-center gap-3">
+            <div class="sc-stat-ico"><i class="bi bi-check2-all"></i></div>
             <div>
-                <div class="nma-stat-value"><?= (int) $compteurs['livree'] ?></div>
-                <div class="nma-stat-label">Commandes livrées</div>
+                <div class="sc-stat-value"><?= (int) $compteurs['livree'] ?></div>
+                <div class="sc-stat-label">Commandes livrées</div>
             </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="nma-stat d-flex align-items-center gap-3">
-            <div class="nma-stat-ico"><i class="bi bi-arrow-repeat"></i></div>
+        <div class="sc-stat d-flex align-items-center gap-3">
+            <div class="sc-stat-ico"><i class="bi bi-arrow-repeat"></i></div>
             <div>
-                <div class="nma-stat-value"><?= (int) ($compteurs['refusee'] + $compteurs['annulee']) ?></div>
-                <div class="nma-stat-label">Refusées / annulées</div>
+                <div class="sc-stat-value"><?= (int) ($compteurs['refusee'] + $compteurs['annulee']) ?></div>
+                <div class="sc-stat-label">Refusées / annulées</div>
             </div>
         </div>
     </div>
@@ -64,16 +64,16 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
     <div class="col-12 col-xl-7">
         <div class="card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-truck text-nma me-2"></i>Commandes en cours de traitement</span>
+                <span><i class="bi bi-truck text-sc me-2"></i>Commandes en cours de traitement</span>
                 <a href="<?= e(url('boulanger/historique')) ?>" class="small">Tout voir</a>
             </div>
             <div class="card-body p-0">
                 <?php if ($enCours === []): ?>
-                    <div class="nma-empty">
+                    <div class="sc-empty">
                         <i class="bi bi-clipboard-check"></i>
                         Aucune commande en cours.
                         <div class="mt-2">
-                            <a href="<?= e(url('boulanger/catalogue')) ?>" class="btn btn-sm btn-outline-nma">Voir le catalogue</a>
+                            <a href="<?= e(url('boulanger/catalogue')) ?>" class="btn btn-sm btn-outline-sc">Voir le catalogue</a>
                         </div>
                     </div>
                 <?php else: ?>
@@ -95,7 +95,7 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
                                     </div>
                                     <div class="text-end"><?= statut_badge($c['statut']) ?></div>
                                 </div>
-                                <div class="progress nma-progress mt-2">
+                                <div class="progress sc-progress mt-2">
                                     <div class="progress-bar" style="width: <?= statut_progression($c['statut']) ?>%"></div>
                                 </div>
                             </a>
@@ -108,7 +108,7 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
 
     <div class="col-12 col-xl-5">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-arrow-clockwise text-nma me-2"></i>Réapprovisionnement express</div>
+            <div class="card-header"><i class="bi bi-arrow-clockwise text-sc me-2"></i>Réapprovisionnement express</div>
             <div class="card-body">
                 <?php if ($reappro === []): ?>
                     <p class="text-muted small mb-0">Vos produits habituels apparaîtront ici après votre première commande.</p>
@@ -124,7 +124,7 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
                                 <div class="fw-semibold text-small"><?= e($ligne['libelle']) ?></div>
                                 <div class="text-small text-muted">Dernière commande : <?= e(date_fr($ligne['derniere_commande'])) ?></div>
                             </div>
-                            <button type="submit" class="btn btn-sm btn-outline-nma">
+                            <button type="submit" class="btn btn-sm btn-outline-sc">
                                 <i class="bi bi-plus-lg"></i>
                             </button>
                         </form>
@@ -152,10 +152,10 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
 </div>
 
 <div class="card mt-3">
-    <div class="card-header"><i class="bi bi-clock-history text-nma me-2"></i>Mes 5 dernières commandes</div>
+    <div class="card-header"><i class="bi bi-clock-history text-sc me-2"></i>Mes 5 dernières commandes</div>
     <div class="card-body p-0">
         <?php if ($dernieres === []): ?>
-            <div class="nma-empty"><i class="bi bi-receipt"></i>Aucune commande enregistrée pour le moment.</div>
+            <div class="sc-empty"><i class="bi bi-receipt"></i>Aucune commande enregistrée pour le moment.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -178,7 +178,7 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
                             </td>
                             <td class="d-none d-sm-table-cell text-small text-muted"><?= e(date_fr($c['date_commande'])) ?></td>
                             <td class="text-small"><?= e(date_fr($c['date_livraison_souhaitee'])) ?></td>
-                            <td class="text-end nma-num"><?= (int) $c['total_sacs'] ?></td>
+                            <td class="text-end sc-num"><?= (int) $c['total_sacs'] ?></td>
                             <td><?= statut_badge($c['statut']) ?></td>
                         </tr>
                     <?php endforeach; ?>

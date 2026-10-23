@@ -45,7 +45,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
         <form method="post" action="<?= e(url('administrateur/utilisateur/modifier')) ?>" class="card">
             <?= csrf_field() ?>
             <input type="hidden" name="id" value="<?= (int) $compte['id'] ?>">
-            <div class="card-header"><i class="bi bi-person-gear text-nma me-2"></i>Informations du compte</div>
+            <div class="card-header"><i class="bi bi-person-gear text-sc me-2"></i>Informations du compte</div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
@@ -108,7 +108,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
                 </div>
             </div>
             <div class="card-footer bg-white d-flex gap-2">
-                <button type="submit" class="btn btn-nma flex-grow-1"><i class="bi bi-save me-2"></i>Enregistrer</button>
+                <button type="submit" class="btn btn-sc flex-grow-1"><i class="bi bi-save me-2"></i>Enregistrer</button>
                 <button type="submit" formaction="<?= e(url('administrateur/utilisateur/mot-de-passe')) ?>"
                         class="btn btn-outline-secondary"
                         onclick="return confirm('GÃ©nÃ©rer un mot de passe provisoire pour ce compte ?');">
@@ -121,7 +121,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
     <div class="col-12 col-lg-5">
         <?php if ($estBoulanger && $commandes !== []): ?>
             <div class="card mb-3">
-                <div class="card-header"><i class="bi bi-receipt text-nma me-2"></i>DerniÃ¨res commandes</div>
+                <div class="card-header"><i class="bi bi-receipt text-sc me-2"></i>DerniÃ¨res commandes</div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
                         <?php foreach ($commandes as $c): ?>
@@ -141,10 +141,10 @@ $estBoulanger = $compte['role'] === 'boulanger';
         <?php endif; ?>
 
         <div class="card">
-            <div class="card-header"><i class="bi bi-journal-text text-nma me-2"></i>DerniÃ¨res opÃ©rations de ce compte</div>
+            <div class="card-header"><i class="bi bi-journal-text text-sc me-2"></i>DerniÃ¨res opÃ©rations de ce compte</div>
             <div class="card-body p-0">
                 <?php if ($operations === []): ?>
-                    <div class="nma-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration enregistrÃ©e.</div>
+                    <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration enregistrÃ©e.</div>
                 <?php else: ?>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($operations as $op): ?>

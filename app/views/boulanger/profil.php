@@ -12,7 +12,7 @@
     <div class="col-12 col-lg-7">
         <form method="post" action="<?= e(url('boulanger/profil')) ?>" class="card">
             <?= csrf_field() ?>
-            <div class="card-header"><i class="bi bi-shop text-nma me-2"></i>Identité et boulangerie</div>
+            <div class="card-header"><i class="bi bi-shop text-sc me-2"></i>Identité et boulangerie</div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-12 col-md-6">
@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="card-footer bg-white border-0">
-                <button type="submit" class="btn btn-nma w-100">
+                <button type="submit" class="btn btn-sc w-100">
                     <i class="bi bi-save me-2"></i>Enregistrer mon profil
                 </button>
             </div>
@@ -62,7 +62,7 @@
 
     <div class="col-12 col-lg-5">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-shield-lock text-nma me-2"></i>Sécurité du compte</div>
+            <div class="card-header"><i class="bi bi-shield-lock text-sc me-2"></i>Sécurité du compte</div>
             <div class="card-body">
                 <form method="post" action="<?= e(url('boulanger/profil/mot-de-passe')) ?>">
                     <?= csrf_field() ?>
@@ -82,7 +82,7 @@
                         <input type="password" class="form-control" id="nouveau_mot_de_passe_confirmation"
                                name="nouveau_mot_de_passe_confirmation" required autocomplete="new-password">
                     </div>
-                    <button type="submit" class="btn btn-outline-nma w-100">
+                    <button type="submit" class="btn btn-outline-sc w-100">
                         <i class="bi bi-key me-2"></i>Changer le mot de passe
                     </button>
                 </form>
@@ -90,7 +90,7 @@
         </div>
 
         <div class="card">
-            <div class="card-header"><i class="bi bi-bar-chart text-nma me-2"></i>Mon activité</div>
+            <div class="card-header"><i class="bi bi-bar-chart text-sc me-2"></i>Mon activité</div>
             <div class="card-body">
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Commandes enregistrées</span><strong><?= array_sum($commandes) ?></strong></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Livrées</span><strong><?= (int) $commandes['livree'] ?></strong></div>

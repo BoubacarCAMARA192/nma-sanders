@@ -45,7 +45,7 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
         </p>
     </div>
     <div class="d-flex gap-2">
-        <button type="button" class="btn btn-outline-nma" data-imprimer>
+        <button type="button" class="btn btn-outline-sc" data-imprimer>
             <i class="bi bi-printer me-1"></i>Imprimer
         </button>
         <?php if ($modifiable): ?>
@@ -75,7 +75,7 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                 <span>Progression</span>
                 <span><?= statut_progression($commande['statut']) ?>%</span>
             </div>
-            <div class="progress nma-progress">
+            <div class="progress sc-progress">
                 <div class="progress-bar" style="width: <?= statut_progression($commande['statut']) ?>%"></div>
             </div>
         </div>
@@ -85,13 +85,13 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
 <div class="row g-3">
     <div class="col-12 col-lg-7">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-diagram-3 text-nma me-2"></i>Suivi étape par étape</div>
+            <div class="card-header"><i class="bi bi-diagram-3 text-sc me-2"></i>Suivi étape par étape</div>
             <div class="card-body">
                 <?php if ($interrompu): ?>
-                    <div class="nma-frise">
+                    <div class="sc-frise">
                         <?php foreach ($historique as $h): ?>
                             <?php [$libelle] = statut_meta($h['statut']); ?>
-                            <div class="nma-frise-etape <?= in_array($h['statut'], ['refusee', 'annulee'], true) ? 'danger' : 'fait' ?>">
+                            <div class="sc-frise-etape <?= in_array($h['statut'], ['refusee', 'annulee'], true) ? 'danger' : 'fait' ?>">
                                 <span class="point"><i class="bi bi-<?= in_array($h['statut'], ['refusee', 'annulee'], true) ? 'x-lg' : 'check-lg' ?>"></i></span>
                                 <div class="titre"><?= e($libelle) ?></div>
                                 <div class="meta">
@@ -99,19 +99,19 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                                     · <?= e(Core\Journal::auteur($h['auteur'] ?? null, $h['auteur_role'] ?? null)) ?>
                                 </div>
                                 <?php if (!empty($h['motif'])): ?>
-                                    <div class="nma-timeline-note mt-1"><?= e($h['motif']) ?></div>
+                                    <div class="sc-timeline-note mt-1"><?= e($h['motif']) ?></div>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
                 <?php else: ?>
-                    <div class="nma-frise">
+                    <div class="sc-frise">
                         <?php foreach ($etapes as $statut => $info):
                             $index = array_search($statut, $suivie, true);
                             $classe = $index < $position ? 'fait' : ($index === $position ? 'actuel' : 'futur');
                             $trace  = $traces[$statut] ?? null;
                             ?>
-                            <div class="nma-frise-etape <?= $classe ?>">
+                            <div class="sc-frise-etape <?= $classe ?>">
                                 <span class="point">
                                     <i class="bi bi-<?= $classe === 'fait' ? 'check-lg' : ($classe === 'actuel' ? 'dot' : 'circle') ?>"></i>
                                 </span>
@@ -122,7 +122,7 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                                         · <?= e(Core\Journal::auteur($trace['auteur'] ?? null, $trace['auteur_role'] ?? null)) ?>
                                     </div>
                                     <?php if (!empty($trace['motif'])): ?>
-                                        <div class="nma-timeline-note mt-1"><?= e($trace['motif']) ?></div>
+                                        <div class="sc-timeline-note mt-1"><?= e($trace['motif']) ?></div>
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <div class="meta"><?= e($info[1]) ?></div>
@@ -136,25 +136,25 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
 
         <?php if (!empty($commande['date_livraison']) || !empty($commande['livreur'])): ?>
             <div class="card mb-3">
-                <div class="card-header"><i class="bi bi-truck text-nma me-2"></i>Livraison planifiée</div>
+                <div class="card-header"><i class="bi bi-truck text-sc me-2"></i>Livraison planifiée</div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-6">
-                            <div class="nma-stat-label">Date de passage</div>
+                            <div class="sc-stat-label">Date de passage</div>
                             <div class="fw-semibold"><?= e(date_fr($commande['date_livraison'] ?? null)) ?></div>
                         </div>
                         <div class="col-6">
-                            <div class="nma-stat-label">Livreur</div>
+                            <div class="sc-stat-label">Livreur</div>
                             <div class="fw-semibold"><?= e($commande['livreur'] ?? 'À confirmer') ?></div>
                         </div>
                         <?php if (!empty($commande['vehicule'])): ?>
                             <div class="col-6">
-                                <div class="nma-stat-label">Véhicule</div>
+                                <div class="sc-stat-label">Véhicule</div>
                                 <div class="fw-semibold"><?= e($commande['vehicule']) ?></div>
                             </div>
                         <?php endif; ?>
                         <div class="col-6">
-                            <div class="nma-stat-label">Adresse</div>
+                            <div class="sc-stat-label">Adresse</div>
                             <div class="fw-semibold text-small"><?= e($commande['adresse_livraison']) ?></div>
                         </div>
                     </div>
@@ -165,7 +165,7 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
 
     <div class="col-12 col-lg-5">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-box-seam text-nma me-2"></i>Détail de la commande</div>
+            <div class="card-header"><i class="bi bi-box-seam text-sc me-2"></i>Détail de la commande</div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table mb-0 align-middle">
@@ -188,8 +188,8 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                                     <div class="fw-semibold text-small"><?= e($l['libelle']) ?></div>
                                     <div class="text-small text-muted"><?= e($l['reference']) ?></div>
                                 </td>
-                                <td class="text-end nma-num"><?= (int) $l['quantite'] ?></td>
-                                <td class="text-end nma-num text-small">
+                                <td class="text-end sc-num"><?= (int) $l['quantite'] ?></td>
+                                <td class="text-end sc-num text-small">
                                     <?= $l['prix_unitaire'] !== null ? e(fcfa((float) $l['prix_unitaire'] * (int) $l['quantite'])) : '—' ?>
                                 </td>
                             </tr>
@@ -198,23 +198,23 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                         <tfoot class="table-light">
                             <tr>
                                 <th>Total</th>
-                                <th class="text-end nma-num"><?= (int) $totalSacs ?></th>
-                                <th class="text-end nma-num"><?= $montantConnu ? e(fcfa($totalMontant)) : 'Sur devis' ?></th>
+                                <th class="text-end sc-num"><?= (int) $totalSacs ?></th>
+                                <th class="text-end sc-num"><?= $montantConnu ? e(fcfa($totalMontant)) : 'Sur devis' ?></th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
             <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <span class="nma-stat-label mb-0">Paiement</span>
-                <span class="nma-paiement-badge">
+                <span class="sc-stat-label mb-0">Paiement</span>
+                <span class="sc-paiement-badge">
                     <i class="bi bi-<?= e(mode_paiement_icone($commande['mode_paiement'] ?? null)) ?>"></i>
                     <?= e(mode_paiement_libelle($commande['mode_paiement'] ?? null)) ?>
                 </span>
             </div>
             <?php if (!empty($commande['commentaire'])): ?>
                 <div class="card-footer bg-white">
-                    <div class="nma-stat-label">Commentaire transmis</div>
+                    <div class="sc-stat-label">Commentaire transmis</div>
                     <div class="text-small"><?= e($commande['commentaire']) ?></div>
                 </div>
             <?php endif; ?>
@@ -293,14 +293,14 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                         </div>
                         <div class="col-12">
                             <span class="form-label d-block">Mode de paiement</span>
-                            <div class="nma-paiement-options">
+                            <div class="sc-paiement-options">
                                 <?php foreach (modes_paiement() as $code => $mode): ?>
-                                    <div class="nma-paiement-option">
+                                    <div class="sc-paiement-option">
                                         <input type="radio" id="m_paiement-<?= e($code) ?>" name="mode_paiement"
                                                value="<?= e($code) ?>" <?= ($commande['mode_paiement'] ?? 'carte') === $code ? 'checked' : '' ?> required>
                                         <label for="m_paiement-<?= e($code) ?>">
-                                            <span class="nma-paiement-ico"><i class="bi bi-<?= e($mode[1]) ?>"></i></span>
-                                            <span class="nma-paiement-txt">
+                                            <span class="sc-paiement-ico"><i class="bi bi-<?= e($mode[1]) ?>"></i></span>
+                                            <span class="sc-paiement-txt">
                                                 <strong><?= e($mode[0]) ?></strong>
                                                 <small><?= e($mode[2]) ?></small>
                                             </span>
@@ -313,7 +313,7 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-nma"><i class="bi bi-save me-1"></i>Enregistrer les modifications</button>
+                    <button type="submit" class="btn btn-sc"><i class="bi bi-save me-1"></i>Enregistrer les modifications</button>
                 </div>
             </form>
         </div>

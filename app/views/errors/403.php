@@ -12,7 +12,7 @@ $utilisateur = Core\Auth::utilisateur();
             Votre profil<?= $utilisateur !== null ? ' (' . e($utilisateur['role']) . ')' : '' ?> ne permet pas
             d'accéder à cette page. Cette tentative a été enregistrée dans le journal des opérations.
         </p>
-        <a href="<?= e(url(Core\Auth::connecte() ? Core\Auth::routeAccueil() : 'connexion')) ?>" class="btn btn-nma">
+        <a href="<?= e(url(Core\Auth::connecte() ? Core\Auth::routeAccueil() : 'connexion')) ?>" class="btn btn-sc">
             <i class="bi bi-arrow-left me-2"></i>Retour à mon espace
         </a>
     </div>

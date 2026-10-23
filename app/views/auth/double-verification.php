@@ -22,12 +22,12 @@
 
     <div class="mb-3">
         <label class="form-label" for="code">Code de vérification</label>
-        <input type="text" class="form-control form-control-lg text-center nma-num" id="code" name="code"
+        <input type="text" class="form-control form-control-lg text-center sc-num" id="code" name="code"
                inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required autofocus
                placeholder="000000" style="letter-spacing:.5rem;font-size:1.5rem">
     </div>
 
-    <button type="submit" class="btn btn-nma w-100 btn-lg mb-3">
+    <button type="submit" class="btn btn-sc w-100 btn-lg mb-3">
         <i class="bi bi-shield-check me-2"></i>Valider le code
     </button>
 

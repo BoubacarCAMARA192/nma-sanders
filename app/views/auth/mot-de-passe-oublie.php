@@ -6,7 +6,7 @@ $lienDemo = APP_DEBUG ? ($_SESSION['_reset_demo_link'] ?? null) : null;
 ?>
 <h2 class="h4 fw-bold mb-1">Mot de passe oublié</h2>
 <p class="text-muted small mb-4">
-    Indiquez l'adresse e-mail de votre compte : votre demande est transmise à NMA Sanders qui vous
+    Indiquez l'adresse e-mail de votre compte : votre demande est transmise à Sanders Connect qui vous
     communiquera un lien de réinitialisation valable une heure.
 </p>
 
@@ -30,7 +30,7 @@ $lienDemo = APP_DEBUG ? ($_SESSION['_reset_demo_link'] ?? null) : null;
         </div>
     </div>
 
-    <button type="submit" class="btn btn-nma w-100 btn-lg mb-3">
+    <button type="submit" class="btn btn-sc w-100 btn-lg mb-3">
         <i class="bi bi-send me-2"></i>Envoyer ma demande
     </button>
 </form>

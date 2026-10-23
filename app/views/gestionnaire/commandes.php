@@ -28,7 +28,7 @@ foreach ($commandes as $c) {
             <?= count($commandes) ?> commande(s) affichée(s) · <?= (int) $totalSacs ?> sac(s)
         </p>
     </div>
-    <a href="<?= e(url('gestionnaire/export', $filtres)) ?>" class="btn btn-outline-nma">
+    <a href="<?= e(url('gestionnaire/export', $filtres)) ?>" class="btn btn-outline-sc">
         <i class="bi bi-filetype-csv me-1"></i>Exporter cette liste (CSV)
     </a>
 </div>
@@ -61,7 +61,7 @@ foreach ($commandes as $c) {
                        placeholder="Référence, boulangerie...">
             </div>
             <div class="col-12 col-lg-2 d-flex gap-2">
-                <button type="submit" class="btn btn-nma flex-grow-1"><i class="bi bi-funnel"></i></button>
+                <button type="submit" class="btn btn-sc flex-grow-1"><i class="bi bi-funnel"></i></button>
                 <a href="<?= e(url('gestionnaire/commandes')) ?>" class="btn btn-outline-secondary" title="Réinitialiser">
                     <i class="bi bi-arrow-counterclockwise"></i>
                 </a>
@@ -73,7 +73,7 @@ foreach ($commandes as $c) {
 <div class="card">
     <div class="card-body p-0">
         <?php if ($commandes === []): ?>
-            <div class="nma-empty"><i class="bi bi-inbox"></i>Aucune commande ne correspond à ces critères.</div>
+            <div class="sc-empty"><i class="bi bi-inbox"></i>Aucune commande ne correspond à ces critères.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -117,11 +117,11 @@ foreach ($commandes as $c) {
                                     <span class="text-muted">souhaitée <?= e(date_fr($c['date_livraison_souhaitee'])) ?></span>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-end nma-num"><?= (int) $c['total_sacs'] ?></td>
+                            <td class="text-end sc-num"><?= (int) $c['total_sacs'] ?></td>
                             <td><?= statut_badge($c['statut']) ?></td>
                             <td class="text-end">
                                 <a href="<?= e(url('gestionnaire/commande', ['id' => (int) $c['id']])) ?>"
-                                   class="btn btn-sm <?= $c['statut'] === 'recue' ? 'btn-nma' : 'btn-outline-nma' ?>">
+                                   class="btn btn-sm <?= $c['statut'] === 'recue' ? 'btn-sc' : 'btn-outline-sc' ?>">
                                     <?= $c['statut'] === 'recue' ? 'Valider' : 'Ouvrir' ?>
                                 </a>
                             </td>

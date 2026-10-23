@@ -1,6 +1,6 @@
-# NMA Sanders — Plateforme de commande et de suivi des livraisons de farine
+# Sanders Connect — Plateforme de commande et de suivi des livraisons de farine
 
-Application web complète pour la société **NMA Sanders (Sénégal)** : les boulangeries clientes commandent leur farine en toute autonomie, le service commercial valide et pilote les livraisons, l'administration gère les comptes, le catalogue et les paramètres — le tout tracé et sécurisé.
+Application web complète pour la société **Sanders Connect (Sénégal)** : les boulangeries clientes commandent leur farine en toute autonomie, le service commercial valide et pilote les livraisons, l'administration gère les comptes, le catalogue et les paramètres — le tout tracé et sécurisé.
 
 Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de commande entièrement traçable : `reçue → validée → en préparation → en livraison → livrée` (ou `refusée` / `annulée`).
 
@@ -53,7 +53,7 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 
 ### Interface
 
-- Page d'accueil animée : **scène SVG interactive** (champ de blé ondulant, soleil, nuages, camion NMA en tournée, sacs de farine), parallaxe douce à la souris et cartes inclinables.
+- Page d'accueil animée : **scène SVG interactive** (champ de blé ondulant, soleil, nuages, camion Sanders Connect en tournée, sacs de farine), parallaxe douce à la souris et cartes inclinables.
 - Parcours guidé (choix **inscription** ou **connexion**), cartes « univers » illustrées (Fournil, Livraison, Suivi) et chiffres clés animés, bandeau défilant.
 - Cartes interactives (effet de brillance, icônes animées), fond à halos mouvants, comptes de démonstration cliquables.
 - Tableaux de bord avec compteurs animés, barres de progression animées, entrées échelonnées, mode d'affichage adapté au mobile (barre de navigation basse).
@@ -65,11 +65,11 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 
 | Rôle | Adresse e-mail | Mot de passe |
 | --- | --- | --- |
-| Administrateur | `admin@nmasanders.sn` | `Admin@2026` |
-| Gestionnaire | `gestionnaire@nmasanders.sn` | `Gestion@2026` |
-| Boulanger | `boulanger@demo.sn` | `Boulanger@2026` |
+| Administrateur | `admin@sandersconnect.sn` | `Admin@2026` |
+| Gestionnaire | `gestionnaire@sandersconnect.sn` | `Gestion@2026` |
+| Boulanger | `boulanger@sandersconnect.sn` | `Boulanger@2026` |
 
-> Les comptes de démonstration sont proposés sur la page de connexion (encart cliquable) quand `NMA_DEMO=1`
+> Les comptes de démonstration sont proposés sur la page de connexion (encart cliquable) quand `SC_DEMO=1`
 > (activé par défaut en mode debug, et forcé à `1` sur la démo Vercel).
 
 ---
@@ -94,35 +94,35 @@ Aucun gestionnaire de paquets n'est nécessaire : le projet se déploie en copia
 
    ```bash
    cd C:\xampp\htdocs
-   git clone <URL_DU_DEPOT> nma-sanders
+   git clone <URL_DU_DEPOT> sanders-connect
    ```
 
-   *(sinon, une jonction Windows fait aussi l'affaire : `mklink /J C:\xampp\htdocs\nma-sanders "chemin\vers\le\projet"`)*
+   *(sinon, une jonction Windows fait aussi l'affaire : `mklink /J C:\xampp\htdocs\sanders-connect "chemin\vers\le\projet"`)*
 
-2. **Importer la base** (phpMyAdmin : `http://localhost/phpmyadmin` → Importer → `database/nma_sanders.sql`), ou en ligne de commande :
+2. **Importer la base** (phpMyAdmin : `http://localhost/phpmyadmin` → Importer → `database/sanders_connect.sql`), ou en ligne de commande :
 
    ```bat
-   C:\xampp\mysql\bin\mysql.exe -u root < database\nma_sanders.sql
+   C:\xampp\mysql\bin\mysql.exe -u root < database\sanders_connect.sql
    ```
 
-3. **Vérifier la configuration** : par défaut `127.0.0.1:3306`, base `nma_sanders`, utilisateur `root` sans mot de passe (valeurs XAMPP). Pour un autre environnement, définir les variables d'environnement :
+3. **Vérifier la configuration** : par défaut `127.0.0.1:3306`, base `sanders_connect`, utilisateur `root` sans mot de passe (valeurs XAMPP). Pour un autre environnement, définir les variables d'environnement :
 
    | Variable | Rôle | Défaut |
    | --- | --- | --- |
-   | `NMA_DB_HOST` | Hôte MySQL | `127.0.0.1` |
-   | `NMA_DB_PORT` | Port MySQL | `3306` |
-   | `NMA_DB_NAME` | Nom de la base | `nma_sanders` |
-   | `NMA_DB_USER` | Utilisateur MySQL | `root` |
-   | `NMA_DB_PASS` | Mot de passe MySQL | *(vide)* |
-   | `NMA_DB_DRIVER` | Pilote imposé (`mysql` ou `sqlite`) | *(auto)* |
-   | `NMA_DEBUG` | Mode debug (1/0) | `1` |
-   | `NMA_DEMO` | Afficher les comptes de démonstration sur la connexion (1/0) | `NMA_DEBUG` |
-   | `NMA_BASE_URL` | URL de base imposée (déploiements particuliers) | *(auto)* |
+   | `SC_DB_HOST` | Hôte MySQL | `127.0.0.1` |
+   | `SC_DB_PORT` | Port MySQL | `3306` |
+   | `SC_DB_NAME` | Nom de la base | `sanders_connect` |
+   | `SC_DB_USER` | Utilisateur MySQL | `root` |
+   | `SC_DB_PASS` | Mot de passe MySQL | *(vide)* |
+   | `SC_DB_DRIVER` | Pilote imposé (`mysql` ou `sqlite`) | *(auto)* |
+   | `SC_DEBUG` | Mode debug (1/0) | `1` |
+   | `SC_DEMO` | Afficher les comptes de démonstration sur la connexion (1/0) | `SC_DEBUG` |
+   | `SC_BASE_URL` | URL de base imposée (déploiements particuliers) | *(auto)* |
 
 4. **Lancer** Apache + MySQL depuis le panneau XAMPP puis ouvrir :
 
    ```
-   http://localhost/nma-sanders/
+   http://localhost/sanders-connect/
    ```
 
 > La page d'accueil propose **Créer un compte** (demande d'inscription) ou **Se connecter**, puis redirige vers l'espace correspondant au rôle connecté.
@@ -132,7 +132,7 @@ Aucun gestionnaire de paquets n'est nécessaire : le projet se déploie en copia
 ## Structure du projet
 
 ```
-nma-sanders/
+sanders-connect/
 ├── index.php                  # Front controller (en-têtes de sécurité, routage, erreurs)
 ├── api/index.php              # Point d'entrée serverless (Vercel)
 ├── vercel.json                # Configuration de déploiement Vercel
@@ -146,8 +146,8 @@ nma-sanders/
 │   ├── models/                # Utilisateur, Boulanger, Produit, Commande,
 │   │                          #   HistoriqueStatut, Livraison
 │   └── views/                 # Vues par espace + layouts (public / connecté)
-├── assets/                    # css/app.css, js/app.js, img/favicon.svg
-├── database/                  # nma_sanders.sql (schéma + jeu de données)
+├── assets/                    # css/app.css, js/app.js, img/favicon.png
+├── database/                  # sanders_connect.sql (schéma + jeu de données)
 └── storage/logs/              # Journaux applicatifs
 ```
 
@@ -176,7 +176,7 @@ C:\xampp\php\php.exe tests\parcours.php
 ```
 
 Pour rejouer la suite dans les conditions serverless (SQLite, sans MySQL), lancer l'application avec
-`NMA_DB_DRIVER=sqlite` puis la suite avec `NMA_TEST_SQLITE=1` (et `NMA_TEST_BASE` si le port diffère).
+`SC_DB_DRIVER=sqlite` puis la suite avec `SC_TEST_SQLITE=1` (et `SC_TEST_BASE` si le port diffère).
 
 ---
 
@@ -185,9 +185,9 @@ Pour rejouer la suite dans les conditions serverless (SQLite, sans MySQL), lance
 ### Hébergement PHP / MySQL classique (recommandé)
 
 1. Copier les fichiers par FTP ou `git clone` sur l'hébergement.
-2. Importer `database/nma_sanders.sql` via phpMyAdmin.
-3. Renseigner `NMA_DB_*` (variables d'environnement de l'hébergeur) ou adapter `app/config/config.php`.
-4. Passer `NMA_DEBUG=0` en production.
+2. Importer `database/sanders_connect.sql` via phpMyAdmin.
+3. Renseigner `SC_DB_*` (variables d'environnement de l'hébergeur) ou adapter `app/config/config.php`.
+4. Passer `SC_DEBUG=0` en production.
 
 ### Vercel (application complète)
 
@@ -195,8 +195,8 @@ Le dépôt contient une configuration Vercel (`vercel.json` + `api/index.php`, r
 
 - En environnement serverless, l'application **bascule automatiquement sur SQLite** (aucun réglage MySQL requis) : le fichier de base est créé dans le stockage éphémère de la fonction.
 - Pour **conserver les données entre les exécutions**, connecter un magasin **Vercel Blob** au projet : le jeton `BLOB_READ_WRITE_TOKEN` est alors fourni automatiquement et le fichier SQLite est téléversé/restauré à chaque exécution.
-- `NMA_DEMO=1` affiche les comptes de démonstration sur la page de connexion.
-- En local, la base **MySQL (XAMPP)** reste la référence de développement ; il suffit de renseigner `NMA_DB_HOST`, `NMA_DB_PORT`, `NMA_DB_NAME`, `NMA_DB_USER`, `NMA_DB_PASS` (ou `NMA_DB_DRIVER=mysql`) pour l'utiliser partout.
+- `SC_DEMO=1` affiche les comptes de démonstration sur la page de connexion.
+- En local, la base **MySQL (XAMPP)** reste la référence de développement ; il suffit de renseigner `SC_DB_HOST`, `SC_DB_PORT`, `SC_DB_NAME`, `SC_DB_USER`, `SC_DB_PASS` (ou `SC_DB_DRIVER=mysql`) pour l'utiliser partout.
 - Sans base joignable, les pages concernées affichent une page « base de données injoignable » claire (au lieu d'une erreur brute).
 
 Déploiement en ligne de commande :
@@ -210,4 +210,4 @@ vercel --prod     # production
 
 ## Licence
 
-Projet développé pour **NMA Sanders (Sénégal)** — tous droits réservés.
+Projet développé pour **Sanders Connect (Sénégal)** — tous droits réservés.

@@ -3,7 +3,7 @@
  * Test fonctionnel de bout en bout : parcours boulanger, gestionnaire, administrateur.
  */
 
-define('BASE', getenv('NMA_TEST_BASE') ?: 'http://localhost/nma-sanders/index.php');
+define('BASE', getenv('SC_TEST_BASE') ?: 'http://localhost/sanders-connect/index.php');
 
 /** Hote reel du serveur teste (les redirections absolues y sont resolues). */
 function base_hote(): string
@@ -17,16 +17,16 @@ function base_hote(): string
 /** Acces direct a la base pour les verifications (MySQL local ou SQLite de test). */
 function pdo_test(): PDO
 {
-    if (getenv('NMA_TEST_SQLITE') !== false) {
-        $pdo = new PDO('sqlite:' . rtrim(sys_get_temp_dir(), '/\\') . '/nma_sanders.sqlite');
+    if (getenv('SC_TEST_SQLITE') !== false) {
+        $pdo = new PDO('sqlite:' . rtrim(sys_get_temp_dir(), '/\\') . '/sanders_connect.sqlite');
         $pdo->exec('PRAGMA busy_timeout = 10000');
 
         return $pdo;
     }
 
-    return new PDO('mysql:host=127.0.0.1;dbname=nma_sanders', 'root', '');
+    return new PDO('mysql:host=127.0.0.1;dbname=sanders_connect', 'root', '');
 }
-$COOKIES = sys_get_temp_dir() . '/nma_test_cookies.txt';
+$COOKIES = sys_get_temp_dir() . '/sc_test_cookies.txt';
 @unlink($COOKIES);
 
 $succes = 0;
@@ -103,7 +103,7 @@ function ouvrirSession(string $email, string $motDePasse, string $cookies): arra
 }
 
 echo "===================================================================" . PHP_EOL;
-echo " TESTS FONCTIONNELS — PLATEFORME NMA SANDERS" . PHP_EOL;
+echo " TESTS FONCTIONNELS — PLATEFORME SANDERS CONNECT" . PHP_EOL;
 echo "===================================================================" . PHP_EOL;
 
 // ---------------------------------------------------------------- 1. Securite
@@ -130,11 +130,11 @@ verifier('Aucune fuite de données sans session', !str_contains($r['corps'], 'Bo
 
 // ---------------------------------------------------------------- 2. Boulanger
 echo PHP_EOL . "== 2. Parcours boulanger ==" . PHP_EOL;
-$tableau = ouvrirSession('boulanger@demo.sn', 'Boulanger@2026', $COOKIES);
+$tableau = ouvrirSession('boulanger@sandersconnect.sn', 'Boulanger@2026', $COOKIES);
 verifier('Connexion boulanger réussie', str_contains($tableau['corps'], 'Bonjour'), 'taille ' . strlen($tableau['corps']));
 
 $catalogue = naviguer(BASE . '?r=boulanger/catalogue', $COOKIES);
-verifier('Catalogue affiché (4 farines NMA)', substr_count($catalogue['corps'], 'Ajouter') >= 4);
+verifier('Catalogue affiché (5 farines Sanders Connect)', substr_count($catalogue['corps'], 'Ajouter') >= 5);
 
 $produitsIds = [];
 if (preg_match_all('/name="produit_id" value="(\d+)"/', $catalogue['corps'], $m)) {
@@ -212,7 +212,7 @@ verifier('Tentative d\'injection SQL neutralisée', $r['code'] === 200 || $r['co
 
 // ---------------------------------------------------------------- 3. Gestionnaire
 echo PHP_EOL . "== 3. Parcours gestionnaire ==" . PHP_EOL;
-$gd = ouvrirSession('gestionnaire@nmasanders.sn', 'Gestion@2026', $COOKIES);
+$gd = ouvrirSession('gestionnaire@sandersconnect.sn', 'Gestion@2026', $COOKIES);
 verifier('Connexion gestionnaire réussie', str_contains($gd['corps'], 'Pilotage des commandes'));
 
 $liste = naviguer(BASE . '?r=gestionnaire/commandes', $COOKIES);
@@ -288,11 +288,11 @@ verifier('Fiche clients boulangers', str_contains($clients['corps'], 'Boulangeri
 
 // ---------------------------------------------------------------- 4. Administrateur
 echo PHP_EOL . "== 4. Parcours administrateur ==" . PHP_EOL;
-$adm = ouvrirSession('admin@nmasanders.sn', 'Admin@2026', $COOKIES);
+$adm = ouvrirSession('admin@sandersconnect.sn', 'Admin@2026', $COOKIES);
 verifier('Connexion administrateur réussie', str_contains($adm['corps'], 'Administration de la plateforme'));
 
 $users = naviguer(BASE . '?r=administrateur/utilisateurs', $COOKIES);
-verifier('Liste des utilisateurs', str_contains($users['corps'], 'boulanger@demo.sn'));
+verifier('Liste des utilisateurs', str_contains($users['corps'], 'boulanger@sandersconnect.sn'));
 
 $emailTest = 'test.auto' . random_int(100, 999) . '@boulangerie.sn';
 $r = requete(BASE . '?r=administrateur/utilisateur/creer', [
@@ -348,13 +348,13 @@ verifier('Mot de passe faible refusé', str_contains($users['corps'], 'au moins 
 
 // Desactivation puis tentative de connexion avec une session vierge
 $r = requete(BASE . '?r=administrateur/utilisateur/activer', ['_token' => token($users['corps']), 'id' => $nouvelId], $COOKIES);
-$cookiesNeufs = sys_get_temp_dir() . '/nma_cookies_neufs.txt';
+$cookiesNeufs = sys_get_temp_dir() . '/sc_cookies_neufs.txt';
 @unlink($cookiesNeufs);
 $formulaire = naviguer(BASE . '?r=connexion', $cookiesNeufs);
 $r = requete(BASE . '?r=connexion', ['_token' => token($formulaire['corps']), 'email' => $emailTest, 'mot_de_passe' => 'Test@2026'], $cookiesNeufs);
 verifier('Connexion refusée pour un compte désactivé', str_contains($r['corps'], 'non activé'), 'code ' . $r['code']);
 
-$adm2 = ouvrirSession('admin@nmasanders.sn', 'Admin@2026', $COOKIES);
+$adm2 = ouvrirSession('admin@sandersconnect.sn', 'Admin@2026', $COOKIES);
 $users = naviguer(BASE . '?r=administrateur/utilisateurs', $COOKIES);
 requete(BASE . '?r=administrateur/utilisateur/activer', ['_token' => token($users['corps']), 'id' => $nouvelId], $COOKIES);
 $users = naviguer(BASE . '?r=administrateur/utilisateurs', $COOKIES);
@@ -404,11 +404,11 @@ $actif = (int) $pdo->query("SELECT actif FROM produit WHERE id = $produitTestId"
 verifier('Produit retiré du catalogue boulanger', $actif === 0);
 
 // Verifier que le produit retire n'apparait plus au catalogue boulanger
-$pageB = ouvrirSession('boulanger@demo.sn', 'Boulanger@2026', $COOKIES);
+$pageB = ouvrirSession('boulanger@sandersconnect.sn', 'Boulanger@2026', $COOKIES);
 $catB = naviguer(BASE . '?r=boulanger/catalogue', $COOKIES);
 verifier('Produit inactif absent du catalogue boulanger', !str_contains($catB['corps'], 'TEST-REF-01'));
 
-$journal = ouvrirSession('admin@nmasanders.sn', 'Admin@2026', $COOKIES);
+$journal = ouvrirSession('admin@sandersconnect.sn', 'Admin@2026', $COOKIES);
 $journal = naviguer(BASE . '?r=administrateur/journal', $COOKIES);
 verifier('Journal des opérations consultable', str_contains($journal['corps'], 'Utilisateur créé') || str_contains($journal['corps'], 'Commande validée'));
 verifier('Journal : périmètre complet tracé', str_contains($journal['corps'], 'Produit créé') && str_contains($journal['corps'], 'Stock ajusté'));
@@ -425,7 +425,7 @@ $params = naviguer(BASE . '?r=administrateur/parametres', $COOKIES);
 verifier('Valeur de paramètre hors bornes rejetée', str_contains($params['corps'], 'compris entre'));
 
 // Effet du parametre cote boulanger (48 h)
-$pageB = ouvrirSession('boulanger@demo.sn', 'Boulanger@2026', $COOKIES);
+$pageB = ouvrirSession('boulanger@sandersconnect.sn', 'Boulanger@2026', $COOKIES);
 $catB = naviguer(BASE . '?r=boulanger/catalogue', $COOKIES);
 requete(BASE . '?r=boulanger/panier/ajouter', ['_token' => token($catB['corps']), 'produit_id' => $produitsIds[0], 'quantite' => '2', 'retour' => 'boulanger/commande/nouvelle'], $COOKIES);
 $panier = naviguer(BASE . '?r=boulanger/commande/nouvelle', $COOKIES);
@@ -438,13 +438,13 @@ $apres = naviguer(BASE . '?r=boulanger/commande/nouvelle', $COOKIES);
 verifier('Délai minimum de 48 h appliqué au boulanger', str_contains($apres['corps'], date('d/m/Y', strtotime('+2 days'))), 'attendu ' . date('d/m/Y', strtotime('+2 days')));
 
 // Restauration
-$adm3 = ouvrirSession('admin@nmasanders.sn', 'Admin@2026', $COOKIES);
+$adm3 = ouvrirSession('admin@sandersconnect.sn', 'Admin@2026', $COOKIES);
 $params = naviguer(BASE . '?r=administrateur/parametres', $COOKIES);
 requete(BASE . '?r=administrateur/parametres', ['_token' => token($params['corps']), 'delai_minimum_heures' => '24', 'max_tentatives_connexion' => '5', 'duree_blocage_minutes' => '15', 'session_duree_minutes' => '45', 'jours_historique_par_defaut' => '90'], $COOKIES);
 
 // ---------------------------------------------------------------- 5. Boulanger : tracabilite et fin
 echo PHP_EOL . "== 5. Traçabilité, notifications et profil ==" . PHP_EOL;
-$notifs = ouvrirSession('boulanger@demo.sn', 'Boulanger@2026', $COOKIES);
+$notifs = ouvrirSession('boulanger@sandersconnect.sn', 'Boulanger@2026', $COOKIES);
 $notifs = naviguer(BASE . '?r=notifications', $COOKIES);
 verifier('Boulanger informé des changements de statut (F14)', str_contains($notifs['corps'], $reference));
 
@@ -487,7 +487,7 @@ verifier('Historique vide pour le nouveau compte', str_contains($r['corps'], 'Au
 
 // ---------------------------------------------------------------- 7. Inscription
 echo PHP_EOL . "== 7. Inscription autonome ==" . PHP_EOL;
-$cookiesInscription = sys_get_temp_dir() . '/nma_test_cookies_inscription.txt';
+$cookiesInscription = sys_get_temp_dir() . '/sc_test_cookies_inscription.txt';
 @unlink($cookiesInscription);
 
 $accueilPub = naviguer(BASE . '?r=', $cookiesInscription);

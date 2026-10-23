@@ -18,7 +18,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
         <p class="text-muted small mb-0">Période analysée : du <?= e(date_fr($depuis)) ?> au <?= e(date_fr($jusqu)) ?></p>
     </div>
     <div class="d-flex gap-2">
-        <a href="<?= e(url('gestionnaire/export', ['depuis' => $depuis, 'jusqu' => $jusqu])) ?>" class="btn btn-outline-nma">
+        <a href="<?= e(url('gestionnaire/export', ['depuis' => $depuis, 'jusqu' => $jusqu])) ?>" class="btn btn-outline-sc">
             <i class="bi bi-filetype-csv me-1"></i>Exporter la période
         </a>
     </div>
@@ -37,7 +37,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
                 <input type="date" class="form-control" id="jusqu" name="jusqu" value="<?= e($jusqu) ?>">
             </div>
             <div class="col-2 col-md-2">
-                <button type="submit" class="btn btn-nma w-100"><i class="bi bi-arrow-repeat"></i></button>
+                <button type="submit" class="btn btn-sc w-100"><i class="bi bi-arrow-repeat"></i></button>
             </div>
         </div>
     </div>
@@ -45,27 +45,27 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
 
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="nma-stat">
-            <div class="nma-stat-value"><?= (int) $stats['total'] ?></div>
-            <div class="nma-stat-label">Commandes sur la période</div>
+        <div class="sc-stat">
+            <div class="sc-stat-value"><?= (int) $stats['total'] ?></div>
+            <div class="sc-stat-label">Commandes sur la période</div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="nma-stat">
-            <div class="nma-stat-value"><?= (int) $stats['sacs'] ?></div>
-            <div class="nma-stat-label">Sacs commandés</div>
+        <div class="sc-stat">
+            <div class="sc-stat-value"><?= (int) $stats['sacs'] ?></div>
+            <div class="sc-stat-label">Sacs commandés</div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="nma-stat">
-            <div class="nma-stat-value"><?= e((string) $stats['taux_livraison']) ?> %</div>
-            <div class="nma-stat-label">Commandes livrées</div>
+        <div class="sc-stat">
+            <div class="sc-stat-value"><?= e((string) $stats['taux_livraison']) ?> %</div>
+            <div class="sc-stat-label">Commandes livrées</div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="nma-stat">
-            <div class="nma-stat-value"><?= $stats['delai_moyen'] !== null ? e((string) $stats['delai_moyen']) . ' h' : '—' ?></div>
-            <div class="nma-stat-label">Délai moyen commande → livraison</div>
+        <div class="sc-stat">
+            <div class="sc-stat-value"><?= $stats['delai_moyen'] !== null ? e((string) $stats['delai_moyen']) . ' h' : '—' ?></div>
+            <div class="sc-stat-label">Délai moyen commande → livraison</div>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
 <div class="row g-3">
     <div class="col-12 col-lg-7">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-graph-up text-nma me-2"></i>Volumes par mois (6 derniers mois)</div>
+            <div class="card-header"><i class="bi bi-graph-up text-sc me-2"></i>Volumes par mois (6 derniers mois)</div>
             <div class="card-body">
                 <?php if ($stats['par_mois'] === []): ?>
                     <p class="text-muted small mb-0">Pas encore de données suffisantes.</p>
@@ -88,7 +88,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
                                     <?= (int) $m['nb_commandes'] ?> commande(s) · <strong><?= (int) $m['total_sacs'] ?> sacs</strong>
                                 </span>
                             </div>
-                            <div class="progress nma-progress mt-1">
+                            <div class="progress sc-progress mt-1">
                                 <div class="progress-bar" style="width: <?= (int) round((int) $m['total_sacs'] * 100 / $maxSacs) ?>%"></div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
         </div>
 
         <div class="card">
-            <div class="card-header"><i class="bi bi-pie-chart text-nma me-2"></i>Répartition par statut (toutes périodes)</div>
+            <div class="card-header"><i class="bi bi-pie-chart text-sc me-2"></i>Répartition par statut (toutes périodes)</div>
             <div class="card-body p-0">
                 <table class="table mb-0 align-middle">
                     <tbody>
@@ -106,9 +106,9 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
                         <?php [$libelle, $couleur] = statut_meta($statut); ?>
                         <tr>
                             <td style="width:180px"><?= statut_badge($statut) ?></td>
-                            <td class="nma-num text-end" style="width:70px"><?= (int) $total ?></td>
+                            <td class="sc-num text-end" style="width:70px"><?= (int) $total ?></td>
                             <td>
-                                <div class="progress nma-progress">
+                                <div class="progress sc-progress">
                                     <div class="progress-bar bg-<?= e($couleur) ?>" style="width: <?= (int) round((int) $total * 100 / $totalStatuts) ?>%"></div>
                                 </div>
                             </td>
@@ -122,10 +122,10 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
 
     <div class="col-12 col-lg-5">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-trophy text-nma me-2"></i>Produits les plus commandés</div>
+            <div class="card-header"><i class="bi bi-trophy text-sc me-2"></i>Produits les plus commandés</div>
             <div class="card-body p-0">
                 <?php if ($stats['top_produits'] === []): ?>
-                    <div class="nma-empty"><i class="bi bi-box"></i>Aucune donnée sur la période.</div>
+                    <div class="sc-empty"><i class="bi bi-box"></i>Aucune donnée sur la période.</div>
                 <?php else: ?>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($stats['top_produits'] as $i => $p): ?>
@@ -135,7 +135,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
                                     <span class="text-small fw-semibold"><?= e($p['libelle']) ?></span>
                                     <div class="text-small text-muted"><?= (int) $p['nb_commandes'] ?> commande(s)</div>
                                 </div>
-                                <span class="nma-pill"><?= (int) $p['total_sacs'] ?> sacs</span>
+                                <span class="sc-pill"><?= (int) $p['total_sacs'] ?> sacs</span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -144,10 +144,10 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
         </div>
 
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-shop text-nma me-2"></i>Meilleurs clients</div>
+            <div class="card-header"><i class="bi bi-shop text-sc me-2"></i>Meilleurs clients</div>
             <div class="card-body p-0">
                 <?php if ($stats['top_boulangers'] === []): ?>
-                    <div class="nma-empty"><i class="bi bi-people"></i>Aucune donnée sur la période.</div>
+                    <div class="sc-empty"><i class="bi bi-people"></i>Aucune donnée sur la période.</div>
                 <?php else: ?>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($stats['top_boulangers'] as $i => $b): ?>
@@ -157,7 +157,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
                                     <span class="text-small fw-semibold"><?= e($b['nom_boulangerie']) ?></span>
                                     <div class="text-small text-muted"><?= e($b['ville'] ?? '') ?> · <?= (int) $b['nb_commandes'] ?> commande(s)</div>
                                 </div>
-                                <span class="nma-pill"><?= (int) $b['total_sacs'] ?> sacs</span>
+                                <span class="sc-pill"><?= (int) $b['total_sacs'] ?> sacs</span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -166,7 +166,7 @@ $totalStatuts = max(1, array_sum($stats['par_statut']));
         </div>
 
         <div class="card">
-            <div class="card-header"><i class="bi bi-truck text-nma me-2"></i>Livraisons</div>
+            <div class="card-header"><i class="bi bi-truck text-sc me-2"></i>Livraisons</div>
             <div class="card-body">
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Planifiées</span><strong><?= (int) $livrStats['planifiees'] ?></strong></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">En cours</span><strong><?= (int) $livrStats['en_cours'] ?></strong></div>

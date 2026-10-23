@@ -13,7 +13,7 @@ $nbPanier = array_sum($panier);
         <p class="text-muted small mb-0">Sélectionnez les produits puis validez votre commande.</p>
     </div>
     <?php if ($nbPanier > 0): ?>
-        <a href="<?= e(url('boulanger/commande/nouvelle')) ?>" class="btn btn-nma">
+        <a href="<?= e(url('boulanger/commande/nouvelle')) ?>" class="btn btn-sc">
             <i class="bi bi-basket2 me-2"></i>Voir ma commande (<?= (int) $nbPanier ?>)
         </a>
     <?php endif; ?>
@@ -25,12 +25,12 @@ $nbPanier = array_sum($panier);
         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
         <input type="search" class="form-control" name="q" value="<?= e($recherche) ?>"
                placeholder="Rechercher une farine (ex. T55, semoule...)">
-        <button class="btn btn-nma" type="submit">Rechercher</button>
+        <button class="btn btn-sc" type="submit">Rechercher</button>
     </div>
 </form>
 
 <?php if ($produits === []): ?>
-    <div class="card"><div class="nma-empty"><i class="bi bi-search"></i>Aucun produit ne correspond à votre recherche.</div></div>
+    <div class="card"><div class="sc-empty"><i class="bi bi-search"></i>Aucun produit ne correspond à votre recherche.</div></div>
 <?php else: ?>
     <div class="row g-3">
         <?php foreach ($produits as $p):
@@ -39,8 +39,8 @@ $nbPanier = array_sum($panier);
             $quantitePanier = (int) ($panier[(int) $p['id']] ?? 0);
             ?>
             <div class="col-12 col-md-6 col-xxl-4">
-                <div class="card nma-produit-card h-100">
-                    <div class="nma-produit-visuel">
+                <div class="card sc-produit-card h-100">
+                    <div class="sc-produit-visuel">
                         <?php if (!empty($p['image'])): ?>
                             <img src="<?= e(asset($p['image'])) ?>" alt="<?= e($p['libelle']) ?>" loading="lazy">
                         <?php else: ?>
@@ -55,13 +55,13 @@ $nbPanier = array_sum($panier);
                             <?php endif; ?>
                         </div>
                         <p class="text-small text-muted mb-2"><?= e($p['description'] ?? '') ?></p>
-                        <div class="nma-produit-prix mb-2">
+                        <div class="sc-produit-prix mb-2">
                             <?= e(fcfa($p['prix_unitaire'] !== null ? (float) $p['prix_unitaire'] : null)) ?>
                             <small>/ <?= e($p['unite']) ?></small>
                         </div>
                         <div class="d-flex flex-wrap gap-2 text-small mb-2">
-                            <span class="nma-pill"><i class="bi bi-tag"></i><?= e($p['reference']) ?></span>
-                            <span class="nma-pill"><i class="bi bi-box-seam"></i><?= e($p['unite']) ?></span>
+                            <span class="sc-pill"><i class="bi bi-tag"></i><?= e($p['reference']) ?></span>
+                            <span class="sc-pill"><i class="bi bi-box-seam"></i><?= e($p['unite']) ?></span>
                         </div>
                         <?php if ($dispo): ?>
                             <div class="text-small text-success">
@@ -89,7 +89,7 @@ $nbPanier = array_sum($panier);
                                             <i class="bi bi-plus"></i>
                                         </button>
                                     </div>
-                                    <button type="submit" class="btn btn-nma flex-grow-1">
+                                    <button type="submit" class="btn btn-sc flex-grow-1">
                                         <i class="bi bi-cart-plus me-2"></i>Ajouter
                                     </button>
                                 </div>

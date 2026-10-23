@@ -42,7 +42,7 @@ $statutsLibelles = [
         </p>
     </div>
     <div class="d-flex gap-2">
-        <button type="button" class="btn btn-outline-nma" data-imprimer><i class="bi bi-printer me-1"></i>Bon de commande</button>
+        <button type="button" class="btn btn-outline-sc" data-imprimer><i class="bi bi-printer me-1"></i>Bon de commande</button>
         <a href="<?= e(url('gestionnaire/commandes')) ?>" class="btn btn-outline-secondary">Retour</a>
     </div>
 </div>
@@ -68,8 +68,8 @@ $statutsLibelles = [
     <div class="col-12 col-lg-7">
         <div class="card mb-3">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-box-seam text-nma me-2"></i>Lignes de commande</span>
-                <span class="nma-pill"><i class="bi bi-bag"></i><?= (int) $total['sacs'] ?> sac(s)</span>
+                <span><i class="bi bi-box-seam text-sc me-2"></i>Lignes de commande</span>
+                <span class="sc-pill"><i class="bi bi-bag"></i><?= (int) $total['sacs'] ?> sac(s)</span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -89,13 +89,13 @@ $statutsLibelles = [
                                     <div class="fw-semibold text-small"><?= e($l['libelle']) ?></div>
                                     <div class="text-small text-muted"><?= e($l['reference']) ?> · <?= e($l['unite']) ?></div>
                                 </td>
-                                <td class="text-end nma-num"><?= (int) $l['quantite'] ?></td>
+                                <td class="text-end sc-num"><?= (int) $l['quantite'] ?></td>
                                 <td class="text-end d-none d-sm-table-cell">
                                     <span class="badge text-bg-<?= (int) $l['stock_disponible'] >= (int) $l['quantite'] ? 'success' : 'danger' ?>">
                                         <?= (int) $l['stock_disponible'] ?>
                                     </span>
                                 </td>
-                                <td class="text-end nma-num text-small">
+                                <td class="text-end sc-num text-small">
                                     <?= $l['prix_unitaire'] !== null ? e(fcfa((float) $l['prix_unitaire'] * (int) $l['quantite'])) : '—' ?>
                                 </td>
                             </tr>
@@ -104,7 +104,7 @@ $statutsLibelles = [
                         <tfoot class="table-light">
                             <tr>
                                 <th colspan="3" class="text-end">Montant total</th>
-                                <th class="text-end nma-num">
+                                <th class="text-end sc-num">
                                     <?= $total['montant_connu'] ? e(fcfa((float) $total['montant'])) : 'Sur devis' ?>
                                 </th>
                             </tr>
@@ -113,37 +113,37 @@ $statutsLibelles = [
                 </div>
             </div>
             <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <span class="nma-stat-label mb-0">Mode de paiement</span>
-                <span class="nma-paiement-badge">
+                <span class="sc-stat-label mb-0">Mode de paiement</span>
+                <span class="sc-paiement-badge">
                     <i class="bi bi-<?= e(mode_paiement_icone($commande['mode_paiement'] ?? null)) ?>"></i>
                     <?= e(mode_paiement_libelle($commande['mode_paiement'] ?? null)) ?>
                 </span>
             </div>
             <?php if (!empty($commande['commentaire'])): ?>
                 <div class="card-footer bg-white">
-                    <div class="nma-stat-label">Commentaire du boulanger</div>
+                    <div class="sc-stat-label">Commentaire du boulanger</div>
                     <div class="text-small"><?= e($commande['commentaire']) ?></div>
                 </div>
             <?php endif; ?>
         </div>
 
         <div class="card">
-            <div class="card-header"><i class="bi bi-person-lines-fill text-nma me-2"></i>Coordonnées du client</div>
+            <div class="card-header"><i class="bi bi-person-lines-fill text-sc me-2"></i>Coordonnées du client</div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-6">
-                        <div class="nma-stat-label">Boulangerie</div>
+                        <div class="sc-stat-label">Boulangerie</div>
                         <div class="fw-semibold"><?= e($commande['nom_boulangerie']) ?></div>
                     </div>
                     <div class="col-6">
-                        <div class="nma-stat-label">Contact</div>
+                        <div class="sc-stat-label">Contact</div>
                         <div class="fw-semibold"><?= e($commande['boulanger_nom']) ?></div>
                         <a href="tel:<?= e($commande['boulanger_telephone'] ?? '') ?>" class="text-small">
                             <i class="bi bi-telephone me-1"></i><?= e($commande['boulanger_telephone'] ?? '—') ?>
                         </a>
                     </div>
                     <div class="col-12">
-                        <div class="nma-stat-label">Adresse de livraison</div>
+                        <div class="sc-stat-label">Adresse de livraison</div>
                         <div class="fw-semibold"><?= e($commande['adresse_livraison']) ?></div>
                         <?php if (!empty($commande['zone_livraison'])): ?>
                             <div class="text-small text-muted"><i class="bi bi-geo-alt me-1"></i><?= e($commande['zone_livraison']) ?></div>
@@ -191,7 +191,7 @@ $statutsLibelles = [
         <!-- F12 : progression du statut -->
         <?php if ($prochain !== null): ?>
             <div class="card mb-3">
-                <div class="card-header"><i class="bi bi-arrow-right-circle text-nma me-2"></i>Faire progresser le statut</div>
+                <div class="card-header"><i class="bi bi-arrow-right-circle text-sc me-2"></i>Faire progresser le statut</div>
                 <div class="card-body">
                     <p class="text-small text-muted">
                         Statut actuel : <strong><?= e($statutsLibelles[$commande['statut']]) ?></strong>.
@@ -205,7 +205,7 @@ $statutsLibelles = [
                         <label class="form-label" for="note">Note interne (facultatif)</label>
                         <input type="text" class="form-control mb-2" id="note" name="note" maxlength="255"
                                placeholder="Ex. camion N°2, chargement terminé...">
-                        <button type="submit" class="btn btn-nma w-100">
+                        <button type="submit" class="btn btn-sc w-100">
                             <i class="bi bi-arrow-right me-2"></i>Passer en « <?= e($statutsLibelles[$prochain]) ?> »
                         </button>
                     </form>
@@ -216,7 +216,7 @@ $statutsLibelles = [
         <!-- F13 : planification de la livraison -->
         <?php if (in_array($commande['statut'], ['validee', 'en_preparation', 'en_livraison'], true)): ?>
             <div class="card mb-3" id="livraison">
-                <div class="card-header"><i class="bi bi-truck text-nma me-2"></i>Livraison</div>
+                <div class="card-header"><i class="bi bi-truck text-sc me-2"></i>Livraison</div>
                 <div class="card-body">
                     <form method="post" action="<?= e(url('gestionnaire/livraisons/planifier')) ?>">
                         <?= csrf_field() ?>
@@ -233,8 +233,8 @@ $statutsLibelles = [
                                        list="listeLivreurs" required
                                        value="<?= e($livraison['livreur'] ?? '') ?>" placeholder="Nom du livreur">
                                 <datalist id="listeLivreurs">
-                                    <option value="Livreur NMA 1"></option>
-                                    <option value="Livreur NMA 2"></option>
+                                    <option value="Livreur Sanders Connect 1"></option>
+                                    <option value="Livreur Sanders Connect 2"></option>
                                 </datalist>
                             </div>
                             <div class="col-12 col-sm-6">
@@ -248,13 +248,13 @@ $statutsLibelles = [
                                        value="<?= e($livraison['commentaire'] ?? '') ?>">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-nma w-100 mt-3">
+                        <button type="submit" class="btn btn-sc w-100 mt-3">
                             <i class="bi bi-calendar-check me-2"></i><?= $livraison !== null ? 'Mettre à jour la livraison' : 'Planifier la livraison' ?>
                         </button>
                     </form>
 
                     <?php if ($livraison !== null): ?>
-                        <div class="nma-sep"></div>
+                        <div class="sc-sep"></div>
                         <div class="text-small text-muted mb-2">État de la tournée : <strong><?= e($livraison['etat']) ?></strong></div>
                         <form method="post" action="<?= e(url('gestionnaire/livraisons/etat')) ?>" class="d-flex gap-2">
                             <?= csrf_field() ?>
@@ -264,7 +264,7 @@ $statutsLibelles = [
                                     <option value="<?= e($cle) ?>" <?= $livraison['etat'] === $cle ? 'selected' : '' ?>><?= e($lib) ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <button type="submit" class="btn btn-sm btn-outline-nma text-nowrap">Mettre à jour</button>
+                            <button type="submit" class="btn btn-sm btn-outline-sc text-nowrap">Mettre à jour</button>
                         </form>
                     <?php endif; ?>
                 </div>
@@ -273,12 +273,12 @@ $statutsLibelles = [
 
         <!-- F07 : historique / tracabilite -->
         <div class="card">
-            <div class="card-header"><i class="bi bi-clock-history text-nma me-2"></i>Historique horodaté</div>
+            <div class="card-header"><i class="bi bi-clock-history text-sc me-2"></i>Historique horodaté</div>
             <div class="card-body">
-                <div class="nma-frise">
+                <div class="sc-frise">
                     <?php foreach ($historique as $h): ?>
                         <?php [$libelle] = statut_meta($h['statut']); ?>
-                        <div class="nma-frise-etape <?= in_array($h['statut'], ['refusee', 'annulee'], true) ? 'danger' : 'fait' ?>">
+                        <div class="sc-frise-etape <?= in_array($h['statut'], ['refusee', 'annulee'], true) ? 'danger' : 'fait' ?>">
                             <span class="point"><i class="bi bi-check-lg"></i></span>
                             <div class="titre"><?= e($libelle) ?></div>
                             <div class="meta">
@@ -286,7 +286,7 @@ $statutsLibelles = [
                                 · <?= e(Core\Journal::auteur($h['auteur'] ?? null, $h['auteur_role'] ?? null)) ?>
                             </div>
                             <?php if (!empty($h['motif'])): ?>
-                                <div class="nma-timeline-note mt-1"><?= e($h['motif']) ?></div>
+                                <div class="sc-timeline-note mt-1"><?= e($h['motif']) ?></div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>

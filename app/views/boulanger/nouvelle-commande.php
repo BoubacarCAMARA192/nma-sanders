@@ -21,18 +21,18 @@ foreach ($lignes as $l) {
         <h1 class="h4 fw-bold mb-0">Ma commande</h1>
         <p class="text-muted small mb-0">Vérifiez les quantités puis indiquez la livraison souhaitée.</p>
     </div>
-    <a href="<?= e(url('boulanger/catalogue')) ?>" class="btn btn-outline-nma">
+    <a href="<?= e(url('boulanger/catalogue')) ?>" class="btn btn-outline-sc">
         <i class="bi bi-plus-lg me-1"></i>Ajouter des produits
     </a>
 </div>
 
 <?php if ($lignes === []): ?>
     <div class="card">
-        <div class="nma-empty">
+        <div class="sc-empty">
             <i class="bi bi-basket"></i>
             Votre commande est vide.
             <div class="mt-3">
-                <a href="<?= e(url('boulanger/catalogue')) ?>" class="btn btn-nma">
+                <a href="<?= e(url('boulanger/catalogue')) ?>" class="btn btn-sc">
                     <i class="bi bi-grid-3x3-gap me-2"></i>Choisir des produits
                 </a>
             </div>
@@ -55,7 +55,7 @@ foreach ($lignes as $l) {
     <div class="col-12 col-lg-7">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span><i class="bi bi-basket2 text-nma me-2"></i>Produits sélectionnés</span>
+                <span><i class="bi bi-basket2 text-sc me-2"></i>Produits sélectionnés</span>
                 <form method="post" action="<?= e(url('boulanger/panier/vider')) ?>" class="d-inline"
                       data-confirmer="Vider toute la commande en cours ?">
                     <?= csrf_field() ?>
@@ -97,7 +97,7 @@ foreach ($lignes as $l) {
                                     </form>
                                     <div class="text-end text-small text-muted mt-1">0 = retirer</div>
                                 </td>
-                                <td class="text-end nma-num">
+                                <td class="text-end sc-num">
                                     <?= $l['prix_unitaire'] !== null ? e(fcfa((float) $l['prix_unitaire'] * (int) $l['quantite'])) : '—' ?>
                                 </td>
                             </tr>
@@ -106,8 +106,8 @@ foreach ($lignes as $l) {
                         <tfoot class="table-light">
                             <tr>
                                 <th>Total</th>
-                                <th class="text-end nma-num"><?= (int) $total['sacs'] ?> sac(s)</th>
-                                <th class="text-end nma-num"><?= $total['montant_connu'] ? e(fcfa((float) $total['montant'])) : 'Sur devis' ?></th>
+                                <th class="text-end sc-num"><?= (int) $total['sacs'] ?> sac(s)</th>
+                                <th class="text-end sc-num"><?= $total['montant_connu'] ? e(fcfa((float) $total['montant'])) : 'Sur devis' ?></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -118,9 +118,9 @@ foreach ($lignes as $l) {
 
     <div class="col-12 col-lg-5">
         <form method="post" action="<?= e(url('boulanger/commande/enregistrer')) ?>" class="card"
-              data-confirmer="Confirmer l'envoi de cette commande à NMA Sanders ?">
+              data-confirmer="Confirmer l'envoi de cette commande à Sanders Connect ?">
             <?= csrf_field() ?>
-            <div class="card-header"><i class="bi bi-truck text-nma me-2"></i>Livraison souhaitée</div>
+            <div class="card-header"><i class="bi bi-truck text-sc me-2"></i>Livraison souhaitée</div>
             <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label" for="date_livraison_souhaitee">Date de livraison souhaitée</label>
@@ -150,14 +150,14 @@ foreach ($lignes as $l) {
 
                 <div class="mb-3">
                     <span class="form-label d-block">Mode de paiement</span>
-                    <div class="nma-paiement-options">
+                    <div class="sc-paiement-options">
                         <?php foreach (modes_paiement() as $code => $mode): ?>
-                            <div class="nma-paiement-option">
+                            <div class="sc-paiement-option">
                                 <input type="radio" id="paiement-<?= e($code) ?>" name="mode_paiement"
                                        value="<?= e($code) ?>" <?= $code === 'carte' ? 'checked' : '' ?> required>
                                 <label for="paiement-<?= e($code) ?>">
-                                    <span class="nma-paiement-ico"><i class="bi bi-<?= e($mode[1]) ?>"></i></span>
-                                    <span class="nma-paiement-txt">
+                                    <span class="sc-paiement-ico"><i class="bi bi-<?= e($mode[1]) ?>"></i></span>
+                                    <span class="sc-paiement-txt">
                                         <strong><?= e($mode[0]) ?></strong>
                                         <small><?= e($mode[2]) ?></small>
                                     </span>
@@ -168,15 +168,15 @@ foreach ($lignes as $l) {
                     <div class="form-text">Le règlement est confirmé avec le gestionnaire lors de la validation de la commande.</div>
                 </div>
 
-                <div class="nma-timeline-note mb-3">
+                <div class="sc-timeline-note mb-3">
                     <i class="bi bi-clock-history me-1"></i>
                     Votre commande sera <strong>« Reçue »</strong> dès l'envoi. Vous pourrez la modifier ou l'annuler
                     tant qu'elle n'est pas validée par le gestionnaire.
                 </div>
             </div>
             <div class="card-footer bg-white border-0 pt-0">
-                <div class="nma-sticky-actions">
-                    <button type="submit" class="btn btn-nma btn-lg w-100">
+                <div class="sc-sticky-actions">
+                    <button type="submit" class="btn btn-sc btn-lg w-100">
                         <i class="bi bi-send-check me-2"></i>Envoyer ma commande
                     </button>
                 </div>

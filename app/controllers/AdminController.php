@@ -179,7 +179,7 @@ final class AdminController extends Controller
             $this->erreur('Utilisateur introuvable.', 'administrateur/utilisateurs');
         }
 
-        $temporaire = 'NMA' . random_int(1000, 9999) . 'a';
+        $temporaire = 'SC' . random_int(1000, 9999) . 'a';
         Utilisateur::changerMotDePasse($id, $temporaire);
 
         Journal::enregistrer('mot_de_passe_reinitialise', 'utilisateur', $id, 'Réinitialisation par l\'administrateur');

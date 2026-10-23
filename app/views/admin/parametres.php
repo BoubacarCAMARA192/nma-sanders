@@ -20,7 +20,7 @@ $descriptions = [
     <div class="col-12 col-lg-8">
         <form method="post" action="<?= e(url('administrateur/parametres')) ?>" class="card">
             <?= csrf_field() ?>
-            <div class="card-header"><i class="bi bi-sliders text-nma me-2"></i>RÃ¨gles de gestion et sÃ©curitÃ©</div>
+            <div class="card-header"><i class="bi bi-sliders text-sc me-2"></i>RÃ¨gles de gestion et sÃ©curitÃ©</div>
             <div class="card-body">
                 <?php foreach ($parametres as $cle => $valeur): ?>
                     <div class="mb-4">
@@ -39,7 +39,7 @@ $descriptions = [
                 <?php endforeach; ?>
             </div>
             <div class="card-footer bg-white">
-                <button type="submit" class="btn btn-nma w-100">
+                <button type="submit" class="btn btn-sc w-100">
                     <i class="bi bi-save me-2"></i>Enregistrer les paramÃ¨tres
                 </button>
             </div>
@@ -48,7 +48,7 @@ $descriptions = [
 
     <div class="col-12 col-lg-4">
         <div class="card mb-3">
-            <div class="card-header"><i class="bi bi-info-circle text-nma me-2"></i>Ã€ propos</div>
+            <div class="card-header"><i class="bi bi-info-circle text-sc me-2"></i>Ã€ propos</div>
             <div class="card-body">
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Application</span><strong><?= e(APP_NAME) ?></strong></div>
                 <div class="d-flex justify-content-between py-1"><span class="text-muted">Version</span><strong><?= e(APP_VERSION) ?></strong></div>

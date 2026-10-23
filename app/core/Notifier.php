@@ -66,7 +66,7 @@ final class Notifier
 
     /**
      * Envoi SMS (F19 - phase ulterieure).
-     * Brancher ici l'API du fournisseur retenu par NMA Sanders.
+     * Brancher ici l'API du fournisseur retenu par Sanders Connect.
      */
     public static function sms(string $telephone, string $message): bool
     {

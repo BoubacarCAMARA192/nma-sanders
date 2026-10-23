@@ -16,7 +16,7 @@ $roles = ['' => 'Tous les rôles', 'boulanger' => 'Boulangers', 'gestionnaire' =
             <?= (int) $stats['total'] ?> compte(s) · <?= (int) $stats['actifs'] ?> actif(s) · <?= (int) $stats['inactifs'] ?> en attente d'activation
         </p>
     </div>
-    <button class="btn btn-nma" data-bs-toggle="collapse" data-bs-target="#formNouveauCompte">
+    <button class="btn btn-sc" data-bs-toggle="collapse" data-bs-target="#formNouveauCompte">
         <i class="bi bi-person-plus me-2"></i>Créer un compte
     </button>
 </div>
@@ -40,8 +40,8 @@ $roles = ['' => 'Tous les rôles', 'boulanger' => 'Boulangers', 'gestionnaire' =
 <?php endif; ?>
 
 <div class="collapse mb-3" id="formNouveauCompte">
-    <div class="card border-nma">
-        <div class="card-header bg-nma-soft"><i class="bi bi-person-plus text-nma me-2"></i>Nouveau compte</div>
+    <div class="card border-sc">
+        <div class="card-header bg-sc-soft"><i class="bi bi-person-plus text-sc me-2"></i>Nouveau compte</div>
         <form method="post" action="<?= e(url('administrateur/utilisateur/creer')) ?>">
             <?= csrf_field() ?>
             <div class="card-body">
@@ -106,7 +106,7 @@ $roles = ['' => 'Tous les rôles', 'boulanger' => 'Boulangers', 'gestionnaire' =
                 </div>
             </div>
             <div class="card-footer bg-white">
-                <button type="submit" class="btn btn-nma w-100"><i class="bi bi-check2 me-2"></i>Créer le compte</button>
+                <button type="submit" class="btn btn-sc w-100"><i class="bi bi-check2 me-2"></i>Créer le compte</button>
             </div>
         </form>
     </div>
@@ -130,7 +130,7 @@ $roles = ['' => 'Tous les rôles', 'boulanger' => 'Boulangers', 'gestionnaire' =
                        placeholder="Nom, e-mail, téléphone, boulangerie...">
             </div>
             <div class="col-12 col-md-3 d-flex gap-2">
-                <button type="submit" class="btn btn-nma flex-grow-1"><i class="bi bi-search"></i></button>
+                <button type="submit" class="btn btn-sc flex-grow-1"><i class="bi bi-search"></i></button>
                 <a href="<?= e(url('administrateur/utilisateurs')) ?>" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise"></i></a>
             </div>
         </div>
@@ -140,7 +140,7 @@ $roles = ['' => 'Tous les rôles', 'boulanger' => 'Boulangers', 'gestionnaire' =
 <div class="card">
     <div class="card-body p-0">
         <?php if ($utilisateurs === []): ?>
-            <div class="nma-empty"><i class="bi bi-people"></i>Aucun compte ne correspond à ces critères.</div>
+            <div class="sc-empty"><i class="bi bi-people"></i>Aucun compte ne correspond à ces critères.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -189,7 +189,7 @@ $roles = ['' => 'Tous les rôles', 'boulanger' => 'Boulangers', 'gestionnaire' =
                             <td class="text-end">
                                 <div class="d-flex gap-1 justify-content-end">
                                     <a href="<?= e(url('administrateur/utilisateur', ['id' => (int) $u['id']])) ?>"
-                                       class="btn btn-sm btn-outline-nma" title="Modifier"><i class="bi bi-pencil"></i></a>
+                                       class="btn btn-sm btn-outline-sc" title="Modifier"><i class="bi bi-pencil"></i></a>
 
                                     <form method="post" action="<?= e(url('administrateur/utilisateur/activer')) ?>"
                                           data-confirmer="<?= (int) $u['actif'] === 1 ? 'Désactiver ce compte ? L\'utilisateur ne pourra plus se connecter.' : 'Activer ce compte ?' ?>">

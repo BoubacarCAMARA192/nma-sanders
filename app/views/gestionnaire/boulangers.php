@@ -15,7 +15,7 @@ foreach ($boulangers as $b) {
             <?= count($boulangers) ?> client(s) · <?= (int) $totalSacs ?> sac(s) commandés sur 90 jours
         </p>
     </div>
-    <a href="<?= e(url('gestionnaire/export')) ?>" class="btn btn-outline-nma">
+    <a href="<?= e(url('gestionnaire/export')) ?>" class="btn btn-outline-sc">
         <i class="bi bi-filetype-csv me-1"></i>Export CSV
     </a>
 </div>
@@ -23,7 +23,7 @@ foreach ($boulangers as $b) {
 <div class="card">
     <div class="card-body p-0">
         <?php if ($boulangers === []): ?>
-            <div class="nma-empty"><i class="bi bi-people"></i>Aucun client boulanger enregistré.</div>
+            <div class="sc-empty"><i class="bi bi-people"></i>Aucun client boulanger enregistré.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -59,8 +59,8 @@ foreach ($boulangers as $b) {
                                     <div class="text-muted"><?= e($b['zone_livraison']) ?></div>
                                 <?php endif; ?>
                             </td>
-                            <td class="text-end nma-num"><?= (int) $b['nb_commandes'] ?></td>
-                            <td class="text-end nma-num fw-semibold"><?= (int) $b['total_sacs'] ?></td>
+                            <td class="text-end sc-num"><?= (int) $b['nb_commandes'] ?></td>
+                            <td class="text-end sc-num fw-semibold"><?= (int) $b['total_sacs'] ?></td>
                             <td class="d-none d-lg-table-cell text-small text-muted">
                                 <?= $b['derniere_commande'] !== null ? e(date_fr($b['derniere_commande'])) : 'Jamais' ?>
                             </td>
