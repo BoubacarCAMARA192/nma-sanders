@@ -296,8 +296,41 @@ final class Sqlite
             self::donneesInitiales($pdo);
         }
 
+        self::assurerComptesSc($pdo);
         self::assurerClientsDemo($pdo);
         self::assurerCatalogueSc($pdo);
+    }
+
+    /**
+     * Met a jour les comptes de demonstration d'une base creee avant le
+     * rebrand Sanders Connect (anciennes adresses @nmasanders.sn/@demo.sn),
+     * une seule fois. Les identifiants et mots de passe restent identiques.
+     */
+    private static function assurerComptesSc(PDO $pdo): void
+    {
+        $migrationFaite = $pdo->query("SELECT valeur FROM parametre WHERE cle = 'comptes_sc_migres'")->fetchColumn();
+
+        if ($migrationFaite === '1') {
+            return;
+        }
+
+        $comptes = [
+            ['admin@nmasanders.sn',        'admin@sandersconnect.sn',        'Fatma Kébé'],
+            ['gestionnaire@nmasanders.sn', 'gestionnaire@sandersconnect.sn', 'Moussa Ndiaye'],
+            ['boulanger@demo.sn',          'boulanger@sandersconnect.sn',    'Boubacar'],
+            ['client1@demo.sn',            'client1@sandersconnect.sn',      'Booba'],
+            ['client2@demo.sn',            'client2@sandersconnect.sn',      'Omar Sow'],
+        ];
+
+        $maj = $pdo->prepare('UPDATE utilisateur SET email = ?, nom = ? WHERE email = ?');
+        foreach ($comptes as [$ancien, $nouveau, $nom]) {
+            $maj->execute([$nouveau, $nom, $ancien]);
+        }
+
+        $pdo->prepare(
+            "INSERT INTO parametre (cle, valeur, libelle) VALUES ('comptes_sc_migres', '1', 'Migration comptes Sanders Connect')
+             ON CONFLICT(cle) DO UPDATE SET valeur = excluded.valeur"
+        )->execute();
     }
 
     /** Ajoute les colonnes recentes aux bases SQLite deja initialisees. */
