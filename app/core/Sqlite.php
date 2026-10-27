@@ -299,6 +299,16 @@ final class Sqlite
         self::assurerComptesSc($pdo);
         self::assurerClientsDemo($pdo);
         self::assurerCatalogueSc($pdo);
+        self::assurerParametresSc($pdo);
+    }
+
+    /** Ajoute les parametres applicatifs recents aux bases SQLite existantes. */
+    private static function assurerParametresSc(PDO $pdo): void
+    {
+        $pdo->prepare(
+            "INSERT OR IGNORE INTO parametre (cle, valeur, libelle)
+             VALUES ('capacite_sacs_par_jour', '200', 'Charge maximale de livraison par jour (sacs, 0 = illimite)')"
+        )->execute();
     }
 
     /**
@@ -422,6 +432,7 @@ final class Sqlite
             ['duree_blocage_minutes', '15', 'Duree du blocage apres echecs repetes (minutes)'],
             ['session_duree_minutes', '45', "Duree d'inactivite avant expiration de la session (minutes)"],
             ['jours_historique_par_defaut', '90', "Profondeur par defaut de l'historique affiche (jours)"],
+            ['capacite_sacs_par_jour', '200', 'Charge maximale de livraison par jour (sacs, 0 = illimite)'],
         ];
         $insert = $pdo->prepare('INSERT INTO parametre (cle, valeur, libelle) VALUES (?, ?, ?)');
         foreach ($parametres as $ligne) {

@@ -8,8 +8,8 @@
     <span class="sc-brand-badge mb-2 sc-badge-pulse" style="width:48px;height:48px;font-size:1.5rem;">
         <i class="bi bi-box-arrow-in-right"></i>
     </span>
-    <h2 class="h4 fw-bold mb-1">Bon retour !</h2>
-    <p class="text-muted small mb-0">Connectez-vous pour retrouver vos commandes et votre suivi.</p>
+    <h2 class="h4 fw-bold mb-1">Connexion</h2>
+    <p class="text-muted small mb-0">Retrouvez vos commandes et votre suivi de livraison.</p>
 </div>
 
 <form method="post" action="<?= e(url('connexion')) ?>" novalidate id="scFormulaireConnexion">
@@ -45,12 +45,15 @@
         <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
     </button>
 
-    <div class="d-flex justify-content-between align-items-center small">
-        <a href="<?= e(url('mot-de-passe-oublie')) ?>" class="link-secondary">Mot de passe oublié ?</a>
-        <span class="text-muted"><i class="bi bi-shield-lock me-1"></i>Connexion sécurisée</span>
+    <div class="row g-3 mb-3">
+        <div class="col-6">
+            <a href="<?= e(url('mot-de-passe-oublie')) ?>" class="small d-block py-1 link-secondary">Mot de passe oublié ?</a>
+        </div>
+        <div class="col-6 text-end">
+            <span class="text-muted small"><i class="bi bi-shield-lock me-1"></i>Connexion sécurisée</span>
+        </div>
     </div>
 </form>
-
 <?php if (APP_DEMO): ?>
     <div class="sc-demo-box mt-4">
         <div class="small fw-semibold mb-2">
@@ -110,8 +113,7 @@
 <p class="small text-muted mb-0 text-center">
     <i class="bi bi-shop me-1"></i>Pas encore de compte ?
     <a href="<?= e(url('inscription')) ?>" class="fw-semibold">Créer un compte</a>
-    ou appelez le
-    <a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a>.
+    — service commercial : <a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a>
 </p>
 
 <div class="sc-toast" id="scToast" role="status" aria-live="polite"></div>

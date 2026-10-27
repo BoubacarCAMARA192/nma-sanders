@@ -12,7 +12,7 @@ $titrePage = $titre ?? APP_NAME;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#007e48">
-    <meta name="description" content="Plateforme Sanders Connect : commande de farine en autonomie et suivi des livraisons en temps réel.">
+    <meta name="description" content="Sanders Connect : commande de farine en ligne pour boulangers, avec suivi de livraison en temps réel.">
     <title><?= e($titrePage) ?></title>
     <link rel="icon" href="<?= e(asset('assets/img/favicon.png')) ?>" type="image/png">
     <link rel="apple-touch-icon" href="<?= e(asset('assets/img/apple-touch-icon.png')) ?>">
@@ -32,24 +32,24 @@ $titrePage = $titre ?? APP_NAME;
                     <div class="sc-auth-brand-inner">
                         <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>"
                              class="sc-logo-public" width="88" height="88">
-                        <div class="sc-auth-eyebrow">Sanders Connect · Farines &amp; céréales</div>
-                        <h1 class="sc-auth-title">Votre farine,<br>commandée simplement.</h1>
+                        <div class="sc-auth-eyebrow">Sanders Connect · Sénégal</div>
+                        <h1 class="sc-auth-title">Votre farine,<br>livrée à la boulangerie.</h1>
                         <p class="sc-auth-text">
-                            Commandez vos sacs de 50 kg, suivez chaque livraison et retrouvez
-                            vos commandes depuis un seul espace.
+                            L'espace de commande des boulangers Sanders : catalogue,
+                            suivi de livraison et paiement en ligne.
                         </p>
                         <ul class="sc-auth-points">
                             <li>
                                 <i class="bi bi-check-circle-fill"></i>
-                                <span>Catalogue à jour : boulangère T55, améliorée, tapalapa, pâtissière et biscuitière.</span>
+                                <span>Toute la gamme de farines Sanders au catalogue.</span>
                             </li>
                             <li>
                                 <i class="bi bi-check-circle-fill"></i>
-                                <span>Suivi en direct de la réception jusqu'à la livraison.</span>
+                                <span>De la commande à la livraison, un suivi en temps réel.</span>
                             </li>
                             <li>
                                 <i class="bi bi-check-circle-fill"></i>
-                                <span>Paiement par carte, Wave ou Orange Money.</span>
+                                <span>Carte bancaire, Wave ou Orange Money.</span>
                             </li>
                         </ul>
                     </div>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Fiche detaillee d'un compte : modification, activation, tracabilite.
  * @var array $compte
@@ -23,17 +23,17 @@ $estBoulanger = $compte['role'] === 'boulanger';
             </span>
         </h1>
         <p class="text-muted small mb-0">
-            <?= e(ucfirst($compte['role'])) ?> Â· <?= e($compte['email']) ?> Â· compte crÃ©Ã© le <?= e(date_fr($compte['cree_le'])) ?>
+            <?= e(ucfirst($compte['role'])) ?> · <?= e($compte['email']) ?> · compte créé le <?= e(date_fr($compte['cree_le'])) ?>
         </p>
     </div>
     <div class="d-flex gap-2">
         <form method="post" action="<?= e(url('administrateur/utilisateur/activer')) ?>"
-              data-confirmer="<?= (int) $compte['actif'] === 1 ? 'DÃ©sactiver ce compte ?' : 'Activer ce compte ?' ?>">
+              data-confirmer="<?= (int) $compte['actif'] === 1 ? 'Désactiver ce compte ?' : 'Activer ce compte ?' ?>">
             <?= csrf_field() ?>
             <input type="hidden" name="id" value="<?= (int) $compte['id'] ?>">
             <button type="submit" class="btn btn-outline-<?= (int) $compte['actif'] === 1 ? 'danger' : 'success' ?>">
                 <i class="bi bi-<?= (int) $compte['actif'] === 1 ? 'pause-circle' : 'play-circle' ?> me-1"></i>
-                <?= (int) $compte['actif'] === 1 ? 'DÃ©sactiver' : 'Activer' ?>
+                <?= (int) $compte['actif'] === 1 ? 'Désactiver' : 'Activer' ?>
             </button>
         </form>
         <a href="<?= e(url('administrateur/utilisateurs')) ?>" class="btn btn-outline-secondary">Retour</a>
@@ -58,12 +58,12 @@ $estBoulanger = $compte['role'] === 'boulanger';
                         <input type="email" class="form-control" id="email" name="email" required value="<?= e($compte['email']) ?>">
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="telephone">TÃ©lÃ©phone</label>
+                        <label class="form-label" for="telephone">Téléphone</label>
                         <input type="tel" class="form-control" id="telephone" name="telephone" maxlength="30"
                                value="<?= e($compte['telephone'] ?? '') ?>">
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="form-label" for="role">RÃ´le</label>
+                        <label class="form-label" for="role">Rôle</label>
                         <select class="form-select" id="role" name="role" required>
                             <?php foreach (['boulanger', 'gestionnaire', 'administrateur'] as $role): ?>
                                 <option value="<?= e($role) ?>" <?= $compte['role'] === $role ? 'selected' : '' ?>>
@@ -77,7 +77,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
                             <input class="form-check-input" type="checkbox" value="1" id="double_verification"
                                    name="double_verification" <?= (int) $compte['double_verification'] === 1 ? 'checked' : '' ?>>
                             <label class="form-check-label" for="double_verification">
-                                Exiger une double vÃ©rification Ã  la connexion (recommandÃ© pour gestionnaire et administrateur)
+                                Exiger une double vérification à la connexion (recommandé pour gestionnaire et administrateur)
                             </label>
                         </div>
                     </div>
@@ -111,8 +111,8 @@ $estBoulanger = $compte['role'] === 'boulanger';
                 <button type="submit" class="btn btn-sc flex-grow-1"><i class="bi bi-save me-2"></i>Enregistrer</button>
                 <button type="submit" formaction="<?= e(url('administrateur/utilisateur/mot-de-passe')) ?>"
                         class="btn btn-outline-secondary"
-                        onclick="return confirm('GÃ©nÃ©rer un mot de passe provisoire pour ce compte ?');">
-                    <i class="bi bi-key me-1"></i>RÃ©initialiser le mot de passe
+                        onclick="return confirm('Générer un mot de passe provisoire pour ce compte ?');">
+                    <i class="bi bi-key me-1"></i>Réinitialiser le mot de passe
                 </button>
             </div>
         </form>
@@ -121,7 +121,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
     <div class="col-12 col-lg-5">
         <?php if ($estBoulanger && $commandes !== []): ?>
             <div class="card mb-3">
-                <div class="card-header"><i class="bi bi-receipt text-sc me-2"></i>DerniÃ¨res commandes</div>
+                <div class="card-header"><i class="bi bi-receipt text-sc me-2"></i>Dernières commandes</div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
                         <?php foreach ($commandes as $c): ?>
@@ -130,7 +130,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
                                     <a href="<?= e(url('gestionnaire/commande', ['id' => (int) $c['id']])) ?>" class="fw-semibold text-small">
                                         <?= e($c['reference']) ?>
                                     </a>
-                                    <div class="text-small text-muted"><?= e(date_fr($c['date_commande'])) ?> Â· <?= (int) $c['total_sacs'] ?> sac(s)</div>
+                                    <div class="text-small text-muted"><?= e(date_fr($c['date_commande'])) ?> · <?= (int) $c['total_sacs'] ?> sac(s)</div>
                                 </div>
                                 <?= statut_badge($c['statut']) ?>
                             </li>
@@ -141,10 +141,10 @@ $estBoulanger = $compte['role'] === 'boulanger';
         <?php endif; ?>
 
         <div class="card">
-            <div class="card-header"><i class="bi bi-journal-text text-sc me-2"></i>DerniÃ¨res opÃ©rations de ce compte</div>
+            <div class="card-header"><i class="bi bi-journal-text text-sc me-2"></i>Dernières opérations de ce compte</div>
             <div class="card-body p-0">
                 <?php if ($operations === []): ?>
-                    <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration enregistrÃ©e.</div>
+                    <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opération enregistrée.</div>
                 <?php else: ?>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($operations as $op): ?>
@@ -155,7 +155,7 @@ $estBoulanger = $compte['role'] === 'boulanger';
                                 </div>
                                 <div class="text-small text-muted">
                                     <?= e($op['details'] ?? '') ?>
-                                    <?php if (!empty($op['adresse_ip'])): ?> Â· <?= e($op['adresse_ip']) ?><?php endif; ?>
+                                    <?php if (!empty($op['adresse_ip'])): ?> · <?= e($op['adresse_ip']) ?><?php endif; ?>
                                 </div>
                             </li>
                         <?php endforeach; ?>

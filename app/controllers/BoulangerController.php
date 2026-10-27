@@ -43,6 +43,7 @@ final class BoulangerController extends Controller
             'reappro'          => Commande::dernieresLignes($boulangerId, 4),
             'alertes'          => Produit::enAlerte(),
             'nbPanier'         => $this->nombrePanier(),
+            'charges'          => Commande::volumesProchainsJours(7),
         ]);
     }
 
@@ -164,6 +165,28 @@ final class BoulangerController extends Controller
             'modifiable' => in_array($commande['statut'], Commande::STATUTS_MODIFIABLES, true),
             'catalogue'  => Produit::catalogue(),
         ]);
+    }
+
+    /** Charge d'une journee de livraison (JSON, pour l'alerte de surcharge). */
+    public function chargeLivraison(): void
+    {
+        $date    = (string) (get_param('date') ?? '');
+        $exclure = (int) (get_param('id') ?? 0);
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || strtotime($date) < strtotime(date('Y-m-d'))) {
+            http_response_code(422);
+            echo json_encode(['erreur' => 'Date invalide.']);
+        } else {
+            $sacs = Commande::volumeParDate($date, $exclure);
+            echo json_encode(array_merge([
+                'date'         => $date,
+                'sacs'         => $sacs,
+                'nb_commandes' => Commande::commandesParDate($date, $exclure),
+            ], niveau_charge($sacs)));
+        }
+
+        exit;
     }
 
     public function modifierCommande(): void

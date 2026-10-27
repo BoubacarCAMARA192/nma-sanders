@@ -54,6 +54,7 @@ final class Router
         $this->post('boulanger/panier/vider',        'BoulangerController', 'viderPanier');
         $this->post('boulanger/commande/enregistrer','BoulangerController', 'enregistrerCommande');
         $this->get('boulanger/commande',             'BoulangerController', 'suiviCommande');
+        $this->get('boulanger/charge-livraison',     'BoulangerController', 'chargeLivraison');
         $this->post('boulanger/commande/modifier',   'BoulangerController', 'modifierCommande');
         $this->post('boulanger/commande/annuler',    'BoulangerController', 'annulerCommande');
         $this->get('boulanger/historique',           'BoulangerController', 'historique');

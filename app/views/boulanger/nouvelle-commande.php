@@ -126,10 +126,23 @@ foreach ($lignes as $l) {
                     <label class="form-label" for="date_livraison_souhaitee">Date de livraison souhaitée</label>
                     <input type="date" class="form-control" id="date_livraison_souhaitee"
                            name="date_livraison_souhaitee" value="<?= e($dateMinimum) ?>"
-                           min="<?= e($dateMinimum) ?>" required>
+                           min="<?= e($dateMinimum) ?>" required
+                           data-charge-url="<?= e(url('boulanger/charge-livraison')) ?>" data-surcharge>
                     <div class="form-text">
                         <i class="bi bi-info-circle me-1"></i>Délai minimum de <?= (int) $delaiHeures ?> h après la commande
                         (date la plus proche : <?= e(date_fr($dateMinimum)) ?>).
+                    </div>
+                    <div id="scAlerteSurcharge" class="d-none mt-2">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <span class="sc-charge-badge">
+                                <i class="bi bi-truck"></i>
+                                <span id="scChargeLibelle">…</span>
+                            </span>
+                            <span class="small text-muted" id="scChargeTexte"></span>
+                        </div>
+                        <div class="progress sc-progress mt-2" style="max-width:260px">
+                            <div class="progress-bar" id="scChargeBarre" style="width:0%"></div>
+                        </div>
                     </div>
                 </div>
 

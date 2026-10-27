@@ -116,6 +116,7 @@ function parametre_fr(string $cle): string
         'duree_blocage_minutes'       => 'Durée du blocage du compte',
         'session_duree_minutes'       => 'Durée d\'inactivité avant expiration de session',
         'jours_historique_par_defaut' => 'Profondeur de l\'historique par défaut',
+        'capacite_sacs_par_jour'      => 'Charge maximale de livraison par jour (sacs)',
     ];
 
     return $libelles[$cle] ?? ucfirst(str_replace('_', ' ', $cle));
@@ -150,6 +151,50 @@ function jours_restants(?string $date): ?int
 function date_livraison_min(): string
 {
     return date('Y-m-d', time() + Core\Parametre::entier('delai_minimum_heures', DELAI_MINIMUM_HEURES) * 3600);
+}
+
+/** Abreviation francaise du jour : « lun. » pour lundi. */
+function jour_fr(string $date): string
+{
+    $jours = [1 => 'lun.', 2 => 'mar.', 3 => 'mer.', 4 => 'jeu.', 5 => 'ven.', 6 => 'sam.', 7 => 'dim.'];
+    $ts = strtotime($date);
+
+    return $ts === false ? '—' : $jours[(int) date('N', $ts)];
+}
+
+/** Charge maximale de livraison par jour (sacs), reglable par l'administrateur. */
+function capacite_livraison(): int
+{
+    return Core\Parametre::entier('capacite_sacs_par_jour', CAPACITE_SACS_PAR_JOUR);
+}
+
+/**
+ * Niveau d'occupation d'une journee de livraison par rapport a la capacite.
+ * @return array{niveau:string, libelle:string, classe:string, icone:string, taux:float, taux_pct:int, capacite:int}
+ */
+function niveau_charge(int $sacs): array
+{
+    $capacite = capacite_livraison();
+    $taux     = $capacite > 0 ? $sacs / $capacite : 0.0;
+    $pct      = $capacite > 0 ? (int) round($taux * 100) : 0;
+
+    if ($capacite <= 0 || $taux < 0.7) {
+        $libelle = 'Disponible';  $classe = 'success'; $icone = 'check-circle';
+    } elseif ($taux < 1) {
+        $libelle = 'Jour chargé'; $classe = 'warning'; $icone = 'exclamation-circle';
+    } else {
+        $libelle = 'Surchargé';   $classe = 'danger';  $icone = 'exclamation-triangle';
+    }
+
+    return [
+        'niveau'   => $taux >= 1 ? 'sature' : ($taux >= 0.7 ? 'eleve' : 'ok'),
+        'libelle'  => $libelle,
+        'classe'   => $classe,
+        'icone'    => $icone,
+        'taux'     => round($taux, 2),
+        'taux_pct' => $pct,
+        'capacite' => $capacite,
+    ];
 }
 
 /**

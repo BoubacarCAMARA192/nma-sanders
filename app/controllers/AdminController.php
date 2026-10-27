@@ -358,6 +358,7 @@ final class AdminController extends Controller
     {
         $modifiables = [
             'delai_minimum_heures'        => [0, 720, 'Délai minimum de livraison'],
+            'capacite_sacs_par_jour'      => [0, 10000, 'Charge maximale de livraison par jour (0 = illimité)'],
             'max_tentatives_connexion'    => [3, 20, 'Tentatives de connexion autorisées'],
             'duree_blocage_minutes'       => [1, 1440, 'Durée du blocage'],
             'session_duree_minutes'       => [5, 1440, 'Durée de session'],

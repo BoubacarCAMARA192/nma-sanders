@@ -70,6 +70,7 @@ define('DELAI_MINIMUM_HEURES', 24);
 define('MAX_TENTATIVES_CONNEXION', 5);
 define('DUREE_BLOCAGE_MINUTES', 15);
 define('DUREE_SESSION_MINUTES', 45);
+define('CAPACITE_SACS_PAR_JOUR', 200);
 
 // --- Affichage des erreurs --------------------------------------------
 if (APP_DEBUG) {

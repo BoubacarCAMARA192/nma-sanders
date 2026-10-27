@@ -279,7 +279,21 @@ $interrompu = in_array($commande['statut'], ['refusee', 'annulee'], true);
                         <div class="col-12 col-sm-6">
                             <label class="form-label" for="m_date">Date de livraison souhaitée</label>
                             <input type="date" class="form-control" id="m_date" name="date_livraison_souhaitee"
-                                   value="<?= e($commande['date_livraison_souhaitee']) ?>" min="<?= e($dateMinimum) ?>" required>
+                                   value="<?= e($commande['date_livraison_souhaitee']) ?>" min="<?= e($dateMinimum) ?>" required
+                                   data-charge-url="<?= e(url('boulanger/charge-livraison')) ?>" data-surcharge
+                                   data-exclure="<?= (int) $commande['id'] ?>">
+                            <div id="scAlerteSurcharge" class="d-none mt-2">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="sc-charge-badge">
+                                        <i class="bi bi-truck"></i>
+                                        <span id="scChargeLibelle">…</span>
+                                    </span>
+                                    <span class="small text-muted" id="scChargeTexte"></span>
+                                </div>
+                                <div class="progress sc-progress mt-2" style="max-width:260px">
+                                    <div class="progress-bar" id="scChargeBarre" style="width:0%"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label class="form-label" for="m_commentaire">Commentaire</label>

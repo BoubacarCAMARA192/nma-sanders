@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Journal des operations : tracabilite complete (identifiant unique par operation).
  * @var array  $operations
@@ -10,10 +10,10 @@
 ?>
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <div>
-        <h1 class="h4 fw-bold mb-0">Journal des opÃ©rations</h1>
+        <h1 class="h4 fw-bold mb-0">Journal des opérations</h1>
         <p class="text-muted small mb-0">
-            <?= (int) $total ?> opÃ©ration(s) enregistrÃ©e(s) depuis la mise en service Â·
-            <?= count($operations) ?> affichÃ©e(s)
+            <?= (int) $total ?> opération(s) enregistrée(s) depuis la mise en service ·
+            <?= count($operations) ?> affichée(s)
         </p>
     </div>
 </div>
@@ -23,9 +23,9 @@
     <div class="card-body">
         <div class="row g-2 align-items-end">
             <div class="col-6 col-md-4">
-                <label class="form-label small" for="action">Type d'opÃ©ration</label>
+                <label class="form-label small" for="action">Type d'opération</label>
                 <select class="form-select" id="action" name="action" data-filtre-auto>
-                    <option value="">Toutes les opÃ©rations</option>
+                    <option value="">Toutes les opérations</option>
                     <?php foreach ($actions as $a): ?>
                         <option value="<?= e($a) ?>" <?= $action === $a ? 'selected' : '' ?>><?= e(action_fr($a)) ?></option>
                     <?php endforeach; ?>
@@ -34,7 +34,7 @@
             <div class="col-6 col-md-5">
                 <label class="form-label small" for="q">Recherche</label>
                 <input type="search" class="form-control" id="q" name="q" value="<?= e($q) ?>"
-                       placeholder="Auteur, dÃ©tail de l'opÃ©ration...">
+                       placeholder="Auteur, détail de l'opération...">
             </div>
             <div class="col-12 col-md-3 d-flex gap-2">
                 <button type="submit" class="btn btn-sc flex-grow-1"><i class="bi bi-search"></i></button>
@@ -47,17 +47,17 @@
 <div class="card">
     <div class="card-body p-0">
         <?php if ($operations === []): ?>
-            <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opÃ©ration ne correspond Ã  ces critÃ¨res.</div>
+            <div class="sc-empty"><i class="bi bi-journal"></i>Aucune opération ne correspond à ces critères.</div>
         <?php else: ?>
             <div class="table-responsive">
                 <table class="table table-hover table-sm align-middle mb-0">
                     <thead>
                         <tr>
-                            <th style="width:80px">NÂ°</th>
+                            <th style="width:80px">N°</th>
                             <th style="width:170px">Date et heure</th>
                             <th>Auteur</th>
-                            <th>OpÃ©ration</th>
-                            <th class="d-none d-lg-table-cell">DÃ©tail</th>
+                            <th>Opération</th>
+                            <th class="d-none d-lg-table-cell">Détail</th>
                             <th class="d-none d-md-table-cell" style="width:120px">Adresse IP</th>
                         </tr>
                     </thead>

@@ -197,7 +197,8 @@ INSERT INTO parametre (cle, valeur, libelle) VALUES
 ('max_tentatives_connexion', '5',           'Nombre de tentatives de connexion avant blocage'),
 ('duree_blocage_minutes', '15',             'Duree du blocage apres echecs repetes (minutes)'),
 ('session_duree_minutes', '45',             'Duree d''inactivite avant expiration de la session (minutes)'),
-('jours_historique_par_defaut', '90',       'Profondeur par defaut de l''historique affiche (jours)');
+('jours_historique_par_defaut', '90',       'Profondeur par defaut de l''historique affiche (jours)'),
+('capacite_sacs_par_jour', '200',           'Charge maximale de livraison par jour (sacs, 0 = illimite)');
 
 -- Utilisateurs ----------------------------------------------------
 -- Mots de passe de demonstration (a changer des la mise en ligne) :

@@ -635,4 +635,87 @@ final class Commande
     {
         return Parametre::entier('delai_minimum_heures', DELAI_MINIMUM_HEURES);
     }
+
+    // -----------------------------------------------------------------
+    // Charge des journees de livraison (alerte de surcharge)
+    // -----------------------------------------------------------------
+    /** Statuts qui occupent encore une journee de livraison. */
+    private const STATUTS_ACTIFS = ['recue', 'validee', 'en_preparation', 'en_livraison'];
+
+    /**
+     * Volume prevu pour une journee donnee : sacs et nombre de commandes.
+     * La date retenue est celle de la tournée planifiée si elle existe,
+     * sinon la date souhaitée par le boulanger.
+     */
+    public static function volumeParDate(string $date, int $exclureCommandeId = 0): int
+    {
+        return (int) Database::scalar(
+            'SELECT COALESCE(SUM(lc.quantite), 0)
+             FROM commande c
+             LEFT JOIN livraison l ON l.commande_id = c.id
+             JOIN ligne_commande lc ON lc.commande_id = c.id
+             WHERE c.statut IN (:s1, :s2, :s3, :s4)
+               AND COALESCE(l.date_livraison, c.date_livraison_souhaitee) = :date
+               AND (:exclure IS NULL OR c.id != :exclure)',
+            [...self::parametresStatuts($date), 'exclure' => $exclureCommandeId > 0 ? $exclureCommandeId : null]
+        );
+    }
+
+    /** Nombre de commandes actives prevues pour une journee. */
+    public static function commandesParDate(string $date, int $exclureCommandeId = 0): int
+    {
+        return (int) Database::scalar(
+            'SELECT COUNT(*) FROM commande c
+             LEFT JOIN livraison l ON l.commande_id = c.id
+             WHERE c.statut IN (:s1, :s2, :s3, :s4)
+               AND COALESCE(l.date_livraison, c.date_livraison_souhaitee) = :date
+               AND (:exclure IS NULL OR c.id != :exclure)',
+            [...self::parametresStatuts($date), 'exclure' => $exclureCommandeId > 0 ? $exclureCommandeId : null]
+        );
+    }
+
+    private static function parametresStatuts(string $date): array
+    {
+        return array_combine(['s1', 's2', 's3', 's4', 'date'], [...self::STATUTS_ACTIFS, $date]);
+    }
+
+    /**
+     * Charge des N prochains jours (sacs par journee), pour le planning.
+     * @return array<string,int> date Y-m-d => sacs prevus
+     */
+    public static function volumesProchainsJours(int $jours = 7): array
+    {
+        $debut = date('Y-m-d');
+        $fin   = date('Y-m-d', strtotime($debut . ' +' . max(1, $jours - 1) . ' days'));
+        $mots  = array_combine(['s1', 's2', 's3', 's4', 'd0', 'd1'], [...self::STATUTS_ACTIFS, $debut, $fin]);
+
+        $sql = 'SELECT CASE
+                        WHEN l.date_livraison IS NOT NULL THEN l.date_livraison
+                        ELSE c.date_livraison_souhaitee
+                    END AS jour,
+                COALESCE(SUM(lc.quantite), 0) AS sacs
+                FROM commande c
+                LEFT JOIN livraison l ON l.commande_id = c.id
+                JOIN ligne_commande lc ON lc.commande_id = c.id
+                WHERE c.statut IN (:s1, :s2, :s3, :s4)
+                  AND CASE
+                        WHEN l.date_livraison IS NOT NULL THEN l.date_livraison
+                        ELSE c.date_livraison_souhaitee
+                    END BETWEEN :d0 AND :d1
+                GROUP BY jour';
+
+        $charges = [];
+        for ($i = 0; $i < max(1, $jours); $i++) {
+            $charges[date('Y-m-d', strtotime($debut . ' +' . $i . ' days'))] = 0;
+        }
+
+        foreach (Database::fetchAll($sql, $mots) as $ligne) {
+            $jour = substr((string) $ligne['jour'], 0, 10);
+            if (isset($charges[$jour])) {
+                $charges[$jour] = (int) $ligne['sacs'];
+            }
+        }
+
+        return $charges;
+    }
 }

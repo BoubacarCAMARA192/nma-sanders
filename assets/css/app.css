@@ -961,7 +961,7 @@ a { text-decoration: none; }
 
 .sc-auth-shell {
     width: 100%;
-    max-width: 1060px;
+    max-width: 1160px;
     margin: 0 auto;
     background: #fff;
     border-radius: 28px;
@@ -1045,8 +1045,8 @@ a { text-decoration: none; }
     background: #fff;
 }
 
-.sc-auth-card { width: 100%; max-width: 430px; margin: 0 auto; }
-.sc-auth-foot { margin: 1.25rem auto 0; max-width: 430px; color: #7b8f82; font-size: .78rem; text-align: center; }
+.sc-auth-card { width: 100%; max-width: 500px; margin: 0 auto; }
+.sc-auth-foot { margin: 1.25rem auto 0; max-width: 500px; color: #7b8f82; font-size: .78rem; text-align: center; }
 
 .sc-logo-nav {
     width: 34px;
@@ -1113,7 +1113,7 @@ a { text-decoration: none; }
 .sc-form-visuel img { width: 62px; height: 70px; object-fit: contain; border-radius: 8px; background: #fff; padding: 4px; border: 1px solid var(--sc-border); }
 .sc-form-visuel small { color: #65786c; }
 
-.sc-paiement-options { display: grid; grid-template-columns: repeat(2, miscx(0, 1fr)); gap: .6rem; }
+.sc-paiement-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; }
 .sc-paiement-option { position: relative; }
 .sc-paiement-option input { position: absolute; opacity: 0; pointer-events: none; }
 .sc-paiement-option label {
@@ -1166,6 +1166,57 @@ a { text-decoration: none; }
 }
 
 .sc-demande-inscription { border-left: 3px solid var(--sc-accent); background: #f2faf6; border-radius: 10px; padding: .75rem .9rem; }
+
+/* --- Alerte de surcharge d'une journee de livraison ------------------ */
+.sc-charge-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .3rem .8rem;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+}
+.sc-charge-ok i { color: var(--sc-accent); }
+.sc-charge-eleve { background: #fff8e6; border: 1px solid #f1d38a; color: #8a6100; }
+.sc-charge-sature { background: #fdecea; border: 1px solid #f0a8a0; color: #b02a37; }
+.sc-charge-ok { background: var(--sc-primary-light); border: 1px solid #bfe3ce; color: var(--sc-primary-dark); }
+
+/* --- Planning des livraisons : serie de mini-barres ------------------- */
+.sc-planning { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; }
+.sc-planning-jour {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+    padding: .5rem .2rem .45rem;
+    border: 1px solid var(--sc-border);
+    border-radius: 12px;
+    background: #fbfdfc;
+}
+.sc-planning-jour .jour { font-size: .7rem; text-transform: lowercase; color: #65786c; }
+.sc-planning-jour .num { font-size: .8rem; font-weight: 700; color: var(--sc-ink); }
+.sc-planning-jour .barre {
+    width: 60%;
+    height: 46px;
+    display: flex;
+    align-items: flex-end;
+    background: #eef5f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.sc-planning-jour .barre span {
+    display: block;
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: height .6s cubic-bezier(.22, .61, .36, 1);
+}
+.sc-planning-jour .sacs { font-size: .68rem; font-weight: 600; color: #65786c; }
+.sc-planning-jour.sc-planning-sature { border-color: #f0a8a0; background: #fdf3f2; }
+
+@media (max-width: 575.98px) {
+    .sc-planning { grid-template-columns: repeat(4, 1fr); }
+}
 
 /* Encart de demonstration : compact et lisible */
 .sc-demo-box { background: #f1f9f4; border: 1px dashed #b9dcc9; border-radius: 14px; padding: .8rem .9rem; }

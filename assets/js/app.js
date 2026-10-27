@@ -202,6 +202,60 @@
         }, 6000);
     });
 
+    /** v3 : carte de surcharge — charge du jour de livraison choisi. */
+    document.querySelectorAll('[data-surcharge]').forEach(function (champ) {
+        var zone = document.getElementById('scAlerteSurcharge');
+        var libelle = document.getElementById('scChargeLibelle');
+        var texte = document.getElementById('scChargeTexte');
+        var barre = document.getElementById('scChargeBarre');
+        var minuteur = null;
+        if (!zone) {
+            return;
+        }
+
+        function verifier() {
+            var date = champ.value;
+            if (!date) {
+                zone.classList.add('d-none');
+                return;
+            }
+
+            fetch(champ.getAttribute('data-charge-url')
+                + (champ.getAttribute('data-charge-url').indexOf('?') === -1 ? '?' : '&')
+                + 'date=' + encodeURIComponent(date)
+                + (champ.getAttribute('data-exclure') ? '&id=' + champ.getAttribute('data-exclure') : ''), {
+                headers: { 'Accept': 'application/json' }
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (d.erreur || !d.capacite) {
+                        zone.classList.add('d-none');
+                        return;
+                    }
+
+                    libelle.textContent = d.libelle;
+                    texte.textContent = d.sacs + ' sac(s) déjà prévus ce jour sur ' + d.capacite + ' · ' + d.nb_commandes + ' commande(s)';
+                    barre.style.width = Math.min(100, d.taux_pct) + '%';
+                    barre.className = 'progress-bar bg-' + d.classe;
+
+                    zone.classList.remove('sc-charge-ok', 'sc-charge-eleve', 'sc-charge-sature', 'd-none');
+                    zone.classList.add('sc-charge-' + d.niveau);
+                })
+                .catch(function () { zone.classList.add('d-none'); });
+        }
+
+        champ.addEventListener('change', function () {
+            window.clearTimeout(minuteur);
+            verifier();
+        });
+        champ.addEventListener('input', function () {
+            // Le navigateur met a jour .value avant l'evenement input pour <input type=date>.
+            window.clearTimeout(minuteur);
+            minuteur = window.setTimeout(verifier, 150);
+        });
+        verifier();
+    });
+
     /** v3 : scene animee - parallaxe douce pilotee par la souris. */
     (function () {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

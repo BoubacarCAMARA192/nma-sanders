@@ -34,7 +34,7 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 ### Espace boulanger (F04 – F08)
 
 - Catalogue produits à jour (disponibilité en temps réel, produits inactifs masqués).
-- Panier en session puis commande avec **date de livraison souhaitée** (délai minimum paramétrable, 24 h par défaut).
+- Panier en session puis commande avec **date de livraison souhaitée** (délai minimum paramétrable, 24 h par défaut). La **charge des 7 prochains jours** est affichée et une alerte signale les journées proches de la capacité ou surchargées.
 - **Suivi en temps réel** : frise horodatée avec auteur de chaque changement de statut.
 - Modification / annulation **tant que la commande est « reçue »**, historique complet, réapprovisionnement express, profil et changement de mot de passe.
 
@@ -49,7 +49,7 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 
 - Gestion des comptes : création (boulanger/gestionnaire/admin), modification, activation/désactivation, réinitialisation de mot de passe.
 - Gestion du catalogue : création/modification produit, ajustement de stock (jamais négatif), activation/désactivation.
-- **Journal des opérations** horodaté et filtrable, **paramètres métier** (délai minimum, tentatives, blocage, session, rétention).
+- **Journal des opérations** horodaté et filtrable, **paramètres métier** (délai minimum, charge maximale de livraison par jour, tentatives, blocage, session, rétention).
 
 ### Interface
 
@@ -167,7 +167,7 @@ sanders-connect/
 
 ## Tests fonctionnels
 
-Une suite de tests de bout en bout (77 vérifications) couvre : contrôle d'accès et CSRF, parcours boulanger complet, cycle de vie gestionnaire (validation, stock, refus avec motif, séquence des statuts, livraisons, export CSV), administration (comptes, catalogue, stock, paramètres, journal), traçabilité, notifications, cloisonnement des données, inscription autonome (compte créé inactif, refus de connexion, doublon) et nettoyage automatique.
+Une suite de tests de bout en bout (80 vérifications) couvre : contrôle d'accès et CSRF, parcours boulanger complet, cycle de vie gestionnaire (validation, stock, refus avec motif, séquence des statuts, livraisons, export CSV), administration (comptes, catalogue, stock, paramètres, journal), traçabilité, notifications, cloisonnement des données, inscription autonome (compte créé inactif, refus de connexion, doublon) et nettoyage automatique.
 
 La suite a été utilisée pendant le développement ; elle peut être rejouée avec :
 
