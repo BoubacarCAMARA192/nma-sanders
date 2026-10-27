@@ -37,8 +37,10 @@ $titrePage = $titre ?? APP_NAME;
                 <div class="col-12 col-lg-6 sc-auth-brand">
                     <span class="sc-auth-shine" aria-hidden="true"></span>
                     <div class="sc-auth-brand-inner">
-                        <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>"
-                             class="sc-logo-public sc-auth-logo sc-reveal" width="88" height="88" style="--retard:.02s">
+                        <span class="sc-auth-logo-wrap sc-reveal" style="--retard:.02s">
+                            <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>"
+                                 class="sc-logo-public sc-auth-logo" width="88" height="88">
+                        </span>
                         <div class="sc-auth-eyebrow sc-reveal" style="--retard:.08s">Sanders Connect · Sénégal</div>
                         <h1 class="sc-auth-title sc-reveal" style="--retard:.14s">Votre farine,<br>livrée à la boulangerie.</h1>
                         <p class="sc-auth-text sc-reveal" style="--retard:.2s">

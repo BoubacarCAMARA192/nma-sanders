@@ -1060,7 +1060,8 @@ a { text-decoration: none; }
 
 .sc-auth-brand-inner { position: relative; z-index: 1; max-width: 440px; }
 
-.sc-auth-logo { animation: sc-auth-logo-flotte 6s ease-in-out infinite; }
+.sc-auth-logo-wrap { display: inline-block; }
+.sc-auth-logo { display: block; animation: sc-auth-logo-flotte 6s ease-in-out infinite; }
 
 @keyframes sc-auth-logo-flotte {
     0%, 100% { transform: translateY(0); }
