@@ -137,7 +137,7 @@ $roleLibelle = match ($role) {
                         <i class="bi bi-telephone-outbound fs-4"></i>
                         <div class="small fw-semibold mt-1">Besoin d'aide ?</div>
                         <div class="small text-muted">Service commercial Sanders Connect</div>
-                        <a class="small fw-semibold" href="tel:+221338390000">+221 33 839 00 00</a>
+                        <a class="small fw-semibold" href="tel:+221771249186">+221 77 124 91 86</a>
                     </div>
                 </div>
             <?php endif; ?>

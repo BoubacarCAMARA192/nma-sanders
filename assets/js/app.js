@@ -102,29 +102,6 @@
         }, 2600);
     }
 
-    /** Comptes de demonstration : remplissage automatique du formulaire. */
-    document.querySelectorAll('.sc-demo-chip').forEach(function (puce) {
-        puce.addEventListener('click', function () {
-            var email = document.getElementById('email');
-            var mdp = document.getElementById('mot_de_passe');
-            if (!email || !mdp) {
-                return;
-            }
-            email.value = this.getAttribute('data-email') || '';
-            mdp.value = this.getAttribute('data-mdp') || '';
-
-            [email, mdp].forEach(function (champ) {
-                champ.classList.remove('sc-rempli');
-                void champ.offsetWidth;
-                champ.classList.add('sc-rempli');
-            });
-
-            var role = this.querySelector('strong');
-            afficherToast('Identifiants « ' + (role ? role.textContent.trim() : 'démo') + ' » remplis — cliquez sur Se connecter.');
-            mdp.focus();
-        });
-    });
-
     /** Compteurs animes sur les indicateurs chiffres. */
     document.querySelectorAll('.sc-stat-value').forEach(function (bloc) {
         var texte = bloc.textContent.trim();

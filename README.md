@@ -55,7 +55,7 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 
 - Page d'accueil animée : **scène SVG interactive** (champ de blé ondulant, soleil, nuages, camion Sanders Connect en tournée, sacs de farine), parallaxe douce à la souris et cartes inclinables.
 - Parcours guidé (choix **inscription** ou **connexion**), cartes « univers » illustrées (Fournil, Livraison, Suivi) et chiffres clés animés, bandeau défilant.
-- Cartes interactives (effet de brillance, icônes animées), fond à halos mouvants, comptes de démonstration cliquables.
+- Cartes interactives (effet de brillance, icônes animées), fond à halos mouvants, page de connexion animée (médaillon, entrées échelonnées).
 - Tableaux de bord avec compteurs animés, barres de progression animées, entrées échelonnées, mode d'affichage adapté au mobile (barre de navigation basse).
 - Notifications intégrées (cloche) et messages flash auto-nettoyés.
 
@@ -69,8 +69,8 @@ Trois espaces selon le rôle, responsive (mobile first), avec un cycle de vie de
 | Gestionnaire | `gestionnaire@sandersconnect.sn` | `Gestion@2026` |
 | Boulanger | `boulanger@sandersconnect.sn` | `Boulanger@2026` |
 
-> Les comptes de démonstration sont proposés sur la page de connexion (encart cliquable) quand `SC_DEMO=1`
-> (activé par défaut en mode debug, et forcé à `1` sur la démo Vercel).
+> Ces comptes existent en base pour les tests. Ils ne sont jamais affichés sur la page de connexion :
+> saisissez l'adresse et le mot de passe manuellement.
 
 ---
 
@@ -116,7 +116,6 @@ Aucun gestionnaire de paquets n'est nécessaire : le projet se déploie en copia
    | `SC_DB_PASS` | Mot de passe MySQL | *(vide)* |
    | `SC_DB_DRIVER` | Pilote imposé (`mysql` ou `sqlite`) | *(auto)* |
    | `SC_DEBUG` | Mode debug (1/0) | `1` |
-   | `SC_DEMO` | Afficher les comptes de démonstration sur la connexion (1/0) | `SC_DEBUG` |
    | `SC_BASE_URL` | URL de base imposée (déploiements particuliers) | *(auto)* |
 
 4. **Lancer** Apache + MySQL depuis le panneau XAMPP puis ouvrir :
@@ -195,7 +194,6 @@ Le dépôt contient une configuration Vercel (`vercel.json` + `api/index.php`, r
 
 - En environnement serverless, l'application **bascule automatiquement sur SQLite** (aucun réglage MySQL requis) : le fichier de base est créé dans le stockage éphémère de la fonction.
 - Pour **conserver les données entre les exécutions**, connecter un magasin **Vercel Blob** au projet : le jeton `BLOB_READ_WRITE_TOKEN` est alors fourni automatiquement et le fichier SQLite est téléversé/restauré à chaque exécution.
-- `SC_DEMO=1` affiche les comptes de démonstration sur la page de connexion.
 - En local, la base **MySQL (XAMPP)** reste la référence de développement ; il suffit de renseigner `SC_DB_HOST`, `SC_DB_PORT`, `SC_DB_NAME`, `SC_DB_USER`, `SC_DB_PASS` (ou `SC_DB_DRIVER=mysql`) pour l'utiliser partout.
 - Sans base joignable, les pages concernées affichent une page « base de données injoignable » claire (au lieu d'une erreur brute).
 

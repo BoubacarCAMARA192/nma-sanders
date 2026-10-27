@@ -23,35 +23,55 @@ $titrePage = $titre ?? APP_NAME;
 </head>
 <body class="sc-public">
 
+<div class="sc-auth-ambiance" aria-hidden="true">
+    <span class="sc-auth-halo sc-auth-halo-1"></span>
+    <span class="sc-auth-halo sc-auth-halo-2"></span>
+    <span class="sc-auth-halo sc-auth-halo-3"></span>
+</div>
+
 <main class="sc-auth-wrapper">
     <div class="container">
         <div class="sc-auth-shell">
             <div class="row g-0">
 
                 <div class="col-12 col-lg-6 sc-auth-brand">
+                    <span class="sc-auth-shine" aria-hidden="true"></span>
                     <div class="sc-auth-brand-inner">
                         <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>"
-                             class="sc-logo-public" width="88" height="88">
-                        <div class="sc-auth-eyebrow">Sanders Connect · Sénégal</div>
-                        <h1 class="sc-auth-title">Votre farine,<br>livrée à la boulangerie.</h1>
-                        <p class="sc-auth-text">
+                             class="sc-logo-public sc-auth-logo sc-reveal" width="88" height="88" style="--retard:.02s">
+                        <div class="sc-auth-eyebrow sc-reveal" style="--retard:.08s">Sanders Connect · Sénégal</div>
+                        <h1 class="sc-auth-title sc-reveal" style="--retard:.14s">Votre farine,<br>livrée à la boulangerie.</h1>
+                        <p class="sc-auth-text sc-reveal" style="--retard:.2s">
                             L'espace de commande des boulangers Sanders : catalogue,
                             suivi de livraison et paiement en ligne.
                         </p>
                         <ul class="sc-auth-points">
-                            <li>
+                            <li class="sc-reveal" style="--retard:.26s">
                                 <i class="bi bi-check-circle-fill"></i>
                                 <span>Toute la gamme de farines Sanders au catalogue.</span>
                             </li>
-                            <li>
+                            <li class="sc-reveal" style="--retard:.32s">
                                 <i class="bi bi-check-circle-fill"></i>
                                 <span>De la commande à la livraison, un suivi en temps réel.</span>
                             </li>
-                            <li>
+                            <li class="sc-reveal" style="--retard:.38s">
                                 <i class="bi bi-check-circle-fill"></i>
                                 <span>Carte bancaire, Wave ou Orange Money.</span>
                             </li>
                         </ul>
+                        <div class="sc-auth-live sc-reveal" style="--retard:.44s">
+                            <span class="sc-auth-live-dot" aria-hidden="true"></span>
+                            <span class="sc-auth-live-txt">
+                                <strong>Planning de charge</strong>
+                                <small>7 jours de livraison visibles dans votre espace</small>
+                            </span>
+                            <i class="bi bi-calendar2-week" aria-hidden="true"></i>
+                        </div>
+                        <div class="sc-auth-mini-stats sc-reveal" style="--retard:.5s">
+                            <div><strong>50 kg</strong><span>sacs de farine</span></div>
+                            <div><strong>24 h</strong><span>délai minimum</span></div>
+                            <div><strong>3</strong><span>moyens de paiement</span></div>
+                        </div>
                     </div>
                 </div>
 

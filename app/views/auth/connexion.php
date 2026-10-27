@@ -4,32 +4,36 @@
  * @var string|null $email
  */
 ?>
-<div class="text-center mb-4">
-    <span class="sc-brand-badge mb-2 sc-badge-pulse" style="width:48px;height:48px;font-size:1.5rem;">
-        <i class="bi bi-box-arrow-in-right"></i>
+<div class="sc-connexion-entete text-center mb-4 sc-reveal" style="--retard:.05s">
+    <span class="sc-connexion-medaillon">
+        <img src="<?= e(asset('assets/img/logo-sc.png')) ?>" alt="<?= e(APP_NAME) ?>" class="sc-connexion-logo">
     </span>
-    <h2 class="h4 fw-bold mb-1">Connexion</h2>
-    <p class="text-muted small mb-0">Retrouvez vos commandes et votre suivi de livraison.</p>
+    <span class="sc-pill mb-2"><i class="bi bi-shield-lock me-1"></i>Espace sécurisé</span>
+    <h2 class="h4 fw-bold mb-1">Connexion à votre espace</h2>
+    <p class="text-muted small mb-0">Commandes, livraisons et suivi réunis au même endroit.</p>
 </div>
 
 <form method="post" action="<?= e(url('connexion')) ?>" novalidate id="scFormulaireConnexion">
     <?= csrf_field() ?>
 
-    <div class="mb-3 sc-champ">
+    <div class="mb-3 sc-connexion-champ sc-reveal" style="--retard:.14s">
         <label class="form-label" for="email">Adresse e-mail</label>
         <div class="input-group">
-            <span class="input-group-text bg-white"><i class="bi bi-envelope"></i></span>
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
             <input type="email" class="form-control" id="email" name="email" autocomplete="username"
-                   inputmode="email" required autofocus
+                   inputmode="email" autocapitalize="none" spellcheck="false" required autofocus
                    placeholder="boulanger@exemple.sn"
                    value="<?= e($email ?? '') ?>">
         </div>
     </div>
 
-    <div class="mb-2 sc-champ">
-        <label class="form-label" for="mot_de_passe">Mot de passe</label>
+    <div class="mb-3 sc-connexion-champ sc-reveal" style="--retard:.2s">
+        <div class="d-flex justify-content-between align-items-center">
+            <label class="form-label" for="mot_de_passe">Mot de passe</label>
+            <a href="<?= e(url('mot-de-passe-oublie')) ?>" class="small fw-semibold">Mot de passe oublié ?</a>
+        </div>
         <div class="input-group">
-            <span class="input-group-text bg-white"><i class="bi bi-lock"></i></span>
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
             <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe"
                    autocomplete="current-password" required placeholder="••••••••">
             <button class="btn btn-outline-secondary" type="button" id="voirMdp" aria-label="Afficher le mot de passe">
@@ -41,80 +45,39 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-sc sc-btn-shine w-100 btn-lg mb-3">
+    <button type="submit" class="btn btn-sc sc-btn-shine sc-reveal w-100 btn-lg mb-2" style="--retard:.26s">
         <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter
     </button>
 
-    <div class="row g-3 mb-3">
-        <div class="col-6">
-            <a href="<?= e(url('mot-de-passe-oublie')) ?>" class="small d-block py-1 link-secondary">Mot de passe oublié ?</a>
-        </div>
-        <div class="col-6 text-end">
-            <span class="text-muted small"><i class="bi bi-shield-lock me-1"></i>Connexion sécurisée</span>
-        </div>
+    <div class="sc-connexion-securite sc-reveal" style="--retard:.32s">
+        <i class="bi bi-shield-check"></i>Connexion sécurisée · session limitée en cas d'inactivité
     </div>
 </form>
-<?php if (APP_DEMO): ?>
-    <div class="sc-demo-box mt-4">
-        <div class="small fw-semibold mb-2">
-            <i class="bi bi-stars me-1 text-sc"></i>Comptes de démonstration — cliquez pour remplir :
-        </div>
-        <div class="sc-demo-comptes">
-            <button type="button" class="sc-demo-compte sc-demo-chip sc-demo-compte-admin"
-                    data-email="admin@sandersconnect.sn" data-mdp="Admin@2026">
-                <span class="ico"><i class="bi bi-shield-lock"></i></span>
-                <span class="txt">
-                    <strong>Administrateur</strong>
-                    <small>admin@sandersconnect.sn</small>
-                </span>
-                <i class="bi bi-arrow-repeat fleche"></i>
-            </button>
-            <button type="button" class="sc-demo-compte sc-demo-chip sc-demo-compte-gestion"
-                    data-email="gestionnaire@sandersconnect.sn" data-mdp="Gestion@2026">
-                <span class="ico"><i class="bi bi-clipboard-check"></i></span>
-                <span class="txt">
-                    <strong>Gestionnaire</strong>
-                    <small>gestionnaire@sandersconnect.sn</small>
-                </span>
-                <i class="bi bi-arrow-repeat fleche"></i>
-            </button>
-            <button type="button" class="sc-demo-compte sc-demo-chip sc-demo-compte-shop"
-                    data-email="boulanger@sandersconnect.sn" data-mdp="Boulanger@2026">
-                <span class="ico"><i class="bi bi-shop"></i></span>
-                <span class="txt">
-                    <strong>Boulanger</strong>
-                    <small>boulanger@sandersconnect.sn</small>
-                </span>
-                <i class="bi bi-arrow-repeat fleche"></i>
-            </button>
-            <button type="button" class="sc-demo-compte sc-demo-chip sc-demo-compte-client"
-                    data-email="client1@sandersconnect.sn" data-mdp="Client1@2026">
-                <span class="ico"><i class="bi bi-basket"></i></span>
-                <span class="txt">
-                    <strong>Client simple 1</strong>
-                    <small>client1@sandersconnect.sn</small>
-                </span>
-                <i class="bi bi-arrow-repeat fleche"></i>
-            </button>
-            <button type="button" class="sc-demo-compte sc-demo-chip sc-demo-compte-client"
-                    data-email="client2@sandersconnect.sn" data-mdp="Client2@2026">
-                <span class="ico"><i class="bi bi-basket3"></i></span>
-                <span class="txt">
-                    <strong>Client simple 2</strong>
-                    <small>client2@sandersconnect.sn</small>
-                </span>
-                <i class="bi bi-arrow-repeat fleche"></i>
-            </button>
-        </div>
-    </div>
-<?php endif; ?>
 
-<hr class="my-4">
-<p class="small text-muted mb-0 text-center">
-    <i class="bi bi-shop me-1"></i>Pas encore de compte ?
-    <a href="<?= e(url('inscription')) ?>" class="fw-semibold">Créer un compte</a>
-    — service commercial : <a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a>
-</p>
+<div class="sc-connexion-actions">
+    <a href="<?= e(url('inscription')) ?>" class="sc-connexion-action sc-reveal" style="--retard:.38s">
+        <span class="ico"><i class="bi bi-shop"></i></span>
+        <span class="txt">
+            <strong>Pas encore de compte ?</strong>
+            <small>Créer un compte boulanger</small>
+        </span>
+        <i class="bi bi-arrow-right fleche"></i>
+    </a>
+    <a href="tel:+221771249186" class="sc-connexion-action sc-reveal" style="--retard:.44s">
+        <span class="ico"><i class="bi bi-telephone"></i></span>
+        <span class="txt">
+            <strong>Service commercial</strong>
+            <small>+221 77 124 91 86</small>
+        </span>
+        <i class="bi bi-telephone-outbound fleche"></i>
+    </a>
+</div>
+
+<div class="sc-connexion-garanties sc-reveal" style="--retard:.5s">
+    <span><i class="bi bi-lock-fill me-1"></i>Paiement sécurisé</span>
+    <span><i class="bi bi-phone me-1"></i>Wave &amp; Orange Money</span>
+    <span><i class="bi bi-truck me-1"></i>Suivi de livraison</span>
+</div>
 
 <div class="sc-toast" id="scToast" role="status" aria-live="polite"></div>
 

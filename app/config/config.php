@@ -36,8 +36,6 @@ define('APP_NAME', 'Sanders Connect');
 define('APP_SLOGAN', 'Commandez votre farine en toute autonomie');
 define('APP_VERSION', '1.0');
 define('APP_DEBUG', filter_var(getenv('SC_DEBUG') !== false ? getenv('SC_DEBUG') : '1', FILTER_VALIDATE_BOOLEAN));
-// Comptes de demonstration affiches sur la page de connexion (SC_DEMO=1).
-define('APP_DEMO', filter_var(getenv('SC_DEMO') !== false ? getenv('SC_DEMO') : (APP_DEBUG ? '1' : '0'), FILTER_VALIDATE_BOOLEAN));
 define('APP_TIMEZONE', 'Africa/Dakar');
 define('APP_LOCALE', 'fr_FR');
 

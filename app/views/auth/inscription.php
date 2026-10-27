@@ -103,7 +103,7 @@ $d = static fn (string $cle): string => (string) ($donnees[$cle] ?? '');
     <div class="alert alert-light border small mb-0" role="note">
         <i class="bi bi-info-circle me-1 text-sc"></i>
         Le compte reste <strong>inactif</strong> jusqu'à l'appel de notre service commercial
-        (<a href="tel:+221338390000" class="fw-semibold">+221 33 839 00 00</a>).
+        (<a href="tel:+221771249186" class="fw-semibold">+221 77 124 91 86</a>).
     </div>
 </form>
 
