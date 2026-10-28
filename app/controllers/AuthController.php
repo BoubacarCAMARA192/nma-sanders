@@ -38,7 +38,7 @@ final class AuthController extends Controller
         if (Auth::connecte()) {
             $this->rediriger(Auth::routeAccueil());
         }
-        $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME, 'avecMarque' => true]);
+        $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME]);
     }
 
     public function formulaireInscription(): void
@@ -128,7 +128,7 @@ final class AuthController extends Controller
 
         if ($validator->echoue()) {
             Flash::erreur($validator->premiereErreur());
-            $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME, 'email' => $email, 'avecMarque' => true]);
+            $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME, 'email' => $email]);
             return;
         }
 
@@ -144,7 +144,7 @@ final class AuthController extends Controller
         }
 
         Flash::erreur($resultat['message']);
-        $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME, 'email' => $email, 'avecMarque' => true]);
+        $this->vuePublique('auth/connexion', ['titre' => 'Connexion – ' . APP_NAME, 'email' => $email]);
     }
 
     public function formulaire2fa(): void
