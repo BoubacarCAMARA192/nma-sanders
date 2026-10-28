@@ -18,7 +18,7 @@ final class Sqlite
     private const NOM_VERROU = 'sanders_connect.lock';
     private const VERSION_CATALOGUE_SC = '2';
     private const DUREE_VERROU = 30;
-    private const CLE_VERROU_NEON = 9042001;
+    private const CLE_VERROU_NEON = 9042002;
     private const ID_ETAT_NEON = 1;
 
     private static ?PDO $pdoPersistance = null;
