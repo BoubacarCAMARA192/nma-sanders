@@ -1128,41 +1128,12 @@ a { text-decoration: none; }
 }
 
 /* --- Connexion : en-tete, champs et cartes de contact ----------------- */
-.sc-connexion-medaillon {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 82px;
-    height: 82px;
-    margin: 0 auto .85rem;
-    border: 1px solid #cfe9da;
-    border-radius: 24px;
-    background: radial-gradient(circle at 30% 20%, #fff, #eaf7ef 72%);
-    box-shadow: 0 18px 32px -20px rgba(0, 92, 52, .45);
-}
-
-.sc-connexion-medaillon::before {
-    content: "";
-    position: absolute;
-    inset: -7px;
-    border: 1.5px dashed rgba(0, 126, 72, .28);
-    border-radius: 30px;
-}
-
-.sc-connexion-medaillon::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border: 1px solid rgba(22, 163, 74, .3);
-    border-radius: 27px;
-}
-
 .sc-connexion-logo {
     display: block;
     width: 56px;
     height: 56px;
+    margin: 0 auto .85rem;
     object-fit: contain;
-    filter: drop-shadow(0 8px 12px rgba(0, 92, 52, .16));
 }
 
 .sc-connexion-entete .sc-pill { margin-bottom: .7rem; }

@@ -5,10 +5,8 @@
  */
 ?>
 <div class="sc-connexion-entete text-center mb-4 sc-reveal" style="--retard:.05s">
-    <span class="sc-connexion-medaillon">
-        <img src="<?= e(asset('assets/img/logo-sc.png')) ?>" alt="<?= e(APP_NAME) ?>" class="sc-connexion-logo">
-    </span>
-    <span class="sc-pill mb-2"><i class="bi bi-shield-lock me-1"></i>Espace sécurisé</span>
+    <img src="<?= e(asset('assets/img/logo-sc.png')) ?>" alt="<?= e(APP_NAME) ?>" class="sc-connexion-logo">
+    <span class="sc-pill mb-2"><?= e(APP_NAME) ?></span>
     <h2 class="h4 fw-bold mb-1">Connexion à votre espace</h2>
     <p class="text-muted small mb-0">Commandes, livraisons et suivi réunis au même endroit.</p>
 </div>
