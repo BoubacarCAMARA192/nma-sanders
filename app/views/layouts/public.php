@@ -3,8 +3,10 @@
  * Gabarit public : page d'accueil / connexion, mot de passe oublie.
  * @var string $contenu
  * @var string $titre
+ * @var bool   $avecMarque
  */
-$titrePage = $titre ?? APP_NAME;
+$titrePage  = $titre ?? APP_NAME;
+$avecMarque = $avecMarque ?? false;
 ?>
 <!doctype html>
 <html lang="fr">
@@ -31,8 +33,45 @@ $titrePage = $titre ?? APP_NAME;
 
 <main class="sc-auth-wrapper">
     <div class="container">
-        <div class="sc-auth-shell">
-            <div class="sc-auth-card-wrap">
+        <div class="sc-auth-shell<?= $avecMarque ? ' sc-auth-shell-large' : '' ?>">
+            <?php if ($avecMarque): ?>
+                <div class="row g-0">
+                    <div class="col-12 col-lg-6 sc-auth-brand">
+                        <div class="sc-auth-brand-inner">
+                            <span class="sc-auth-logo-wrap">
+                                <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>"
+                                     class="sc-logo-public sc-auth-logo" width="88" height="88">
+                            </span>
+                            <div class="sc-auth-eyebrow">Sanders Connect · Sénégal</div>
+                            <h1 class="sc-auth-title">Votre farine,<br>livrée à la boulangerie.</h1>
+                            <p class="sc-auth-text">
+                                L'espace de commande des boulangers Sanders : catalogue,
+                                suivi de livraison et paiement en ligne.
+                            </p>
+                            <ul class="sc-auth-points">
+                                <li><i class="bi bi-check-circle-fill"></i><span>Toute la gamme de farines Sanders au catalogue.</span></li>
+                                <li><i class="bi bi-check-circle-fill"></i><span>De la commande à la livraison, un suivi en temps réel.</span></li>
+                                <li><i class="bi bi-check-circle-fill"></i><span>Carte bancaire, Wave ou Orange Money.</span></li>
+                            </ul>
+                            <div class="sc-auth-live">
+                                <span class="sc-auth-live-dot" aria-hidden="true"></span>
+                                <span class="sc-auth-live-txt">
+                                    <strong>Livraison suivie</strong>
+                                    <small>Suivez chacune de vos commandes en temps réel</small>
+                                </span>
+                                <i class="bi bi-truck" aria-hidden="true"></i>
+                            </div>
+                            <div class="sc-auth-mini-stats">
+                                <div><strong>50 kg</strong><span>sacs de farine</span></div>
+                                <div><strong>24 h</strong><span>délai minimum</span></div>
+                                <div><strong>3</strong><span>moyens de paiement</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 sc-auth-card-wrap">
+            <?php else: ?>
+                <div class="sc-auth-card-wrap">
+            <?php endif; ?>
                 <?php foreach (($messages ?? []) as $msg): ?>
                     <div class="alert alert-<?= e($msg['type']) ?> d-flex align-items-start shadow-sm" role="alert">
                         <i class="bi bi-<?= $msg['type'] === 'success' ? 'check2-circle' : ($msg['type'] === 'danger' ? 'exclamation-triangle' : 'info-circle') ?> me-2"></i>
@@ -47,7 +86,10 @@ $titrePage = $titre ?? APP_NAME;
                 <p class="sc-auth-foot mb-0">
                     &copy; <?= date('Y') ?> <?= e(APP_NAME) ?> — Sénégal · Version <?= e(APP_VERSION) ?>
                 </p>
-            </div>
+                </div>
+            <?php if ($avecMarque): ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </main>

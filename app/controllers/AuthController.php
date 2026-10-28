@@ -27,7 +27,10 @@ final class AuthController extends Controller
         if (Auth::connecte()) {
             $this->rediriger(Auth::routeAccueil());
         }
-        $this->vuePublique('auth/accueil', ['titre' => APP_NAME . ' – Bienvenue']);
+        $this->vuePublique('auth/accueil', [
+            'titre'      => APP_NAME . ' – Bienvenue',
+            'avecMarque' => true,
+        ]);
     }
 
     public function formulaireConnexion(): void
