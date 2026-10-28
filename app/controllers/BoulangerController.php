@@ -43,7 +43,6 @@ final class BoulangerController extends Controller
             'reappro'          => Commande::dernieresLignes($boulangerId, 4),
             'alertes'          => Produit::enAlerte(),
             'nbPanier'         => $this->nombrePanier(),
-            'charges'          => Commande::volumesProchainsJours(7),
         ]);
     }
 

@@ -152,31 +152,6 @@ $totalActives = $compteurs['recue'] + $compteurs['validee'] + $compteurs['en_pre
 </div>
 
 <div class="card mt-3">
-    <div class="card-header d-flex align-items-center">
-        <i class="bi bi-calendar-week text-sc me-2"></i>Charge des livraisons à venir
-        <?php if (capacite_livraison() > 0): ?>
-            <span class="sc-pill ms-2"><i class="bi bi-truck me-1"></i><?= capacite_livraison() ?> sacs / jour max</span>
-        <?php endif; ?>
-    </div>
-    <div class="card-body">
-        <div class="sc-planning">
-            <?php foreach ($charges as $date => $sacs): $niveau = niveau_charge($sacs); ?>
-                <div class="sc-planning-jour <?= $niveau['taux'] >= 1 ? 'sc-planning-sature' : '' ?>" title="<?= e($date) ?> · <?= (int) $sacs ?> sacs">
-                    <span class="jour"><?= e(jour_fr($date)) ?></span>
-                    <span class="num"><?= e(date_fr($date, 'd/m')) ?></span>
-                    <div class="barre"><span style="height: <?= max(4, min(100, $niveau['taux_pct'])) ?>%" class="bg-<?= $niveau['classe'] ?>"></span></div>
-                    <span class="sacs"><?= (int) $sacs ?> s.</span>
-                </div>
-            <?php endforeach; ?>
-        </div>
-        <div class="text-small text-muted mt-2">
-            <i class="bi bi-info-circle me-1"></i>
-            Rouge : journée surchargée (commandes déjà prévues au-delà de la capacité).
-        </div>
-    </div>
-</div>
-
-<div class="card mt-3">
     <div class="card-header"><i class="bi bi-clock-history text-sc me-2"></i>Mes 5 dernières commandes</div>
     <div class="card-body p-0">
         <?php if ($dernieres === []): ?>

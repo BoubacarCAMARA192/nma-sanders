@@ -32,68 +32,21 @@ $titrePage = $titre ?? APP_NAME;
 <main class="sc-auth-wrapper">
     <div class="container">
         <div class="sc-auth-shell">
-            <div class="row g-0">
-
-                <div class="col-12 col-lg-6 sc-auth-brand">
-                    <span class="sc-auth-shine" aria-hidden="true"></span>
-                    <div class="sc-auth-brand-inner">
-                        <span class="sc-auth-logo-wrap sc-reveal" style="--retard:.02s">
-                            <img src="<?= e(asset('assets/img/logo-sc-clair.png')) ?>" alt="<?= e(APP_NAME) ?>"
-                                 class="sc-logo-public sc-auth-logo" width="88" height="88">
-                        </span>
-                        <div class="sc-auth-eyebrow sc-reveal" style="--retard:.08s">Sanders Connect · Sénégal</div>
-                        <h1 class="sc-auth-title sc-reveal" style="--retard:.14s">Votre farine,<br>livrée à la boulangerie.</h1>
-                        <p class="sc-auth-text sc-reveal" style="--retard:.2s">
-                            L'espace de commande des boulangers Sanders : catalogue,
-                            suivi de livraison et paiement en ligne.
-                        </p>
-                        <ul class="sc-auth-points">
-                            <li class="sc-reveal" style="--retard:.26s">
-                                <i class="bi bi-check-circle-fill"></i>
-                                <span>Toute la gamme de farines Sanders au catalogue.</span>
-                            </li>
-                            <li class="sc-reveal" style="--retard:.32s">
-                                <i class="bi bi-check-circle-fill"></i>
-                                <span>De la commande à la livraison, un suivi en temps réel.</span>
-                            </li>
-                            <li class="sc-reveal" style="--retard:.38s">
-                                <i class="bi bi-check-circle-fill"></i>
-                                <span>Carte bancaire, Wave ou Orange Money.</span>
-                            </li>
-                        </ul>
-                        <div class="sc-auth-live sc-reveal" style="--retard:.44s">
-                            <span class="sc-auth-live-dot" aria-hidden="true"></span>
-                            <span class="sc-auth-live-txt">
-                                <strong>Planning de charge</strong>
-                                <small>7 jours de livraison visibles dans votre espace</small>
-                            </span>
-                            <i class="bi bi-calendar2-week" aria-hidden="true"></i>
-                        </div>
-                        <div class="sc-auth-mini-stats sc-reveal" style="--retard:.5s">
-                            <div><strong>50 kg</strong><span>sacs de farine</span></div>
-                            <div><strong>24 h</strong><span>délai minimum</span></div>
-                            <div><strong>3</strong><span>moyens de paiement</span></div>
-                        </div>
+            <div class="sc-auth-card-wrap">
+                <?php foreach (($messages ?? []) as $msg): ?>
+                    <div class="alert alert-<?= e($msg['type']) ?> d-flex align-items-start shadow-sm" role="alert">
+                        <i class="bi bi-<?= $msg['type'] === 'success' ? 'check2-circle' : ($msg['type'] === 'danger' ? 'exclamation-triangle' : 'info-circle') ?> me-2"></i>
+                        <div><?= e($msg['message']) ?></div>
                     </div>
+                <?php endforeach; ?>
+
+                <div class="sc-auth-card">
+                    <?= $contenu ?>
                 </div>
 
-                <div class="col-12 col-lg-6 sc-auth-card-wrap">
-                    <?php foreach (($messages ?? []) as $msg): ?>
-                        <div class="alert alert-<?= e($msg['type']) ?> d-flex align-items-start shadow-sm" role="alert">
-                            <i class="bi bi-<?= $msg['type'] === 'success' ? 'check2-circle' : ($msg['type'] === 'danger' ? 'exclamation-triangle' : 'info-circle') ?> me-2"></i>
-                            <div><?= e($msg['message']) ?></div>
-                        </div>
-                    <?php endforeach; ?>
-
-                    <div class="sc-auth-card">
-                        <?= $contenu ?>
-                    </div>
-
-                    <p class="sc-auth-foot mb-0">
-                        &copy; <?= date('Y') ?> <?= e(APP_NAME) ?> — Sénégal · Version <?= e(APP_VERSION) ?>
-                    </p>
-                </div>
-
+                <p class="sc-auth-foot mb-0">
+                    &copy; <?= date('Y') ?> <?= e(APP_NAME) ?> — Sénégal · Version <?= e(APP_VERSION) ?>
+                </p>
             </div>
         </div>
     </div>

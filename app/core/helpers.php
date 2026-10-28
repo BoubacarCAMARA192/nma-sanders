@@ -111,11 +111,11 @@ function action_fr(string $action): string
 function parametre_fr(string $cle): string
 {
     $libelles = [
-        'delai_minimum_heures'        => 'Délai minimum de livraison',
+        'delai_minimum_heures'        => 'Délai minimum de livraison (heures)',
         'max_tentatives_connexion'    => 'Tentatives de connexion avant blocage',
-        'duree_blocage_minutes'       => 'Durée du blocage du compte',
-        'session_duree_minutes'       => 'Durée d\'inactivité avant expiration de session',
-        'jours_historique_par_defaut' => 'Profondeur de l\'historique par défaut',
+        'duree_blocage_minutes'       => 'Durée du blocage du compte (minutes)',
+        'session_duree_minutes'       => 'Durée d\'inactivité avant expiration de session (minutes)',
+        'jours_historique_par_defaut' => 'Profondeur de l\'historique par défaut (jours)',
         'capacite_sacs_par_jour'      => 'Charge maximale de livraison par jour (sacs)',
     ];
 

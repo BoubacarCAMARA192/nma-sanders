@@ -678,44 +678,4 @@ final class Commande
     {
         return array_combine(['s1', 's2', 's3', 's4', 'date'], [...self::STATUTS_ACTIFS, $date]);
     }
-
-    /**
-     * Charge des N prochains jours (sacs par journee), pour le planning.
-     * @return array<string,int> date Y-m-d => sacs prevus
-     */
-    public static function volumesProchainsJours(int $jours = 7): array
-    {
-        $debut = date('Y-m-d');
-        $fin   = date('Y-m-d', strtotime($debut . ' +' . max(1, $jours - 1) . ' days'));
-        $mots  = array_combine(['s1', 's2', 's3', 's4', 'd0', 'd1'], [...self::STATUTS_ACTIFS, $debut, $fin]);
-
-        $sql = 'SELECT CASE
-                        WHEN l.date_livraison IS NOT NULL THEN l.date_livraison
-                        ELSE c.date_livraison_souhaitee
-                    END AS jour,
-                COALESCE(SUM(lc.quantite), 0) AS sacs
-                FROM commande c
-                LEFT JOIN livraison l ON l.commande_id = c.id
-                JOIN ligne_commande lc ON lc.commande_id = c.id
-                WHERE c.statut IN (:s1, :s2, :s3, :s4)
-                  AND CASE
-                        WHEN l.date_livraison IS NOT NULL THEN l.date_livraison
-                        ELSE c.date_livraison_souhaitee
-                    END BETWEEN :d0 AND :d1
-                GROUP BY jour';
-
-        $charges = [];
-        for ($i = 0; $i < max(1, $jours); $i++) {
-            $charges[date('Y-m-d', strtotime($debut . ' +' . $i . ' days'))] = 0;
-        }
-
-        foreach (Database::fetchAll($sql, $mots) as $ligne) {
-            $jour = substr((string) $ligne['jour'], 0, 10);
-            if (isset($charges[$jour])) {
-                $charges[$jour] = (int) $ligne['sacs'];
-            }
-        }
-
-        return $charges;
-    }
 }

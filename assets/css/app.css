@@ -435,13 +435,6 @@ a { text-decoration: none; }
     box-shadow: 0 30px 60px -18px rgba(0, 50, 30, .35);
 }
 
-.sc-logo-glow { animation: sc-pouls 3.2s ease-in-out infinite; }
-
-@keyframes sc-pouls {
-    0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, .25), 0 0 0 0 rgba(22, 163, 74, .5); }
-    50%      { box-shadow: 0 10px 30px rgba(0, 0, 0, .25), 0 0 0 20px rgba(22, 163, 74, 0); }
-}
-
 .sc-feature {
     display: flex;
     gap: .9rem;
@@ -993,149 +986,13 @@ a { text-decoration: none; }
 
 .sc-auth-shell {
     width: 100%;
-    max-width: 1160px;
+    max-width: 620px;
     margin: 0 auto;
     background: #fff;
     border-radius: 28px;
     overflow: hidden;
     box-shadow: 0 30px 70px -34px rgba(0, 60, 35, .4);
 }
-
-.sc-auth-brand {
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    min-height: 100%;
-    padding: clamp(1.6rem, 4vw, 3.5rem);
-    color: #fff;
-    background: linear-gradient(155deg, #004d2b 0%, #007e48 58%, #0f9d58 100%);
-    background-size: 170% 170%;
-    animation: sc-auth-braise 18s ease infinite;
-}
-
-@keyframes sc-auth-braise {
-    0%, 100% { background-position: 0% 40%; }
-    50%      { background-position: 100% 60%; }
-}
-
-.sc-auth-shine {
-    position: absolute;
-    inset: -30% -50%;
-    z-index: 0;
-    background: linear-gradient(112deg, transparent 42%, rgba(255, 255, 255, .16) 50%, transparent 58%);
-    transform: translateX(-65%);
-    animation: sc-auth-scan 9s ease-in-out infinite 1.5s;
-    pointer-events: none;
-}
-
-@keyframes sc-auth-scan {
-    0%, 52%  { transform: translateX(-65%); }
-    78%, 100% { transform: translateX(65%); }
-}
-
-.sc-auth-brand::before,
-.sc-auth-brand::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.sc-auth-brand::before {
-    width: 340px;
-    height: 340px;
-    right: -150px;
-    top: -140px;
-    background: rgba(255, 255, 255, .09);
-}
-
-.sc-auth-brand::after {
-    width: 460px;
-    height: 460px;
-    left: -220px;
-    bottom: -250px;
-    border: 1px solid rgba(255, 255, 255, .16);
-}
-
-.sc-auth-brand-inner { position: relative; z-index: 1; max-width: 440px; }
-
-.sc-auth-logo-wrap { display: inline-block; }
-.sc-auth-logo { display: block; animation: sc-auth-logo-flotte 6s ease-in-out infinite; }
-
-@keyframes sc-auth-logo-flotte {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-5px); }
-}
-
-.sc-auth-live {
-    display: flex;
-    align-items: center;
-    gap: .7rem;
-    margin-top: 1.35rem;
-    padding: .62rem .78rem;
-    border: 1px solid rgba(255, 255, 255, .18);
-    border-radius: 14px;
-    background: rgba(255, 255, 255, .09);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-}
-
-.sc-auth-live-dot {
-    width: 9px;
-    height: 9px;
-    flex: 0 0 auto;
-    border-radius: 50%;
-    background: #a8f0c9;
-    animation: sc-auth-pulse 2.4s ease-out infinite;
-}
-
-@keyframes sc-auth-pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(168, 240, 201, .55); }
-    70%  { box-shadow: 0 0 0 10px rgba(168, 240, 201, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(168, 240, 201, 0); }
-}
-
-.sc-auth-live-txt { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
-.sc-auth-live-txt strong { color: #fff; font-size: .76rem; }
-.sc-auth-live-txt small { color: rgba(255, 255, 255, .7); font-size: .68rem; }
-.sc-auth-live > i { margin-left: auto; color: #a8f0c9; font-size: 1.05rem; animation: sc-auth-cal 5s ease-in-out infinite; }
-
-@keyframes sc-auth-cal {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-2px); }
-}
-
-.sc-logo-public {
-    width: 88px;
-    height: 88px;
-    object-fit: contain;
-    margin-bottom: 1.35rem;
-    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .18));
-}
-
-.sc-auth-eyebrow {
-    margin-bottom: .5rem;
-    font-size: .72rem;
-    font-weight: 800;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, .68);
-}
-
-.sc-auth-title {
-    margin-bottom: .85rem;
-    font-size: clamp(1.85rem, 3.4vw, 2.7rem);
-    font-weight: 800;
-    line-height: 1.06;
-    letter-spacing: -.035em;
-}
-
-.sc-auth-text { color: rgba(255, 255, 255, .78); font-size: .98rem; line-height: 1.55; }
-
-.sc-auth-points { list-style: none; display: grid; gap: .8rem; margin: 1.5rem 0 0; padding: 0; }
-.sc-auth-points li { display: flex; align-items: flex-start; gap: .65rem; color: rgba(255, 255, 255, .9); font-size: .9rem; }
-.sc-auth-points i { color: #a8f0c9; font-size: 1rem; margin-top: .05rem; }
 
 .sc-auth-card-wrap {
     display: flex;
@@ -1174,7 +1031,6 @@ a { text-decoration: none; }
     inset: -7px;
     border: 1.5px dashed rgba(0, 126, 72, .28);
     border-radius: 30px;
-    animation: sc-tourne 22s linear infinite;
 }
 
 .sc-connexion-medaillon::after {
@@ -1183,12 +1039,6 @@ a { text-decoration: none; }
     inset: -3px;
     border: 1px solid rgba(22, 163, 74, .3);
     border-radius: 27px;
-    animation: sc-auth-aura 3.4s ease-out infinite;
-}
-
-@keyframes sc-auth-aura {
-    0%   { opacity: .65; transform: scale(1); }
-    70%, 100% { opacity: 0; transform: scale(1.18); }
 }
 
 .sc-connexion-logo {
@@ -1197,12 +1047,6 @@ a { text-decoration: none; }
     height: 56px;
     object-fit: contain;
     filter: drop-shadow(0 8px 12px rgba(0, 92, 52, .16));
-    animation: sc-auth-logo-respire 5.5s ease-in-out infinite;
-}
-
-@keyframes sc-auth-logo-respire {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.04); }
 }
 
 .sc-connexion-entete .sc-pill { margin-bottom: .7rem; }
@@ -1309,24 +1153,6 @@ a { text-decoration: none; }
     font-size: .72rem;
 }
 .sc-connexion-garanties i { color: var(--sc-primary); }
-
-.sc-auth-mini-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: .5rem;
-    margin-top: 1.7rem;
-}
-.sc-auth-mini-stats > div {
-    padding: .55rem .4rem;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, .18);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, .1);
-}
-.sc-auth-mini-stats > div { transition: transform .2s ease, background .2s ease; }
-.sc-auth-mini-stats > div:hover { transform: translateY(-2px); background: rgba(255, 255, 255, .16); }
-.sc-auth-mini-stats strong { display: block; color: #fff; font-size: 1rem; letter-spacing: -.01em; }
-.sc-auth-mini-stats span { display: block; color: rgba(255, 255, 255, .72); font-size: .64rem; line-height: 1.2; }
 
 .sc-logo-nav {
     width: 34px;
@@ -1462,42 +1288,6 @@ a { text-decoration: none; }
 .sc-charge-sature { background: #fdecea; border: 1px solid #f0a8a0; color: #b02a37; }
 .sc-charge-ok { background: var(--sc-primary-light); border: 1px solid #bfe3ce; color: var(--sc-primary-dark); }
 
-/* --- Planning des livraisons : serie de mini-barres ------------------- */
-.sc-planning { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; }
-.sc-planning-jour {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .25rem;
-    padding: .5rem .2rem .45rem;
-    border: 1px solid var(--sc-border);
-    border-radius: 12px;
-    background: #fbfdfc;
-}
-.sc-planning-jour .jour { font-size: .7rem; text-transform: lowercase; color: #65786c; }
-.sc-planning-jour .num { font-size: .8rem; font-weight: 700; color: var(--sc-ink); }
-.sc-planning-jour .barre {
-    width: 60%;
-    height: 46px;
-    display: flex;
-    align-items: flex-end;
-    background: #eef5f0;
-    border-radius: 6px;
-    overflow: hidden;
-}
-.sc-planning-jour .barre span {
-    display: block;
-    width: 100%;
-    border-radius: 6px 6px 0 0;
-    transition: height .6s cubic-bezier(.22, .61, .36, 1);
-}
-.sc-planning-jour .sacs { font-size: .68rem; font-weight: 600; color: #65786c; }
-.sc-planning-jour.sc-planning-sature { border-color: #f0a8a0; background: #fdf3f2; }
-
-@media (max-width: 575.98px) {
-    .sc-planning { grid-template-columns: repeat(4, 1fr); }
-}
-
 .sc-toast {
     position: fixed;
     left: 50%;
@@ -1522,11 +1312,5 @@ a { text-decoration: none; }
 @media (max-width: 991.98px) {
     .sc-auth-wrapper { align-items: flex-start; }
     .sc-auth-shell { border-radius: 22px; }
-    .sc-auth-brand { padding: 1.35rem 1.25rem; }
-    .sc-auth-brand-inner { max-width: none; }
-    .sc-logo-public { width: 58px; height: 58px; margin-bottom: .7rem; }
-    .sc-auth-title { font-size: 1.55rem; margin-bottom: .35rem; }
-    .sc-auth-text { font-size: .86rem; margin-bottom: 0; }
-    .sc-auth-points, .sc-auth-mini-stats, .sc-auth-live { display: none; }
     .sc-auth-card-wrap { padding: 1.35rem 1.1rem 1.6rem; }
 }

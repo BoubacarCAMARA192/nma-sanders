@@ -4,7 +4,7 @@
  */
 ?>
 <div class="text-center mb-4">
-    <span class="sc-brand-badge mb-3 sc-logo-glow" style="width:64px;height:64px;font-size:1.9rem;border-radius:18px;">
+    <span class="sc-brand-badge mb-3" style="width:64px;height:64px;font-size:1.9rem;border-radius:18px;">
         <i class="bi bi-basket2-fill"></i>
     </span>
     <h2 class="h4 fw-bold mb-1"><?= e(APP_NAME) ?></h2>
