@@ -7,9 +7,7 @@
 $d = static fn (string $cle): string => (string) ($donnees[$cle] ?? '');
 ?>
 <div class="text-center mb-4">
-    <span class="sc-brand-badge mb-2" style="width:46px;height:46px;font-size:1.45rem;">
-        <i class="bi bi-shop"></i>
-    </span>
+    <img src="<?= e(asset('assets/img/logo-sc.png')) ?>" alt="<?= e(APP_NAME) ?>" class="sc-connexion-logo">
     <h2 class="h4 fw-bold mb-1">Créer un compte</h2>
     <p class="text-muted small mb-0">Votre demande est transmise à notre service commercial, puis activée après contact.</p>
 </div>
