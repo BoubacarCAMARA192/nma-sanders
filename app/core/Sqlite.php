@@ -18,7 +18,7 @@ final class Sqlite
     private const NOM_VERROU = 'sanders_connect.lock';
     private const VERSION_CATALOGUE_SC = '2';
     private const DUREE_VERROU = 30;
-    private const CLE_VERROU_NEON = 9042002;
+    private const CLE_VERROU_NEON = 9042003;
     private const ID_ETAT_NEON = 1;
 
     private static ?PDO $pdoPersistance = null;
@@ -29,6 +29,7 @@ final class Sqlite
     private static bool $synchronisationEffectuee = true;
     private static ?string $etagPersistance = null;
     private static bool $verrouAcquis = false;
+    private static bool $transactionOuverte = false;
     private static string $verrouProprietaire = '';
     private static bool $finalisationEnregistree = false;
 
@@ -94,6 +95,10 @@ final class Sqlite
      */
     public static function verrouiller(): void
     {
+        if (self::$verrouAcquis) {
+            return;
+        }
+
         if (self::neonUrl() === '') {
             return;
         }
@@ -107,17 +112,45 @@ final class Sqlite
         $limite = microtime(true) + 8.0;
 
         do {
-            $acquis = $pdo->query('SELECT pg_try_advisory_lock(' . self::CLE_VERROU_NEON . ')')->fetchColumn();
+            try {
+                // Verrou transactionnel : il est libere automatiquement au
+                // COMMIT/ROLLBACK ou a la fermeture de la connexion, ce qui
+                // evite les verrous orphelins des instances serverless.
+                $pdo->exec('BEGIN');
+                self::$transactionOuverte = true;
+                $acquis = $pdo->query('SELECT pg_try_advisory_xact_lock(' . self::CLE_VERROU_NEON . ')')->fetchColumn();
 
-            if ($acquis === true || $acquis === 't' || $acquis === 1 || $acquis === '1') {
-                self::$verrouAcquis = true;
-                return;
+                if ($acquis === true || $acquis === 't' || $acquis === 1 || $acquis === '1') {
+                    self::$verrouAcquis = true;
+                    return;
+                }
+
+                self::annulerTransaction();
+            } catch (Throwable $e) {
+                self::annulerTransaction();
+                error_log('Neon verrou: ' . $e->getMessage());
             }
 
             usleep(250000);
         } while (microtime(true) < $limite);
 
         throw new \RuntimeException('La base partagee est occupee. Merci de reessayer.');
+    }
+
+    /** Annule la transaction en cours apres un echec d'acquisition. */
+    private static function annulerTransaction(): void
+    {
+        if (!self::$transactionOuverte || !self::$pdoNeon instanceof PDO) {
+            return;
+        }
+
+        self::$transactionOuverte = false;
+
+        try {
+            self::$pdoNeon->exec('ROLLBACK');
+        } catch (Throwable $e) {
+            error_log('Neon verrou: rollback impossible - ' . $e->getMessage());
+        }
     }
 
     /** Fonctions MySQL reproduites en SQLite (memes requetes des modeles). */
@@ -636,7 +669,7 @@ final class Sqlite
         return [null, null];
     }
 
-    /** Libere le verrou PostgreSQL de la requete courante. */
+    /** Valide la transaction et libere ainsi le verrou de la requete courante. */
     private static function libererVerrou(): void
     {
         if (!self::$verrouAcquis) {
@@ -644,13 +677,21 @@ final class Sqlite
         }
 
         self::$verrouAcquis = false;
+        self::$transactionOuverte = false;
 
         try {
             if (self::$pdoNeon instanceof PDO) {
-                self::$pdoNeon->query('SELECT pg_advisory_unlock(' . self::CLE_VERROU_NEON . ')');
+                self::$pdoNeon->exec('COMMIT');
             }
         } catch (Throwable $e) {
-            error_log('Neon verrou: liberation impossible - ' . $e->getMessage());
+            error_log('Neon verrou: validation impossible - ' . $e->getMessage());
+
+            try {
+                if (self::$pdoNeon instanceof PDO) {
+                    self::$pdoNeon->exec('ROLLBACK');
+                }
+            } catch (Throwable $ignore) {
+            }
         }
     }
 
